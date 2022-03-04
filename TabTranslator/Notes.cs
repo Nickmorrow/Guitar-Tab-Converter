@@ -6,8 +6,19 @@ using System.Threading.Tasks;
 
 namespace TabTranslator
 {
-    internal class Notes
+    public enum RootNotes
     {
-        List<string> notes = new List<string>() { "C", "Csharp/Dflat", "D", "Dsharp/Eflat", "E", "F", "Fsharp/Gflat", "G", "Gsharp/Aflat", "A", "Asharp/Bflat", "B" };
+        C,
+        Cs,
+        D,
+        Ds,
+        E,
+        F,
+        Fs,
+        G,
+        Gs,
+        A,
+        As,
+        B
     }
 }
