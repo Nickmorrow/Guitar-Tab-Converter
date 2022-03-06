@@ -10,6 +10,7 @@ namespace TabTranslator
     {
         string TitleOfSong;
         string Artist;
+        string Difficulty;
         string Description;
         string Lyrics;
         StringInstrument Instrument;
