@@ -8,7 +8,7 @@ namespace TabTranslator
 {
     class FingerPosition
     {
-        //RootNotes Note;
+        RootNotes Note;
         int FretNr;
     }
 }

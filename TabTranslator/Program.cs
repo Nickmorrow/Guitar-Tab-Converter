@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Linq;
+using System.Globalization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-namespace TabTranslator // Note: actual namespace depends on the project name.
+namespace TabTranslator 
 {
     internal class Program
     {
