@@ -10,26 +10,29 @@ namespace TabTranslator
     {
         static void Main(string[] args)
         {
-            string path = "E:/Projects/Programming/CSharp/RaketeMentoring/Final project/TabTranslator/SongsterrFiles/SongJSON";
+            string path = "E:/Projects/Programming/CSharp/RaketeMentoring/FinalProject/TabTranslator/JSONFiles";
             //string json = File.ReadAllText(path);
             
             List<Measure> Measures = GetMeasure(path);
-            Console.WriteLine(Measures);
+            
 
 
         } 
-        public static List<Measure> GetMeasure(string dPath)
+        public static List<Measure> GetMeasure(string dPath) //getting this exception - Newtonsoft.Json.JsonSerializationException: 'Error converting value 1 to type 'TabTranslator.Voice[]'. Path 'voices', line 1, position 94848.':
         {
             List<Measure> Measures = new List<Measure>();
             DirectoryInfo dir = new DirectoryInfo(dPath);
             string[] fPaths = Directory.GetFiles(dPath);
+            string json = "";
+            int fileNum = fPaths.Count();
 
-            foreach (FileInfo flInfo in dir.GetFiles())
+            for (int i = 0; i < fileNum; i++)
             {
-                Measure measure = JsonConvert.DeserializeObject<Measure>(dPath);
+                json = File.ReadAllText(fPaths[i]);
+                Measure measure = JsonConvert.DeserializeObject<Measure>(json);
                 Measures.Add(measure);
             }
-            
+
             return Measures;
         }
     }
