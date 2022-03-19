@@ -10,15 +10,11 @@ namespace TabTranslator
     {
         static void Main(string[] args)
         {
-            string path = "E:/Projects/Programming/CSharp/RaketeMentoring/FinalProject/TabTranslator/JSONFiles";
-            //string json = File.ReadAllText(path);
-            
-            List<Measure> Measures = GetMeasure(path);
-            
-
+            string path = "E:/Projects/Programming/CSharp/RaketeMentoring/FinalProject/TabTranslator/JSONFiles";            
+            List<Measure> Measures = GetMeasure(path);            
 
         } 
-        public static List<Measure> GetMeasure(string dPath) //getting this exception - Newtonsoft.Json.JsonSerializationException: 'Error converting value 1 to type 'TabTranslator.Voice[]'. Path 'voices', line 1, position 94848.':
+        public static List<Measure> GetMeasure(string dPath) //getting this exception - Newtonsoft.Json.JsonSerializationException: 'Error converting value 1 to type 'TabTranslator.Voice[]'. Path 'voices', line 1, position 94848.': ArgumentException: Could not cast or convert from System.Int64 to TabTranslator.Voice[].
         {
             List<Measure> Measures = new List<Measure>();
             DirectoryInfo dir = new DirectoryInfo(dPath);
@@ -35,5 +31,6 @@ namespace TabTranslator
 
             return Measures;
         }
+
     }
 }
