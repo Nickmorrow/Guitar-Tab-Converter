@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TabTranslator
 {
-    class StringInstrument
+    public class StringInstrument
     {
         String Name;
         int FretCount;

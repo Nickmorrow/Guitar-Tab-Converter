@@ -9,7 +9,7 @@ using Newtonsoft.Json.Converters;
 
 namespace TabTranslator
 {
-    public partial class Welcome5
+    public partial class SongsterrSong
     {
         [JsonProperty("strings")]
         public long Strings { get; set; }
@@ -219,14 +219,14 @@ namespace TabTranslator
         public long Bpm { get; set; }
     }
 
-    public partial class Welcome5
+    public partial class SongsterrSong
     {
-        public static Welcome5 FromJson(string json) => JsonConvert.DeserializeObject<Welcome5>(json, TabTranslator.Converter.Settings);
+        public static SongsterrSong FromJson(string json) => JsonConvert.DeserializeObject<SongsterrSong>(json, TabTranslator.Converter.Settings);
     }
 
     public static class Serialize
     {
-        public static string ToJson(this Welcome5 self) => JsonConvert.SerializeObject(self, TabTranslator.Converter.Settings);
+        public static string ToJson(this SongsterrSong self) => JsonConvert.SerializeObject(self, TabTranslator.Converter.Settings);
     }
 
     internal static class Converter

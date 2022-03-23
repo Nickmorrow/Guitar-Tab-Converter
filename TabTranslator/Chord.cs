@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace TabTranslator
 {
-    public class FingerPosition
+    internal class Chord
     {
-        //RootNotes Note;
-        public long? StringNum;
-        public long? FretNr;
+        List<MusicalNote> notes;
+        int Duration16ths;
     }
 }
