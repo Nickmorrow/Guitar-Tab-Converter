@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace TabTranslator
 {
-    class MusicString
+    public class MusicString
     {
-        RootNotes Tuning;
-        int Octave;
+        public RootNotes Tuning;
+        //int Octave;
         
     }
 }

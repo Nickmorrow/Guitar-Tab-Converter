@@ -10,51 +10,45 @@ namespace TabTranslator
     {
         static void Main(string[] args)
         {
-            string path = "E:/Projects/Programming/CSharp/RaketeMentoring/FinalProject/TabTranslator/JSONFiles";
+            string path = @"..\..\..\..\JSONFiles";
             List<SongsterrSong> Songs = GetJsonSongs(path);
-            List<MusicalNote> songNotes = GetSongNotes(Songs[5]);
+            List<MusicalNote> songNotes = GetSongNotes(Songs[8]);
+
+            for (int i = 0; i < songNotes.Count; i++)
+            {
+
+                Console.WriteLine($"{songNotes[i].FingerPosition.StringNum.ToString()}{songNotes[i].FingerPosition.FretNr.ToString()}");
+            }
+            
+            
 
         } 
 
         public static List<MusicalNote> GetSongNotes(SongsterrSong song)
         {
-            MusicalNote note = new MusicalNote();
+            
             List <MusicalNote>notes = new List<MusicalNote>();
-            int measureNum = song.Measures.Count();
-            int voiceNum;
-            int beatNum;
-            int noteNum;
-            int durationNum;            
 
-            for (int i = 0; i < measureNum+1; i++)
+            for (int i = 0; i < song.Measures.Count(); i++)
             {
-                voiceNum = song.Measures[i].Voices.Count();
-
-                for (int j = 0; j < voiceNum+1; j++)
+                for (int j = 0; j < song.Measures[i].Voices.Count(); j++)
                 {
-                    beatNum = song.Measures[i].Voices[j].Beats.Count();
-
-                    for (int k = 0; k < beatNum+1; k++)
+                    for (int k = 0; k < song.Measures[i].Voices[j].Beats.Count(); k++)
                     {
-                        noteNum = song.Measures[i].Voices[j].Beats[k].Notes.Count();
-
-                        for (int l = 0; l < noteNum+1; l++)
+                        for (int l = 0; l < song.Measures[i].Voices[j].Beats[k].Notes.Count(); l++)
                         {
-                            durationNum = song.Measures[i].Voices[j].Beats[k].Duration.Count();
-
+                            MusicalNote note = new MusicalNote();
                             note.FingerPosition.StringNum = song.Measures[i].Voices[j].Beats[k].Notes[l].String;
                             note.FingerPosition.FretNr = song.Measures[i].Voices[j].Beats[k].Notes[l].Fret;
-                            note.SongsterrDuration = song.Measures[i].Voices[j].Beats[k].Duration[2];
+                            note.SongsterrDuration = song.Measures[i].Voices[j].Beats[k].Duration[1];
                             note.Duration16ths = MusicalNote.Get16ths(note.SongsterrDuration);
                             notes.Add(note);
                         }
-                        
                     }
                 }
             }
+
             return notes;
-
-
         }
 
         /// <summary>
