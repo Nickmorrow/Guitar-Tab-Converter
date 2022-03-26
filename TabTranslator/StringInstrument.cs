@@ -8,9 +8,9 @@ namespace TabTranslator
 {
     public class StringInstrument
     {
-        string Name;
-        int FretCount;
-        List<MusicString> MusicStrings;
+        public string Name;
+        public int FretCount;
+        public List<MusicString> MusicStrings;
     }
 
     
