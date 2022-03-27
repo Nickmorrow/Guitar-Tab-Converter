@@ -17,17 +17,17 @@ namespace TabTranslator
             MusicString GString0 = new MusicString();
             GString0.Tuning = RootNotes.E;
             MusicString GString1 = new MusicString();
-            GString1.Tuning = RootNotes.A;
+            GString1.Tuning = RootNotes.B;
             MusicString GString2 = new MusicString();
-            GString2.Tuning = RootNotes.D;
+            GString2.Tuning = RootNotes.G;
             MusicString GString3 = new MusicString();
-            GString3.Tuning = RootNotes.G;
+            GString3.Tuning = RootNotes.D;
             MusicString GString4 = new MusicString();
-            GString4.Tuning = RootNotes.B;
+            GString4.Tuning = RootNotes.A;
             MusicString GString5 = new MusicString();
             GString5.Tuning = RootNotes.E;
 
-            List<MusicString>StandardTunings = new List<MusicString>();
+            List<MusicString>StandardTunings = new List<MusicString>(); //string list is reverse of normal to match json data
             StandardTunings.Add(GString0);
             StandardTunings.Add(GString1);
             StandardTunings.Add(GString2);
@@ -44,7 +44,7 @@ namespace TabTranslator
 
             List<SongsterrSong> Songs = GetJsonSongs(path);
 
-            List<MusicalNote> songNotes = GetSongNotes(Songs[6], AcousticGuitar);
+            List<MusicalNote> songNotes = GetSongNotes(Songs[7], AcousticGuitar);
 
             for (int i = 0; i < songNotes.Count; i++)
             {

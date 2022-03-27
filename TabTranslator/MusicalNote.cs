@@ -26,69 +26,81 @@ namespace TabTranslator
             int fretNr = Convert.ToInt32(fingerPosition.FretNr);
             RootNotes endNote = new RootNotes();
 
-            List<RootNotes> rootNotes = new List<RootNotes>();
-            rootNotes.Add(RootNotes.C);
-            rootNotes.Add(RootNotes.Cs);
-            rootNotes.Add(RootNotes.D);
-            rootNotes.Add(RootNotes.Ds);
-            rootNotes.Add(RootNotes.E);
-            rootNotes.Add(RootNotes.F);
-            rootNotes.Add(RootNotes.Fs);
-            rootNotes.Add(RootNotes.G);
-            rootNotes.Add(RootNotes.Gs);
-            rootNotes.Add(RootNotes.A);
-            rootNotes.Add(RootNotes.As);
-            rootNotes.Add(RootNotes.B);
-            rootNotes.Add(RootNotes.C2);
-            rootNotes.Add(RootNotes.Cs2);
-            rootNotes.Add(RootNotes.D2);
-            rootNotes.Add(RootNotes.Ds2);
-            rootNotes.Add(RootNotes.E2);
-            rootNotes.Add(RootNotes.F2);
-            rootNotes.Add(RootNotes.Fs2);
-            rootNotes.Add(RootNotes.G2);
-            rootNotes.Add(RootNotes.Gs2);
-            rootNotes.Add(RootNotes.A2);
-            rootNotes.Add(RootNotes.As2);
-            rootNotes.Add(RootNotes.B2);
-            rootNotes.Add(RootNotes.C3);
-            rootNotes.Add(RootNotes.Cs3);
-            rootNotes.Add(RootNotes.D3);
-            rootNotes.Add(RootNotes.Ds3);
-            rootNotes.Add(RootNotes.E3);
-            rootNotes.Add(RootNotes.F3);
-            rootNotes.Add(RootNotes.Fs3);
-            rootNotes.Add(RootNotes.G3);
-            rootNotes.Add(RootNotes.Gs3);
-            rootNotes.Add(RootNotes.A3);
-            rootNotes.Add(RootNotes.As3);
-            rootNotes.Add(RootNotes.B3);
+            List<RootNotes> rootnotesOct1 = new List<RootNotes>();
+            rootnotesOct1.Add(RootNotes.C);
+            rootnotesOct1.Add(RootNotes.Cs);
+            rootnotesOct1.Add(RootNotes.D);
+            rootnotesOct1.Add(RootNotes.Ds);
+            rootnotesOct1.Add(RootNotes.E);
+            rootnotesOct1.Add(RootNotes.F);
+            rootnotesOct1.Add(RootNotes.Fs);
+            rootnotesOct1.Add(RootNotes.G);
+            rootnotesOct1.Add(RootNotes.Gs);
+            rootnotesOct1.Add(RootNotes.A);
+            rootnotesOct1.Add(RootNotes.As);
+            rootnotesOct1.Add(RootNotes.B);
 
-            if (musicString.Tuning == rootNotes[0])
+            List<RootNotes> rootnotesOct2 = new List<RootNotes>();
+            rootnotesOct2.Add(RootNotes.C2);
+            rootnotesOct2.Add(RootNotes.Cs2);
+            rootnotesOct2.Add(RootNotes.D2);
+            rootnotesOct2.Add(RootNotes.Ds2);
+            rootnotesOct2.Add(RootNotes.E2);
+            rootnotesOct2.Add(RootNotes.F2);
+            rootnotesOct2.Add(RootNotes.Fs2);
+            rootnotesOct2.Add(RootNotes.G2);
+            rootnotesOct2.Add(RootNotes.Gs2);
+            rootnotesOct2.Add(RootNotes.A2);
+            rootnotesOct2.Add(RootNotes.As2);
+            rootnotesOct2.Add(RootNotes.B2);
+
+            List<RootNotes> rootnotesOct3 = new List<RootNotes>();
+            rootnotesOct3.Add(RootNotes.C3);
+            rootnotesOct3.Add(RootNotes.Cs3);
+            rootnotesOct3.Add(RootNotes.D3);
+            rootnotesOct3.Add(RootNotes.Ds3);
+            rootnotesOct3.Add(RootNotes.E3);
+            rootnotesOct3.Add(RootNotes.F3);
+            rootnotesOct3.Add(RootNotes.Fs3);
+            rootnotesOct3.Add(RootNotes.G3);
+            rootnotesOct3.Add(RootNotes.Gs3);
+            rootnotesOct3.Add(RootNotes.A3);
+            rootnotesOct3.Add(RootNotes.As3);
+            rootnotesOct3.Add(RootNotes.B3);
+
+            if (musicString.Tuning == rootnotesOct1[0])
             {
-                endNote = rootNotes[fretNr];        
+                endNote = rootnotesOct1[fretNr];        
             }
             else
             {
+
                 List<RootNotes> removedNotes = new List<RootNotes>();
 
-                for (int i = 0; i < rootNotes.Count; i++)
+                for (int i = 0; i < rootnotesOct1.Count; i++)
                 {
-                    if (musicString.Tuning == rootNotes[i])
+                    if (musicString.Tuning == rootnotesOct1[i])
                     {
-                        s = Convert.ToInt32(rootNotes[i]);
+                        s = Convert.ToInt32(rootnotesOct1[i]);
+                        break;
                     }
+                    
                 }
                 for (int i = 0;i < s; i++)
                 {
-                    removedNotes.Add(rootNotes[i]);
+                    removedNotes.Add(rootnotesOct1[i]);
                 }
-                for (int i = 0; i < s; i++)
+                for (int i = 0; i < s; i++) //removing incorrect notes!!
                 {
-                    rootNotes.RemoveAt(i);
+                    rootnotesOct1.RemoveAt(0);
+
                 }
-                rootNotes.AddRange(removedNotes);
-                endNote = rootNotes[fretNr];
+                for (int i = 0;i < removedNotes.Count(); i++)
+                {
+                    rootnotesOct1.Add(removedNotes[i]);
+                }
+                //rootNotes.AddRange(removedNotes);
+                endNote = rootnotesOct1[fretNr];
             }
 
             return endNote;
