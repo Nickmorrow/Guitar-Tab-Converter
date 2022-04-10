@@ -49,12 +49,16 @@ namespace TabTranslator
             for (int i = 0; i < songNotes.Count; i++)
             {
 
-                Console.WriteLine($"{songNotes[i].FingerPosition.StringNum.ToString()}{songNotes[i].FingerPosition.FretNr.ToString()}{songNotes[i].RootNote.ToString()}");
+                Console.Write($"{songNotes[i].FingerPosition.StringNum.ToString()}{songNotes[i].FingerPosition.FretNr.ToString()}{songNotes[i].RootNote.ToString()}");
+                //Console.Write($"{songNotes[i].Octave.ToString()}");
+                //Console.Write($"{songNotes[i].Duration16ths.ToString()}");
             }
-            
-            
+
+
+
 
         } 
+
 
         public static List<MusicalNote> GetSongNotes(SongsterrSong song, StringInstrument stringInstrument)
         {
@@ -75,6 +79,7 @@ namespace TabTranslator
                             note.SongsterrDuration = song.Measures[i].Voices[j].Beats[k].Duration[1];
                             note.Duration16ths = MusicalNote.Get16ths(note.SongsterrDuration);
                             note.RootNote = MusicalNote.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
+                            note.Octave = MusicalNote.GetOctave(note.FingerPosition);
                             notes.Add(note);
                         }
                     }

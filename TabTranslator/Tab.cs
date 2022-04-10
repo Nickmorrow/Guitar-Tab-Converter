@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TabTranslator
 {
-    internal class Tab
+    public class Tab
     {
         string TitleOfSong;
         string Artist;
