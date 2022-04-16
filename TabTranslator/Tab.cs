@@ -8,13 +8,16 @@ namespace TabTranslator
 {
     public class Tab
     {
-        string TitleOfSong;
-        string Artist;
-        string Difficulty;
-        string Description;
-        string Lyrics;
-        StringInstrument Instrument;
-        List<MusicalNote> Notes;
-        List<FingerPosition> FingerPositions;
+        public string TitleOfSong;
+        public string Artist;
+        public string Difficulty;
+        public string Description;
+        public string Lyrics;
+
+
+        public static string GetNoteString(MusicalNote Note)
+        {
+            
+        }
     }
 }
