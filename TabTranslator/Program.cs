@@ -46,13 +46,24 @@ namespace TabTranslator
 
             List<MusicalNote> songNotes = GetSongNotes(Songs[7], AcousticGuitar);
 
-            for (int i = 0; i < songNotes.Count; i++)
-            {
+            // **TESTS**
 
-                Console.Write($"{songNotes[i].FingerPosition.StringNum.ToString()}{songNotes[i].FingerPosition.FretNr.ToString()}{songNotes[i].RootNote.ToString()}");
-                //Console.Write($"{songNotes[i].Octave.ToString()}");
-                //Console.Write($"{songNotes[i].Duration16ths.ToString()}");
-            }
+            List<List<string[]>> TabLines = Tab.GetTabLines(Songs[7], AcousticGuitar);
+            Console.WriteLine(TabLines);
+
+
+            //long vIn = Songs[6].Measures[1].Signature[0];
+            //string vOut = vIn.ToString();
+
+            //Console.WriteLine(vOut);
+
+            //for (int i = 0; i < songNotes.Count; i++)
+            //{
+
+            //    //Console.Write($"{songNotes[i].FingerPosition.StringNum.ToString()}{songNotes[i].FingerPosition.FretNr.ToString()}{songNotes[i].RootNote.ToString()}");
+            //    //Console.Write($"{songNotes[i].Octave.ToString()}");
+            //    //Console.Write($"{songNotes[i].Duration16ths.ToString()}");
+            //}
 
 
 
