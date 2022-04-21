@@ -48,8 +48,16 @@ namespace TabTranslator
 
             // **TESTS**
 
-            List<List<string[]>> TabLines = Tab.GetTabLines(Songs[7], AcousticGuitar);
-            Console.WriteLine(TabLines);
+            List<List<string>> TabLines = Tab.GetTabLines(Songs[7], AcousticGuitar);
+            for (int i = 0;i < TabLines.Count();i++)
+            {
+                for (int h = 0; h < TabLines.Measures.Count(); h++)
+                {
+                    Console.WriteLine(TabLines.Measures[h].ToString());
+                }
+            }
+            
+            
 
 
             //long vIn = Songs[6].Measures[1].Signature[0];

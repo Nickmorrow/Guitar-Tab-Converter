@@ -18,37 +18,33 @@ namespace TabTranslator
         //{
 
         //}
-        public static List <List<string[]>> GetTabLines(SongsterrSong Song, StringInstrument instrument)
+        public static List <List<string>> GetTabLines(SongsterrSong Song, StringInstrument instrument)
         {
 
             int TSigNum = 0;
+            string tuningString = "";
 
-            string[] MeasureStringAr; //Measure
-            List<string> MeasureDashes = new List<string>();
-            List<string[]> Measures = new List<string[]>(); //Measures per guitar string
-            List<List<string[]>> TabLines = new List<List<string[]>>(); //list of guitar strings measurelines
+            List<string> Measures = new List<string>(); //Measures per guitar string
+            List<List<string>> TabLines = new List<List<string>>(); //list of guitar strings measurelines
 
             foreach (MusicString Mstring in instrument.MusicStrings)
             {
                 TSigNum = Convert.ToInt32(Song.Measures[0].Signature[0]);
+                tuningString = Mstring.Tuning.ToString();
+                Measures.Add(tuningString); 
+
                 for (int i = 0; i < Song.Measures.Count(); i++)
                 {
-                    //if (Song.Measures[i].Signature[0] == null)
-                    //{
-                    //    TSigNum = TSigNum;
-                    //}
-                    //TSigNum = Convert.ToInt32(Song.Measures[i].Signature[0]);                   
-                     
-                    MeasureDashes.Add("|");
-                    for (i = 0; i < TSigNum;i++)
+                    String MeasureDashes = "";
+                    MeasureDashes += "|";
+                    for (int iDashCnt = 0; iDashCnt < TSigNum; iDashCnt++)
                     {
-                        MeasureDashes.Add("-");
-                        MeasureDashes.Add("-");
-                        MeasureDashes.Add("-");
-                        MeasureDashes.Add("-");
+                        MeasureDashes += "-";
+                        MeasureDashes += "-";
+                        MeasureDashes += "-";
+                        MeasureDashes += "-";
                     }
-                    MeasureStringAr = MeasureDashes.ToArray();
-                    Measures.Add(MeasureStringAr);
+                    Measures.Add(MeasureDashes);
                 }
                 TabLines.Add(Measures);
             }
