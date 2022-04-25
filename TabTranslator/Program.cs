@@ -35,29 +35,37 @@ namespace TabTranslator
             StandardTunings.Add(GString4);
             StandardTunings.Add(GString5);
 
-            StringInstrument AcousticGuitar = new StringInstrument();
+            StringInstrument SixStringGuitar = new StringInstrument();
 
-            AcousticGuitar.Name = "AcousticGuitar";
-            AcousticGuitar.FretCount = 30;
-            AcousticGuitar.MusicStrings = StandardTunings;
+            SixStringGuitar.Name = "AcousticGuitar";
+            SixStringGuitar.FretCount = 30;
+            SixStringGuitar.MusicStrings = StandardTunings;
             
 
             List<SongsterrSong> Songs = GetJsonSongs(path);
 
-            List<MusicalNote> songNotes = GetSongNotes(Songs[7], AcousticGuitar);
+            List<MusicalNote> songNotes = GetSongNotes(Songs[7], SixStringGuitar);
 
             // **TESTS**
 
-            List<List<string>> TabLines = Tab.GetTabLines(Songs[7], AcousticGuitar);
-            for (int i = 0;i < TabLines.Count();i++)
+            List<List<string>> TabLines = Tab.GetTabLines(Songs[7], SixStringGuitar);
+            List<string> Measures;
+
+    
+            for (int i = 0; i < TabLines.Count; i++)
             {
-                for (int h = 0; h < TabLines.Measures.Count(); h++)
-                {
-                    Console.WriteLine(TabLines.Measures[h].ToString());
-                }
+                Console.WriteLine(TabLines[i][i].ToString());
             }
-            
-            
+
+            //for (int i = 0; i < TabLines.Count; i++)
+            //{
+            //    for (int h = 0; h < TabLines.Measures.Count; h++)
+            //    {
+            //        Console.WriteLine(TabLines[h].ToString());
+            //    }
+            //}
+
+
 
 
             //long vIn = Songs[6].Measures[1].Signature[0];
