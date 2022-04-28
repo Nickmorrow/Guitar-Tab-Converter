@@ -49,19 +49,25 @@ namespace TabTranslator
             // **TESTS**
 
             List<List<string>> TabLines = Tab.GetTabLines(Songs[7], SixStringGuitar);
-            List<string> Measures;
 
-    
-            for (int i = 0; i < TabLines.Count; i++)
+
+            foreach (List<string> Measure in TabLines)
             {
-                Console.WriteLine(TabLines[i][i].ToString());
+                foreach (string MeasureDashes in Measure)
+                {
+                    Console.Write(MeasureDashes);
+                }
             }
 
             //for (int i = 0; i < TabLines.Count; i++)
             //{
-            //    for (int h = 0; h < TabLines.Measures.Count; h++)
+            //    List<string> Measures = TabLines[i];
+            //    int mCount = Measures.Count;
+
+
+            //    for (int h = 0; h < mCount; i++)
             //    {
-            //        Console.WriteLine(TabLines[h].ToString());
+            //        Console.WriteLine(TabLines[i][h].ToString());
             //    }
             //}
 
@@ -84,7 +90,7 @@ namespace TabTranslator
 
 
 
-        } 
+        }
 
 
         public static List<MusicalNote> GetSongNotes(SongsterrSong song, StringInstrument stringInstrument)
