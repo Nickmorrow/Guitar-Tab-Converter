@@ -75,7 +75,7 @@ namespace TabTranslator
 
                     for (int k = 0; k < dCount; k++)
                     {
-                        Console.WriteLine(dashes[k]);
+                        Console.Write(dashes[k]);
                     }
                 }
             }
@@ -89,44 +89,79 @@ namespace TabTranslator
             int noteCount;
             List<List<string>> Tab = new List<List<string>>();
 
-            for (int i = 0; i < stringCount; i++)
+            foreach (List<string> Measure in TabLines)
             {
-                List<string> Measures = TabLines[i];
-                int mCount = Measures.Count;
                 noteCount = 0;
-
-                for (int j = 0; j < mCount; j++)
+                foreach (string Dashes in Measure)
                 {
-                    string dashes = Measures[j];
-                    int dCount = dashes.Length;
-                    if (dCount == 1)
+                    if (Dashes.Length == 1)
                     {
-                        break;
+                        continue;
                     }
                     else
                     {
-                        for (int k = 0; k < dCount; k++)
+                        int dashCount = 0;
+                        foreach (char c in Dashes) //maybe try: if (c != "-" && c != "|")
                         {
-                            if (k == 0)
+                            if (dashCount == 0)
                             {
-                                dashes.Remove(k + 1);
-                                dashes.Insert(k + 1, Notes[noteCount].FingerPosition.FretNr.ToString());
-                                k = k + Convert.ToInt32(Notes[noteCount].Duration16ths);
-                                noteCount++;
+                                Dashes.Remove(dashCount+1);
+                                Dashes.Insert(dashCount+1, Notes[noteCount].FingerPosition.FretNr.ToString());
+                                dashCount = dashCount + Convert.ToInt32(Notes[noteCount].Duration16ths);
+                                noteCount++;                               
                             }
                             else
                             {
-                                dashes.Remove(k + 1);
-                                dashes.Insert(k + 1, Notes[noteCount].FingerPosition.FretNr.ToString());
-                                k = k + Convert.ToInt32(Notes[noteCount].Duration16ths);
+                                Dashes.Remove(dashCount);
+                                Dashes.Insert(dashCount, Notes[noteCount].FingerPosition.FretNr.ToString());
+                                dashCount = dashCount + Convert.ToInt32(Notes[noteCount].Duration16ths);
                                 noteCount++;
                             }
                         }
-                        Measures.Add(dashes);
+                        Measure.Add(Dashes);
                     }
                 }
-                Tab.Add(Measures);
+                Tab.Add(Measure);
             }
+
+            //for (int i = 0; i < stringCount; i++)
+            //{
+            //    List<string> Measures = TabLines[i];
+            //    int mCount = Measures.Count;
+            //    noteCount = 0;
+
+            //    for (int j = 0; j < mCount; j++)
+            //    {
+            //        string dashes = Measures[j];
+            //        int dCount = dashes.Length;
+            //        if (dCount == 0)
+            //        {
+            //            continue;
+            //        }
+            //        else
+            //        {
+            //            for (int k = 0; k < dCount; k++)
+            //            {
+            //                if (k == 0)
+            //                {
+            //                    dashes.Remove(k + 1);
+            //                    dashes.Insert(k + 1, Notes[noteCount].FingerPosition.FretNr.ToString());
+            //                    k = k + Convert.ToInt32(Notes[noteCount].Duration16ths);
+            //                    noteCount++;
+            //                }
+            //                else
+            //                {
+            //                    dashes.Remove(k + 1);
+            //                    dashes.Insert(k + 1, Notes[noteCount].FingerPosition.FretNr.ToString());
+            //                    k = k + Convert.ToInt32(Notes[noteCount].Duration16ths);
+            //                    noteCount++;
+            //                }
+            //            }
+            //            Measures.Add(dashes);
+            //        }
+            //    }
+            //    Tab.Add(Measures);
+            //}
             return Tab;     
         }
         /// <summary>
