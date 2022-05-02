@@ -49,50 +49,92 @@ namespace TabTranslator
             // **TESTS**
 
             List<List<string>> TabLines = Tab.GetTabLines(Songs[7], SixStringGuitar);
+            List < List<string> > FinalTab = GetTab(TabLines, songNotes);
 
 
-            foreach (List<string> Measure in TabLines)
+            //foreach (List<string> Measure in FinalTab)
+            //{
+            //    foreach (string Dashes in Measure)
+            //    {
+            //        Console.Write(Dashes);
+            //    }
+            //    Console.Write($"\n");
+            //}
+            //Console.ReadLine();
+
+            for (int i = 0; i < FinalTab.Count; i++)
             {
-                foreach (string MeasureDashes in Measure)
+                List<string> Measures = FinalTab[i];
+                int mCount = Measures.Count;
+
+
+                for (int h = 0; h < mCount; i++)
                 {
-                    Console.Write(MeasureDashes);
+                    string dashes = Measures[h];
+                    int dCount = dashes.Length;
+
+                    for (int k = 0; k < dCount; k++)
+                    {
+                        Console.WriteLine(dashes[k]);
+                    }
                 }
             }
 
-            //for (int i = 0; i < TabLines.Count; i++)
-            //{
-            //    List<string> Measures = TabLines[i];
-            //    int mCount = Measures.Count;
-
-
-            //    for (int h = 0; h < mCount; i++)
-            //    {
-            //        Console.WriteLine(TabLines[i][h].ToString());
-            //    }
-            //}
-
-
-
-
-            //long vIn = Songs[6].Measures[1].Signature[0];
-            //string vOut = vIn.ToString();
-
-            //Console.WriteLine(vOut);
-
-            //for (int i = 0; i < songNotes.Count; i++)
-            //{
-
-            //    //Console.Write($"{songNotes[i].FingerPosition.StringNum.ToString()}{songNotes[i].FingerPosition.FretNr.ToString()}{songNotes[i].RootNote.ToString()}");
-            //    //Console.Write($"{songNotes[i].Octave.ToString()}");
-            //    //Console.Write($"{songNotes[i].Duration16ths.ToString()}");
-            //}
-
-
-
 
         }
+        public static List<List<string>> GetTab(List<List<string>> TabLines, List<MusicalNote> Notes)
+        {
 
+            int stringCount = TabLines.Count;
+            int noteCount;
+            List<List<string>> Tab = new List<List<string>>();
 
+            for (int i = 0; i < stringCount; i++)
+            {
+                List<string> Measures = TabLines[i];
+                int mCount = Measures.Count;
+                noteCount = 0;
+
+                for (int j = 0; j < mCount; j++)
+                {
+                    string dashes = Measures[j];
+                    int dCount = dashes.Length;
+                    if (dCount == 1)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        for (int k = 0; k < dCount; k++)
+                        {
+                            if (k == 0)
+                            {
+                                dashes.Remove(k + 1);
+                                dashes.Insert(k + 1, Notes[noteCount].FingerPosition.FretNr.ToString());
+                                k = k + Convert.ToInt32(Notes[noteCount].Duration16ths);
+                                noteCount++;
+                            }
+                            else
+                            {
+                                dashes.Remove(k + 1);
+                                dashes.Insert(k + 1, Notes[noteCount].FingerPosition.FretNr.ToString());
+                                k = k + Convert.ToInt32(Notes[noteCount].Duration16ths);
+                                noteCount++;
+                            }
+                        }
+                        Measures.Add(dashes);
+                    }
+                }
+                Tab.Add(Measures);
+            }
+            return Tab;     
+        }
+        /// <summary>
+        /// Gets the notes, duration. and octave from songster json
+        /// </summary>
+        /// <param name="song"></param>
+        /// <param name="stringInstrument"></param>
+        /// <returns>list of MusicalNotes</returns>
         public static List<MusicalNote> GetSongNotes(SongsterrSong song, StringInstrument stringInstrument)
         {
             
