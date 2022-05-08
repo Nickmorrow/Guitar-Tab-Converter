@@ -4,14 +4,14 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace TabTranslator 
+namespace TabTranslator
 {
     internal class Program
     {
         static void Main(string[] args)
         {
             string path = @"..\..\..\..\JSONFiles";
-            
+
             //Defining instrument
 
             MusicString GString0 = new MusicString();
@@ -27,7 +27,7 @@ namespace TabTranslator
             MusicString GString5 = new MusicString();
             GString5.Tuning = RootNotes.E;
 
-            List<MusicString>StandardTunings = new List<MusicString>(); //string list is reverse of normal to match json data
+            List<MusicString> StandardTunings = new List<MusicString>(); //string list is reverse of normal to match json data
             StandardTunings.Add(GString0);
             StandardTunings.Add(GString1);
             StandardTunings.Add(GString2);
@@ -40,7 +40,7 @@ namespace TabTranslator
             SixStringGuitar.Name = "AcousticGuitar";
             SixStringGuitar.FretCount = 30;
             SixStringGuitar.MusicStrings = StandardTunings;
-            
+
 
             List<SongsterrSong> Songs = GetJsonSongs(path);
 
@@ -49,7 +49,7 @@ namespace TabTranslator
             // **TESTS**
 
             List<List<string>> TabLines = Tab.GetTabLines(Songs[7], SixStringGuitar);
-            List < List<string> > FinalTab = GetTab(TabLines, songNotes);
+            List<List<string>> FinalTab = GetTab(TabLines, songNotes);
 
 
             //foreach (List<string> Measure in FinalTab)
@@ -92,34 +92,33 @@ namespace TabTranslator
             foreach (List<string> Measure in TabLines)
             {
                 noteCount = 0;
-                foreach (string Dashes in Measure)
+                for (int dashIndex = 0; dashIndex < Measure.Count; dashIndex++)
                 {
-                    if (Dashes.Length == 1)
+                    if (Measure[dashIndex].Length == 1)
                     {
                         continue;
                     }
-                    else
+
+
+                    for (int dashCount = 0; dashCount < Measure[dashIndex].Length; dashCount++)
                     {
-                        int dashCount = 0;
-                        foreach (char c in Dashes) //maybe try: if (c != "-" && c != "|")
+                        if (dashCount == 0)
                         {
-                            if (dashCount == 0)
-                            {
-                                Dashes.Remove(dashCount+1);
-                                Dashes.Insert(dashCount+1, Notes[noteCount].FingerPosition.FretNr.ToString());
-                                dashCount = dashCount + Convert.ToInt32(Notes[noteCount].Duration16ths);
-                                noteCount++;                               
-                            }
-                            else
-                            {
-                                Dashes.Remove(dashCount);
-                                Dashes.Insert(dashCount, Notes[noteCount].FingerPosition.FretNr.ToString());
-                                dashCount = dashCount + Convert.ToInt32(Notes[noteCount].Duration16ths);
-                                noteCount++;
-                            }
+                            Measure[dashIndex] = Measure[dashIndex].Remove(1, 1);
+                            Measure[dashIndex] = Measure[dashIndex].Insert(1, Notes[noteCount].FingerPosition.FretNr.ToString());
+                            dashCount = Convert.ToInt32(Notes[noteCount].Duration16ths);
+                            noteCount++;
                         }
-                        Measure.Add(Dashes);
+                        else
+                        {
+                            Measure[dashIndex] = Measure[dashIndex].Remove(dashCount,1);
+                            Measure[dashIndex] = Measure[dashIndex].Insert(dashCount, Notes[noteCount].FingerPosition.FretNr.ToString());
+                            dashCount = dashCount + Convert.ToInt32(Notes[noteCount].Duration16ths)-1;
+                            noteCount++;
+                        }
                     }
+                    Measure.Add(Measure[dashIndex]);
+
                 }
                 Tab.Add(Measure);
             }
@@ -162,7 +161,7 @@ namespace TabTranslator
             //    }
             //    Tab.Add(Measures);
             //}
-            return Tab;     
+            return Tab;
         }
         /// <summary>
         /// Gets the notes, duration. and octave from songster json
@@ -172,8 +171,8 @@ namespace TabTranslator
         /// <returns>list of MusicalNotes</returns>
         public static List<MusicalNote> GetSongNotes(SongsterrSong song, StringInstrument stringInstrument)
         {
-            
-            List <MusicalNote>notes = new List<MusicalNote>();
+
+            List<MusicalNote> notes = new List<MusicalNote>();
 
             for (int i = 0; i < song.Measures.Count(); i++)
             {
@@ -204,7 +203,7 @@ namespace TabTranslator
         /// </summary>
         /// <param name="dPath"></param>
         /// <returns>List of objects</returns>
-        public static List<SongsterrSong> GetJsonSongs(string dPath) 
+        public static List<SongsterrSong> GetJsonSongs(string dPath)
         {
             List<SongsterrSong> Songs = new List<SongsterrSong>();
             DirectoryInfo dir = new DirectoryInfo(dPath);
