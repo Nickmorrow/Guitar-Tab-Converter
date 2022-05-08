@@ -99,7 +99,6 @@ namespace TabTranslator
                         continue;
                     }
 
-
                     for (int dashCount = 0; dashCount < Measure[dashIndex].Length; dashCount++)
                     {
                         if (dashCount == 0)
@@ -107,18 +106,17 @@ namespace TabTranslator
                             Measure[dashIndex] = Measure[dashIndex].Remove(1, 1);
                             Measure[dashIndex] = Measure[dashIndex].Insert(1, Notes[noteCount].FingerPosition.FretNr.ToString());
                             dashCount = Convert.ToInt32(Notes[noteCount].Duration16ths);
-                            noteCount++;
                         }
                         else
                         {
-                            Measure[dashIndex] = Measure[dashIndex].Remove(dashCount,1);
+                            Measure[dashIndex] = Measure[dashIndex].Remove(dashCount, 1);
                             Measure[dashIndex] = Measure[dashIndex].Insert(dashCount, Notes[noteCount].FingerPosition.FretNr.ToString());
-                            dashCount = dashCount + Convert.ToInt32(Notes[noteCount].Duration16ths)-1;
-                            noteCount++;
+                            dashCount = dashCount + Convert.ToInt32(Notes[noteCount].Duration16ths) - 1;
                         }
-                    }
-                    Measure.Add(Measure[dashIndex]);
 
+                        noteCount++;
+                    }
+                    Measure.Add(Measure[dashIndex]);  //?? need that 
                 }
                 Tab.Add(Measure);
             }
