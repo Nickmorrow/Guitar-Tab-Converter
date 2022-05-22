@@ -18,20 +18,20 @@ namespace TabTranslator
         //{
 
         //}
-        public static List <List<string>> GetTabLines(SongsterrSong Song, StringInstrument instrument)
+        public static List<List<string>> GetTabLines(SongsterrSong Song, StringInstrument instrument)
         {
 
             int TSigNum = 0;
             string tuningString = "";
 
-            List<string> Measures = new List<string>(); //Measures per guitar string
             List<List<string>> TabLines = new List<List<string>>(); //list of guitar strings measurelines
 
             foreach (MusicString Mstring in instrument.MusicStrings)
             {
+                List<string> Measures = new List<string>(); //Measures per guitar string
                 TSigNum = Convert.ToInt32(Song.Measures[0].Signature[0]);
                 tuningString = Mstring.Tuning.ToString();
-                Measures.Add(tuningString); 
+                Measures.Add(tuningString);
 
                 for (int i = 0; i < Song.Measures.Count(); i++)
                 {
