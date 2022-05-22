@@ -44,11 +44,11 @@ namespace TabTranslator
 
             List<SongsterrSong> Songs = GetJsonSongs(path);
 
-            List<MusicalNote> songNotes = GetSongNotes(Songs[7], SixStringGuitar);
+            List<MusicalNote> songNotes = GetSongNotes(Songs[8], SixStringGuitar);
 
             // **TESTS**
 
-            List<List<string>> TabLines = Tab.GetTabLines(Songs[7], SixStringGuitar);
+            List<List<string>> TabLines = Tab.GetTabLines(Songs[8], SixStringGuitar);
             List<List<string>> FinalTab = GetTab(TabLines, songNotes);
 
 
@@ -87,79 +87,36 @@ namespace TabTranslator
 
             int stringCount = TabLines.Count;
             int noteCount;
-            List<List<string>> Tab = new List<List<string>>();
+            List<List<string>> Tabs = new List<List<string>>();
 
-            foreach (List<string> Measure in TabLines)
+            foreach (List<string> TabLine in TabLines)
             {
                 noteCount = 0;
-                for (int dashIndex = 0; dashIndex < Measure.Count; dashIndex++)
+                for (int tabLineIndex = 0; tabLineIndex < TabLine.Count; tabLineIndex++)
                 {
-                    if (Measure[dashIndex].Length == 1)
+                    if (TabLine[tabLineIndex].Length == 1)
                     {
                         continue;
                     }
 
-                    for (int dashCount = 0; dashCount < Measure[dashIndex].Length; dashCount++)
+                    for (int dashCount = 1; dashCount < TabLine[tabLineIndex].Length; dashCount++)
                     {
-                        if (dashCount == 0)
+                        if (Notes[noteCount].FingerPosition.FretNr != null)
                         {
-                            Measure[dashIndex] = Measure[dashIndex].Remove(1, 1);
-                            Measure[dashIndex] = Measure[dashIndex].Insert(1, Notes[noteCount].FingerPosition.FretNr.ToString());
-                            dashCount = Convert.ToInt32(Notes[noteCount].Duration16ths);
+                            TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, 1);
+                            TabLine[tabLineIndex] = TabLine[tabLineIndex].Insert(dashCount, Notes[noteCount].FingerPosition.FretNr.ToString());
                         }
-                        else
-                        {
-                            Measure[dashIndex] = Measure[dashIndex].Remove(dashCount, 1);
-                            Measure[dashIndex] = Measure[dashIndex].Insert(dashCount, Notes[noteCount].FingerPosition.FretNr.ToString());
-                            dashCount = dashCount + Convert.ToInt32(Notes[noteCount].Duration16ths) - 1;
-                        }
+                        dashCount = dashCount + Convert.ToInt32(Notes[noteCount].Duration16ths) - 1;
 
                         noteCount++;
+
                     }
-                    Measure.Add(Measure[dashIndex]);  //?? need that 
+                    TabLine.Add(TabLine[tabLineIndex]);  //?? need that 
                 }
-                Tab.Add(Measure);
+                Tabs.Add(TabLine);
             }
 
-            //for (int i = 0; i < stringCount; i++)
-            //{
-            //    List<string> Measures = TabLines[i];
-            //    int mCount = Measures.Count;
-            //    noteCount = 0;
-
-            //    for (int j = 0; j < mCount; j++)
-            //    {
-            //        string dashes = Measures[j];
-            //        int dCount = dashes.Length;
-            //        if (dCount == 0)
-            //        {
-            //            continue;
-            //        }
-            //        else
-            //        {
-            //            for (int k = 0; k < dCount; k++)
-            //            {
-            //                if (k == 0)
-            //                {
-            //                    dashes.Remove(k + 1);
-            //                    dashes.Insert(k + 1, Notes[noteCount].FingerPosition.FretNr.ToString());
-            //                    k = k + Convert.ToInt32(Notes[noteCount].Duration16ths);
-            //                    noteCount++;
-            //                }
-            //                else
-            //                {
-            //                    dashes.Remove(k + 1);
-            //                    dashes.Insert(k + 1, Notes[noteCount].FingerPosition.FretNr.ToString());
-            //                    k = k + Convert.ToInt32(Notes[noteCount].Duration16ths);
-            //                    noteCount++;
-            //                }
-            //            }
-            //            Measures.Add(dashes);
-            //        }
-            //    }
-            //    Tab.Add(Measures);
-            //}
-            return Tab;
+            return Tabs;
         }
         /// <summary>
         /// Gets the notes, duration. and octave from songster json
