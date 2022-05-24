@@ -11,8 +11,11 @@ namespace TabTranslator
         public string TitleOfSong;
         public string Artist;
         public string Difficulty;
+        public StringInstrument Instrument;
+        public long Capo;
         public string Description;
         public string Lyrics;
+
 
         //public Tab GetTitle(SongsterrSong Song)
         //{

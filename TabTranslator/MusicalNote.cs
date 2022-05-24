@@ -12,8 +12,16 @@ namespace TabTranslator
         public int Octave;
         public long Duration16ths;
         public long SongsterrDuration;
+        public bool? NullableBool;
+        public bool IsRest;
         public FingerPosition FingerPosition = new FingerPosition();
 
+        public static bool GetRestNote(bool? NullableBool)
+        {
+            bool actualBool = NullableBool.GetValueOrDefault();
+            return actualBool;
+
+        }
         /// <summary>
         /// Gets duration of note
         /// </summary>

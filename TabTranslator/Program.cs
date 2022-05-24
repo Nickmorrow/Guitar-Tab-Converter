@@ -84,36 +84,36 @@ namespace TabTranslator
         }
         public static List<List<string>> GetTab(List<List<string>> TabLines, List<MusicalNote> Notes)
         {
-
-            int stringCount = TabLines.Count;
+            int tablinesCount = 0;
             int noteCount;
             List<List<string>> Tabs = new List<List<string>>();
 
             foreach (List<string> TabLine in TabLines)
             {
                 noteCount = 0;
-                for (int tabLineIndex = 0; tabLineIndex < TabLine.Count; tabLineIndex++)
+                for (int tabLineIndex = 1; tabLineIndex < TabLine.Count; tabLineIndex++)
                 {
-                    if (TabLine[tabLineIndex].Length == 1)
-                    {
-                        continue;
-                    }
-
+                    //if (TabLine[tabLineIndex].Length == 1)
+                    //{
+                    //    continue;
+                    //}
+                             
                     for (int dashCount = 1; dashCount < TabLine[tabLineIndex].Length; dashCount++)
                     {
-                        if (Notes[noteCount].FingerPosition.FretNr != null)
+                        if (Notes[noteCount].FingerPosition.FretNr != null && Notes[noteCount].FingerPosition.StringNum == tablinesCount)
                         {
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, 1);
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Insert(dashCount, Notes[noteCount].FingerPosition.FretNr.ToString());
                         }
+                        
                         dashCount = dashCount + Convert.ToInt32(Notes[noteCount].Duration16ths) - 1;
-
                         noteCount++;
 
                     }
                     TabLine.Add(TabLine[tabLineIndex]);  //?? need that 
                 }
                 Tabs.Add(TabLine);
+                tablinesCount++;
             }
 
             return Tabs;
@@ -144,6 +144,8 @@ namespace TabTranslator
                             note.Duration16ths = MusicalNote.Get16ths(note.SongsterrDuration);
                             note.RootNote = MusicalNote.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
                             note.Octave = MusicalNote.GetOctave(note.FingerPosition);
+                            note.NullableBool = song.Measures[i].Voices[j].Beats[k].Notes[l].Rest;
+                            note.IsRest = MusicalNote.GetRestNote(note.NullableBool);
                             notes.Add(note);
                         }
                     }
