@@ -52,33 +52,33 @@ namespace TabTranslator
             List<List<string>> FinalTab = GetTab(TabLines, songNotes);
 
 
-            //foreach (List<string> Measure in FinalTab)
-            //{
-            //    foreach (string Dashes in Measure)
-            //    {
-            //        Console.Write(Dashes);
-            //    }
-            //    Console.Write($"\n");
-            //}
-            //Console.ReadLine();
-
-            for (int i = 0; i < FinalTab.Count; i++)
+            foreach (List<string> Measure in FinalTab)
             {
-                List<string> Measures = FinalTab[i];
-                int mCount = Measures.Count;
-
-
-                for (int h = 0; h < mCount; i++)
+                foreach (string Dashes in Measure)
                 {
-                    string dashes = Measures[h];
-                    int dCount = dashes.Length;
-
-                    for (int k = 0; k < dCount; k++)
-                    {
-                        Console.Write(dashes[k]);
-                    }
+                    Console.Write(Dashes);
                 }
+                Console.Write($"\n");
             }
+            Console.ReadLine();
+
+            //for (int i = 0; i < FinalTab.Count; i++)
+            //{
+            //    List<string> Measures = FinalTab[i];
+            //    int mCount = Measures.Count;
+
+
+            //    for (int h = 0; h < mCount; i++)
+            //    {
+            //        string dashes = Measures[h];
+            //        int dCount = dashes.Length;
+
+            //        for (int k = 0; k < dCount; k++)
+            //        {
+            //            Console.Write(dashes[k]);
+            //        }
+            //    }
+            //}
 
 
         }
@@ -97,7 +97,7 @@ namespace TabTranslator
                     //{
                     //    continue;
                     //}
-                             
+
                     for (int dashCount = 1; dashCount < TabLine[tabLineIndex].Length; dashCount++)
                     {
                         if (Notes[noteCount].FingerPosition.FretNr != null && Notes[noteCount].FingerPosition.StringNum == tablinesCount)
@@ -110,7 +110,7 @@ namespace TabTranslator
                         noteCount++;
 
                     }
-                    TabLine.Add(TabLine[tabLineIndex]);  //?? need that 
+                    //TabLine.Add(TabLine[tabLineIndex]);  //?? need that 
                 }
                 Tabs.Add(TabLine);
                 tablinesCount++;
