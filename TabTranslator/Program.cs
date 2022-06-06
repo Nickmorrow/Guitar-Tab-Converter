@@ -52,36 +52,71 @@ namespace TabTranslator
             List<List<string>> FinalTab = GetTab(TabLines, songNotes);
 
 
-            foreach (List<string> Measure in FinalTab)
-            {
-                foreach (string Dashes in Measure)
-                {
-                    Console.Write(Dashes);
-                }
-                Console.Write($"\n");
-            }
-            Console.ReadLine();
+            //foreach (List<string> Tabline in FinalTab)
+            //{
+            //    foreach (string Measure in Tabline)
+            //    {
+            //        Console.Write(Measure);
+            //    }
+            //    Console.Write($"\n");
+            //}
+            //Console.ReadLine();
 
             //for (int i = 0; i < FinalTab.Count; i++)
             //{
-            //    List<string> Measures = FinalTab[i];
-            //    int mCount = Measures.Count;
+            //    List<string> tabLine = FinalTab[i];
+            //    int measureCount = tabLine.Count;
 
 
-            //    for (int h = 0; h < mCount; i++)
+            //    for (int h = 0; h < measureCount; h++)
             //    {
-            //        string dashes = Measures[h];
-            //        int dCount = dashes.Length;
+            //        string measure = tabLine[h];
+            //        int dashCount = measure.Length;
 
-            //        for (int k = 0; k < dCount; k++)
+            //        for (int k = 0; k < dashCount; k++)
             //        {
-            //            Console.Write(dashes[k]);
+            //            Console.Write(measure[k]);
             //        }
             //    }
+            //    Console.Write($"\n\n");
             //}
+
+            int tabsInLine = 10;
+            int tabsCount = 0;
+            int tabIndex = 0;
+            
+            for (int i = 0; i < FinalTab.Count; i++)
+            {
+                List<string> tabLine = FinalTab[i];
+                int measureCount = tabLine.Count;
+                tabsCount = 0;
+
+                for (int h = tabIndex; h < measureCount; h++)
+                {
+                    if (tabsCount < tabsInLine)
+                    {
+                        string measure = tabLine[h];
+                        int dashCount = measure.Length;
+
+                        for (int k = 0; k < dashCount; k++)
+                        {
+                            Console.Write(measure[k]);
+                        }
+                        tabIndex++;
+                        tabsCount++;
+                    }
+                }
+                Console.Write($"\n");
+            }
 
 
         }
+        /// <summary>
+        /// inserts songnotes fretnumbers into tab structure
+        /// </summary>
+        /// <param name="TabLines"></param>
+        /// <param name="Notes"></param>
+        /// <returns>List<List<string>> (final tab) </returns>
         public static List<List<string>> GetTab(List<List<string>> TabLines, List<MusicalNote> Notes)
         {
             int tablinesCount = 0;
@@ -93,14 +128,9 @@ namespace TabTranslator
                 noteCount = 0;
                 for (int tabLineIndex = 1; tabLineIndex < TabLine.Count; tabLineIndex++)
                 {
-                    //if (TabLine[tabLineIndex].Length == 1)
-                    //{
-                    //    continue;
-                    //}
-
                     for (int dashCount = 1; dashCount < TabLine[tabLineIndex].Length; dashCount++)
                     {
-                        if (Notes[noteCount].FingerPosition.FretNr != null && Notes[noteCount].FingerPosition.StringNum == tablinesCount)
+                         if (Notes[noteCount].FingerPosition.FretNr != null && Notes[noteCount].FingerPosition.StringNum == tablinesCount)
                         {
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, 1);
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Insert(dashCount, Notes[noteCount].FingerPosition.FretNr.ToString());
@@ -110,7 +140,6 @@ namespace TabTranslator
                         noteCount++;
 
                     }
-                    //TabLine.Add(TabLine[tabLineIndex]);  //?? need that 
                 }
                 Tabs.Add(TabLine);
                 tablinesCount++;
