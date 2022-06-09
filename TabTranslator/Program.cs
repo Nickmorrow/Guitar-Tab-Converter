@@ -44,11 +44,11 @@ namespace TabTranslator
 
             List<SongsterrSong> Songs = GetJsonSongs(path);
 
-            List<MusicalNote> songNotes = GetSongNotes(Songs[8], SixStringGuitar);
+            List<MusicalNote> songNotes = GetSongNotes(Songs[4], SixStringGuitar);
 
             // **TESTS**
 
-            List<List<string>> TabLines = Tab.GetTabLines(Songs[8], SixStringGuitar);
+            List<List<string>> TabLines = Tab.GetTabLines(Songs[4], SixStringGuitar);
             List<List<string>> FinalTab = GetTab(TabLines, songNotes);
 
 
@@ -62,38 +62,24 @@ namespace TabTranslator
             //}
             //Console.ReadLine();
 
-            //for (int i = 0; i < FinalTab.Count; i++)
-            //{
-            //    List<string> tabLine = FinalTab[i];
-            //    int measureCount = tabLine.Count;
-
-
-            //    for (int h = 0; h < measureCount; h++)
-            //    {
-            //        string measure = tabLine[h];
-            //        int dashCount = measure.Length;
-
-            //        for (int k = 0; k < dashCount; k++)
-            //        {
-            //            Console.Write(measure[k]);
-            //        }
-            //    }
-            //    Console.Write($"\n\n");
-            //}
-
-            int tabsInLine = 10;
-            int tabsCount = 0;
-            int tabIndex = 0;
+            List<string> tabOne = FinalTab[0];
+            int tabLength = tabOne.Count;
+            int measuresPerLine = 10;
+            int tabLineStartPoint = 0;
+            int tabLineEndPoint = measuresPerLine;
             
-            for (int i = 0; i < FinalTab.Count; i++)
-            {
-                List<string> tabLine = FinalTab[i];
-                int measureCount = tabLine.Count;
-                tabsCount = 0;
 
-                for (int h = tabIndex; h < measureCount; h++)
+
+            while (tabLineStartPoint < tabLength)
+            {
+                int remainingMeasures = tabLength - tabLineEndPoint;
+                for (int i = 0; i < FinalTab.Count; i++)
                 {
-                    if (tabsCount < tabsInLine)
+                    List<string> tabLine = FinalTab[i];
+                    //int measureCount = tabLine.Count;
+
+
+                    for (int h = tabLineStartPoint; h < tabLineEndPoint; h++)
                     {
                         string measure = tabLine[h];
                         int dashCount = measure.Length;
@@ -102,12 +88,48 @@ namespace TabTranslator
                         {
                             Console.Write(measure[k]);
                         }
-                        tabIndex++;
-                        tabsCount++;
                     }
+                    Console.Write($"\n");
+                }
+                tabLineStartPoint += 10;
+                if (remainingMeasures >= 10)
+                {
+                    tabLineEndPoint += 10;
+                }
+                else
+                {
+                    tabLineEndPoint = tabLength;
                 }
                 Console.Write($"\n");
             }
+
+            //int tabsInLine = 10;
+            //int tabsCount = 0;
+            //int tabIndex = 0;
+
+            //for (int i = 0; i < FinalTab.Count; i++)
+            //{
+            //    List<string> tabLine = FinalTab[i];
+            //    int measureCount = tabLine.Count;
+            //    tabsCount = 0;
+
+            //    for (int h = tabIndex; h < measureCount; h++)
+            //    {
+            //        if (tabsCount < tabsInLine)
+            //        {
+            //            string measure = tabLine[h];
+            //            int dashCount = measure.Length;
+
+            //            for (int k = 0; k < dashCount; k++)
+            //            {
+            //                Console.Write(measure[k]);
+            //            }
+            //            tabIndex++;
+            //            tabsCount++;
+            //        }
+            //    }
+            //    Console.Write($"\n");
+            //}
 
 
         }
