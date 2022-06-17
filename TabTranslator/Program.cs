@@ -44,12 +44,12 @@ namespace TabTranslator
 
             List<SongsterrSong> Songs = GetJsonSongs(path);
 
-            List<MusicalNote> songNotes = GetSongNotes(Songs[4], SixStringGuitar);
+            List<MusicalNote> songNotes = GetSongNotes(Songs[3], SixStringGuitar);
 
             // **TESTS**
 
-            List<List<string>> TabLines = Tab.GetTabLines(Songs[4], SixStringGuitar);
-            List<List<string>> FinalTab = GetTab(TabLines, songNotes);
+            List<List<string>> TabLines = Tab.GetTabLines(Songs[3], SixStringGuitar);
+            FillTablines(TabLines, songNotes);
 
 
             //foreach (List<string> Tabline in FinalTab)
@@ -62,23 +62,18 @@ namespace TabTranslator
             //}
             //Console.ReadLine();
 
-            List<string> tabOne = FinalTab[0];
+            List<string> tabOne = TabLines[0];
             int tabLength = tabOne.Count;
             int measuresPerLine = 10;
             int tabLineStartPoint = 0;
             int tabLineEndPoint = measuresPerLine;
-            
-
 
             while (tabLineStartPoint < tabLength)
             {
                 int remainingMeasures = tabLength - tabLineEndPoint;
-                for (int i = 0; i < FinalTab.Count; i++)
+                for (int i = 0; i < TabLines.Count; i++)
                 {
-                    List<string> tabLine = FinalTab[i];
-                    //int measureCount = tabLine.Count;
-
-
+                    List<string> tabLine = TabLines[i];
                     for (int h = tabLineStartPoint; h < tabLineEndPoint; h++)
                     {
                         string measure = tabLine[h];
@@ -90,6 +85,7 @@ namespace TabTranslator
                         }
                     }
                     Console.Write($"\n");
+             //       File.AppendAllText(@"c:\test.txt", "lol");
                 }
                 tabLineStartPoint += 10;
                 if (remainingMeasures >= 10)
@@ -103,33 +99,6 @@ namespace TabTranslator
                 Console.Write($"\n");
             }
 
-            //int tabsInLine = 10;
-            //int tabsCount = 0;
-            //int tabIndex = 0;
-
-            //for (int i = 0; i < FinalTab.Count; i++)
-            //{
-            //    List<string> tabLine = FinalTab[i];
-            //    int measureCount = tabLine.Count;
-            //    tabsCount = 0;
-
-            //    for (int h = tabIndex; h < measureCount; h++)
-            //    {
-            //        if (tabsCount < tabsInLine)
-            //        {
-            //            string measure = tabLine[h];
-            //            int dashCount = measure.Length;
-
-            //            for (int k = 0; k < dashCount; k++)
-            //            {
-            //                Console.Write(measure[k]);
-            //            }
-            //            tabIndex++;
-            //            tabsCount++;
-            //        }
-            //    }
-            //    Console.Write($"\n");
-            //}
 
 
         }
@@ -139,11 +108,11 @@ namespace TabTranslator
         /// <param name="TabLines"></param>
         /// <param name="Notes"></param>
         /// <returns>List<List<string>> (final tab) </returns>
-        public static List<List<string>> GetTab(List<List<string>> TabLines, List<MusicalNote> Notes)
+        public static void FillTablines(List<List<string>> TabLines, List<MusicalNote> Notes)
         {
             int tablinesCount = 0;
             int noteCount;
-            List<List<string>> Tabs = new List<List<string>>();
+        //    List<List<string>> Tabs = new List<List<string>>();
 
             foreach (List<string> TabLine in TabLines)
             {
@@ -152,22 +121,22 @@ namespace TabTranslator
                 {
                     for (int dashCount = 1; dashCount < TabLine[tabLineIndex].Length; dashCount++)
                     {
-                         if (Notes[noteCount].FingerPosition.FretNr != null && Notes[noteCount].FingerPosition.StringNum == tablinesCount)
+                        if (Notes[noteCount].FingerPosition.FretNr != null && Notes[noteCount].FingerPosition.StringNum == tablinesCount)
                         {
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, 1);
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Insert(dashCount, Notes[noteCount].FingerPosition.FretNr.ToString());
                         }
-                        
+
                         dashCount = dashCount + Convert.ToInt32(Notes[noteCount].Duration16ths) - 1;
                         noteCount++;
 
                     }
                 }
-                Tabs.Add(TabLine);
+           //     Tabs.Add(TabLine);
                 tablinesCount++;
             }
 
-            return Tabs;
+          //  return Tabs;
         }
         /// <summary>
         /// Gets the notes, duration. and octave from songster json
