@@ -119,8 +119,11 @@ namespace TabTranslator
                 noteCount = 0;
                 for (int tabLineIndex = 1; tabLineIndex < TabLine.Count; tabLineIndex++)  //for each (output) measure
                 {
-                    for (int dashCount = 1; dashCount < TabLine[tabLineIndex].Length; dashCount++)
+                    for (int dashCount = 1; dashCount < TabLine[tabLineIndex].Length; /*dashCount++*/)
                     {
+                        if (noteCount >= Notes.Count - 1)
+                            break;
+
                         var currentNote = Notes[noteCount];
 
                         if (currentNote.FingerPosition.FretNr != null && currentNote.FingerPosition.StringNum == tablinesCount)
@@ -128,11 +131,13 @@ namespace TabTranslator
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, 1);
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Insert(dashCount, currentNote.FingerPosition.FretNr.ToString());
                             dashCount = dashCount + Convert.ToInt32(currentNote.Duration16ths) - 1;
+                            dashCount++;
                         }
 
                         if (currentNote.IsRest)
                         {
                             dashCount = dashCount + Convert.ToInt32(currentNote.Duration16ths) - 1;
+                            dashCount++;
                         }
 
                         noteCount++;
