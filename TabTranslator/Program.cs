@@ -85,7 +85,7 @@ namespace TabTranslator
                         }
                     }
                     Console.Write($"\n");
-             //       File.AppendAllText(@"c:\test.txt", "lol");
+                    //       File.AppendAllText(@"c:\test.txt", "lol");
                 }
                 tabLineStartPoint += 10;
                 if (remainingMeasures >= 10)
@@ -112,31 +112,39 @@ namespace TabTranslator
         {
             int tablinesCount = 0;
             int noteCount;
-        //    List<List<string>> Tabs = new List<List<string>>();
+            //    List<List<string>> Tabs = new List<List<string>>();
 
             foreach (List<string> TabLine in TabLines)
             {
                 noteCount = 0;
-                for (int tabLineIndex = 1; tabLineIndex < TabLine.Count; tabLineIndex++)
+                for (int tabLineIndex = 1; tabLineIndex < TabLine.Count; tabLineIndex++)  //for each (output) measure
                 {
                     for (int dashCount = 1; dashCount < TabLine[tabLineIndex].Length; dashCount++)
                     {
-                        if (Notes[noteCount].FingerPosition.FretNr != null && Notes[noteCount].FingerPosition.StringNum == tablinesCount)
+                        var currentNote = Notes[noteCount];
+
+                        if (currentNote.FingerPosition.FretNr != null && currentNote.FingerPosition.StringNum == tablinesCount)
                         {
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, 1);
-                            TabLine[tabLineIndex] = TabLine[tabLineIndex].Insert(dashCount, Notes[noteCount].FingerPosition.FretNr.ToString());
+                            TabLine[tabLineIndex] = TabLine[tabLineIndex].Insert(dashCount, currentNote.FingerPosition.FretNr.ToString());
+                            dashCount = dashCount + Convert.ToInt32(currentNote.Duration16ths) - 1;
                         }
 
-                        dashCount = dashCount + Convert.ToInt32(Notes[noteCount].Duration16ths) - 1;
+                        if (currentNote.IsRest)
+                        {
+                            dashCount = dashCount + Convert.ToInt32(currentNote.Duration16ths) - 1;
+                        }
+
                         noteCount++;
+
 
                     }
                 }
-           //     Tabs.Add(TabLine);
+                //     Tabs.Add(TabLine);
                 tablinesCount++;
             }
 
-          //  return Tabs;
+            //  return Tabs;
         }
         /// <summary>
         /// Gets the notes, duration. and octave from songster json

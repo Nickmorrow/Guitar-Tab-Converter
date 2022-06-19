@@ -132,6 +132,10 @@ namespace TabTranslator
             return endNote;
         }
 
+        public override string ToString()
+        {
+            return $"{RootNote} - FPos: {FingerPosition?.FretNr}/{FingerPosition?.StringNum} Dur: {Duration16ths}";
+        }
     }
 
     
