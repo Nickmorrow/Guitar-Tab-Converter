@@ -107,49 +107,40 @@ namespace TabTranslator
         /// </summary>
         /// <param name="TabLines"></param>
         /// <param name="Notes"></param>
-        /// <returns>List<List<string>> (final tab) </returns>
         public static void FillTablines(List<List<string>> TabLines, List<MusicalNote> Notes)
         {
-            int tablinesCount = 0;
-            int noteCount;
-            //    List<List<string>> Tabs = new List<List<string>>();
-
-            foreach (List<string> TabLine in TabLines)
+            for (int idxTabLine = 0; idxTabLine < TabLines.Count; idxTabLine++)
             {
-                noteCount = 0;
+                List<string> TabLine = TabLines[idxTabLine];
+                int noteCount = 0;
                 for (int tabLineIndex = 1; tabLineIndex < TabLine.Count; tabLineIndex++)  //for each (output) measure
                 {
-                    for (int dashCount = 1; dashCount < TabLine[tabLineIndex].Length; /*dashCount++*/)
+                    int dashCount = 1;
+                    while (dashCount < TabLine[tabLineIndex].Length)
                     {
+                        // break if current noteCount exceeds actual count -> should not happen
                         if (noteCount >= Notes.Count - 1)
+                        {
                             break;
+                        }
 
+                        // replace parts with current FretNr or skip if is rest
                         var currentNote = Notes[noteCount];
-
-                        if (currentNote.FingerPosition.FretNr != null && currentNote.FingerPosition.StringNum == tablinesCount)
+                        if (currentNote.FingerPosition.FretNr != null && currentNote.FingerPosition.StringNum == idxTabLine)
                         {
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, 1);
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Insert(dashCount, currentNote.FingerPosition.FretNr.ToString());
-                            dashCount = dashCount + Convert.ToInt32(currentNote.Duration16ths) - 1;
-                            dashCount++;
+                            dashCount += Convert.ToInt32(currentNote.Duration16ths);
                         }
-
-                        if (currentNote.IsRest)
+                        else if (currentNote.IsRest)
                         {
-                            dashCount = dashCount + Convert.ToInt32(currentNote.Duration16ths) - 1;
-                            dashCount++;
+                            dashCount += Convert.ToInt32(currentNote.Duration16ths);
                         }
 
                         noteCount++;
-
-
                     }
                 }
-                //     Tabs.Add(TabLine);
-                tablinesCount++;
             }
-
-            //  return Tabs;
         }
         /// <summary>
         /// Gets the notes, duration. and octave from songster json
