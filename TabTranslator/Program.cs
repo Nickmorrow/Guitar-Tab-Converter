@@ -44,12 +44,12 @@ namespace TabTranslator
 
             List<SongsterrSong> Songs = GetJsonSongs(path);
 
-            List<MusicalNote> songNotes = GetSongNotes(Songs[3], SixStringGuitar);
+            List<MusicalNote> songNotes = GetSongNotes(Songs[7], SixStringGuitar);
 
             // **TESTS**
 
-            List<List<string>> TabLines = Tab.GetTabLines(Songs[3], SixStringGuitar);
-            FillTablines(TabLines, songNotes);
+            List<List<string>> TabLines = Tab.GetTabLines(Songs[7], SixStringGuitar);
+            FillTablines(TabLines, songNotes, Songs[7]);
 
 
             //foreach (List<string> Tabline in FinalTab)
@@ -107,7 +107,7 @@ namespace TabTranslator
         /// </summary>
         /// <param name="TabLines"></param>
         /// <param name="Notes"></param>
-        public static void FillTablines(List<List<string>> TabLines, List<MusicalNote> Notes)
+        public static void FillTablines(List<List<string>> TabLines, List<MusicalNote> Notes, SongsterrSong Song)
         {
             for (int idxTabLine = 0; idxTabLine < TabLines.Count; idxTabLine++)
             {
@@ -115,9 +115,10 @@ namespace TabTranslator
                 int noteCount = 0;
                 for (int tabLineIndex = 1; tabLineIndex < TabLine.Count; tabLineIndex++)  //for each (output) measure
                 {
+                    int noteCountInMeasure = 0;
                     int dashCount = 1;
                     while (dashCount < TabLine[tabLineIndex].Length)
-                    {
+                    {                      
                         // break if current noteCount exceeds actual count -> should not happen
                         if (noteCount >= Notes.Count - 1)
                         {
@@ -126,6 +127,10 @@ namespace TabTranslator
 
                         // replace parts with current FretNr or skip if is rest
                         var currentNote = Notes[noteCount];
+                        if (currentNote.NoteNumInMeasure > noteCountInMeasure)
+                        {
+                            break;
+                        }
                         if (currentNote.FingerPosition.FretNr != null && currentNote.FingerPosition.StringNum == idxTabLine)
                         {
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, 1);
@@ -170,6 +175,8 @@ namespace TabTranslator
                             note.Octave = MusicalNote.GetOctave(note.FingerPosition);
                             note.NullableBool = song.Measures[i].Voices[j].Beats[k].Notes[l].Rest;
                             note.IsRest = MusicalNote.GetRestNote(note.NullableBool);
+                            //note.MeasureNum = Convert.ToInt32(song.Measures[i]);
+                            note.NoteNumInMeasure = Convert.ToInt32(song.Measures[i].Voices[j].Beats[k].Notes[l]);
                             notes.Add(note);
                         }
                     }
