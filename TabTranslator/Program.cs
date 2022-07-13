@@ -115,7 +115,6 @@ namespace TabTranslator
                 int noteCount = 0;
                 for (int tabLineIndex = 1; tabLineIndex < TabLine.Count; tabLineIndex++)  //for each (output) measure
                 {
-                    int noteCountInMeasure = 0;
                     int dashCount = 1;
                     while (dashCount < TabLine[tabLineIndex].Length)
                     {                      
@@ -127,7 +126,7 @@ namespace TabTranslator
 
                         // replace parts with current FretNr or skip if is rest
                         var currentNote = Notes[noteCount];
-                        if (currentNote.NoteNumInMeasure > noteCountInMeasure)
+                        if (currentNote.MeasureNum != tabLineIndex)
                         {
                             break;
                         }
@@ -157,9 +156,10 @@ namespace TabTranslator
         {
 
             List<MusicalNote> notes = new List<MusicalNote>();
-
+            int measureCounter = 0;
             for (int i = 0; i < song.Measures.Count(); i++)
             {
+                measureCounter++;
                 for (int j = 0; j < song.Measures[i].Voices.Count(); j++)
                 {
                     for (int k = 0; k < song.Measures[i].Voices[j].Beats.Count(); k++)
@@ -175,8 +175,7 @@ namespace TabTranslator
                             note.Octave = MusicalNote.GetOctave(note.FingerPosition);
                             note.NullableBool = song.Measures[i].Voices[j].Beats[k].Notes[l].Rest;
                             note.IsRest = MusicalNote.GetRestNote(note.NullableBool);
-                            //note.MeasureNum = Convert.ToInt32(song.Measures[i]);
-                            note.NoteNumInMeasure = Convert.ToInt32(song.Measures[i].Voices[j].Beats[k].Notes[l]);
+                            note.MeasureNum = measureCounter;
                             notes.Add(note);
                         }
                     }
