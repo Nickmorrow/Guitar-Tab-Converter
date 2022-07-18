@@ -126,10 +126,12 @@ namespace TabTranslator
 
                         // replace parts with current FretNr or skip if is rest
                         var currentNote = Notes[noteCount];
-                        if (currentNote.MeasureNum != tabLineIndex)
-                        {
-                            break;
-                        }
+
+                        // checks if note is in measure, skips if not
+                        //if (currentNote.MeasureNum != tabLineIndex)
+                        //{
+                        //    break;
+                        //}
                         if (currentNote.FingerPosition.FretNr != null && currentNote.FingerPosition.StringNum == idxTabLine)
                         {
                             TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, 1);
@@ -156,26 +158,29 @@ namespace TabTranslator
         {
 
             List<MusicalNote> notes = new List<MusicalNote>();
-            int measureCounter = 0;
-            for (int i = 0; i < song.Measures.Count(); i++)
+            //int measureCounter = 0;
+            for (int measureNum = 0; measureNum < song.Measures.Count(); measureNum++)
             {
-                measureCounter++;
-                for (int j = 0; j < song.Measures[i].Voices.Count(); j++)
+                //measureCounter++;
+                //int beatCounter = 0;
+                for (int j = 0; j < song.Measures[measureNum].Voices.Count(); j++)
                 {
-                    for (int k = 0; k < song.Measures[i].Voices[j].Beats.Count(); k++)
+                    for (int beatNum = 0; beatNum < song.Measures[measureNum].Voices[j].Beats.Count(); beatNum++)
                     {
-                        for (int l = 0; l < song.Measures[i].Voices[j].Beats[k].Notes.Count(); l++)
+                        //beatCounter++;
+                        for (int l = 0; l < song.Measures[measureNum].Voices[j].Beats[beatNum].Notes.Count(); l++)
                         {
                             MusicalNote note = new MusicalNote();
-                            note.FingerPosition.StringNum = song.Measures[i].Voices[j].Beats[k].Notes[l].String;
-                            note.FingerPosition.FretNr = song.Measures[i].Voices[j].Beats[k].Notes[l].Fret;
-                            note.SongsterrDuration = song.Measures[i].Voices[j].Beats[k].Duration[1];
+                            note.FingerPosition.StringNum = song.Measures[measureNum].Voices[j].Beats[beatNum].Notes[l].String;
+                            note.FingerPosition.FretNr = song.Measures[measureNum].Voices[j].Beats[beatNum].Notes[l].Fret;
+                            note.SongsterrDuration = song.Measures[measureNum].Voices[j].Beats[beatNum].Duration[1];
                             note.Duration16ths = MusicalNote.Get16ths(note.SongsterrDuration);
                             note.RootNote = MusicalNote.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
                             note.Octave = MusicalNote.GetOctave(note.FingerPosition);
-                            note.NullableBool = song.Measures[i].Voices[j].Beats[k].Notes[l].Rest;
+                            note.NullableBool = song.Measures[measureNum].Voices[j].Beats[beatNum].Notes[l].Rest;
                             note.IsRest = MusicalNote.GetRestNote(note.NullableBool);
-                            note.MeasureNum = measureCounter;
+                            //note.MeasureNum = measureCounter;
+                            note.BeatNum = beatNum;
                             notes.Add(note);
                         }
                     }
