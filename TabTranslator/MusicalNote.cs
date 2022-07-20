@@ -14,8 +14,6 @@ namespace TabTranslator
         public long SongsterrDuration;
         public bool? NullableBool;
         public bool IsRest;
-        //public int MeasureNum;
-        public int BeatNum;
         public FingerPosition FingerPosition = new FingerPosition();
 
         public static bool GetRestNote(bool? NullableBool)

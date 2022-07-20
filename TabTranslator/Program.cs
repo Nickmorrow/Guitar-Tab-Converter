@@ -41,39 +41,27 @@ namespace TabTranslator
             SixStringGuitar.FretCount = 30;
             SixStringGuitar.MusicStrings = StandardTunings;
 
-
             List<SongsterrSong> Songs = GetJsonSongs(path);
-
-            List<MusicalBeat> songBeats = GetSongBeats(Songs[7], SixStringGuitar);
+            List<MusicalBeat> songBeats = GetSongBeats(Songs[4], SixStringGuitar);
 
             // **TESTS**
 
-            List<List<string>> TabLines = Tab.GetTabLines(Songs[7], SixStringGuitar);
-            FillTablines(TabLines, songBeats, Songs[7]);
+            var tab = new Tab(Songs[4], SixStringGuitar, songBeats);
 
-
-            //foreach (List<string> Tabline in FinalTab)
-            //{
-            //    foreach (string Measure in Tabline)
-            //    {
-            //        Console.Write(Measure);
-            //    }
-            //    Console.Write($"\n");
-            //}
-            //Console.ReadLine();
-
-            List<string> tabOne = TabLines[0];
+            List<string> tabOne = tab.TabLines[0];
             int tabLength = tabOne.Count;
             int measuresPerLine = 10;
             int tabLineStartPoint = 0;
             int tabLineEndPoint = measuresPerLine;
 
+            Console.WriteLine();
+
             while (tabLineStartPoint < tabLength)
             {
                 int remainingMeasures = tabLength - tabLineEndPoint;
-                for (int i = 0; i < TabLines.Count; i++)
+                for (int i = 0; i < tab.TabLines.Count; i++)
                 {
-                    List<string> tabLine = TabLines[i];
+                    List<string> tabLine = tab.TabLines[i];
                     for (int h = tabLineStartPoint; h < tabLineEndPoint; h++)
                     {
                         string measure = tabLine[h];
@@ -97,54 +85,6 @@ namespace TabTranslator
                     tabLineEndPoint = tabLength;
                 }
                 Console.Write($"\n");
-            }
-
-
-
-        }
-        /// <summary>
-        /// inserts songnotes fretnumbers into tab structure
-        /// </summary>
-        /// <param name="TabLines"></param>
-        /// <param name="Beats"></param>
-        public static void FillTablines(List<List<string>> TabLines, List<MusicalBeat> Beats, SongsterrSong Song)
-        {
-            for (int idxTabLine = 0; idxTabLine < TabLines.Count; idxTabLine++)
-            {
-                List<string> TabLine = TabLines[idxTabLine];
-                int beatCount = 0;
-                for (int tabLineIndex = 1; tabLineIndex < TabLine.Count; tabLineIndex++)  //for each (output) measure
-                {
-                    int dashCount = 1;
-                    while (dashCount < TabLine[tabLineIndex].Length)
-                    {                      
-                        // break if current noteCount exceeds actual count -> should not happen
-                        if (beatCount >= Beats.Count - 1)
-                        {
-                            break;
-                        }
-
-                        // replace parts with current FretNr or skip if is rest
-                        var currentBeat = Beats[beatCount];
-
-                        for (int noteCount = 0; noteCount < currentBeat.MusicalNotes.Count; noteCount++)
-                        {
-                            var currentNote = currentBeat.MusicalNotes[noteCount];
-                            if (currentNote.FingerPosition.FretNr != null && currentNote.FingerPosition.StringNum == idxTabLine)
-                            {
-                                TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, 1);
-                                TabLine[tabLineIndex] = TabLine[tabLineIndex].Insert(dashCount, currentNote.FingerPosition.FretNr.ToString());
-                                //dashCount += Convert.ToInt32(currentBeat.Duration16ths);
-                            }
-                        }
-                        //if (currentBeat.IsRest)
-                        //{
-                        //    dashCount += Convert.ToInt32(currentBeat.Duration16ths);
-                        //}
-                        dashCount += Convert.ToInt32(currentBeat.Duration16ths);
-                        beatCount++;
-                    }
-                }
             }
         }
         /// <summary>
@@ -176,7 +116,7 @@ namespace TabTranslator
                         {
                             MusicalNote note = new MusicalNote();
                             note.FingerPosition.StringNum = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String;
-                            note.FingerPosition.FretNr = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret;                          
+                            note.FingerPosition.FretNr = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret;
                             note.RootNote = MusicalNote.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
                             note.Octave = MusicalNote.GetOctave(note.FingerPosition);
                             note.NullableBool = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
@@ -214,6 +154,7 @@ namespace TabTranslator
 
             return Songs;
         }
+
 
     }
 }
