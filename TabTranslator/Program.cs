@@ -27,26 +27,26 @@ namespace TabTranslator
             MusicString GString5 = new MusicString();
             GString5.Tuning = RootNotes.E;
 
-            List<MusicString> StandardTunings = new List<MusicString>(); //string list is reverse of normal to match json data
-            StandardTunings.Add(GString0);
-            StandardTunings.Add(GString1);
-            StandardTunings.Add(GString2);
-            StandardTunings.Add(GString3);
-            StandardTunings.Add(GString4);
-            StandardTunings.Add(GString5);
+            List<MusicString> StandardGuitarTunings = new List<MusicString>(); //string list is reverse of normal to match json data
+            StandardGuitarTunings.Add(GString0);
+            StandardGuitarTunings.Add(GString1);
+            StandardGuitarTunings.Add(GString2);
+            StandardGuitarTunings.Add(GString3);
+            StandardGuitarTunings.Add(GString4);
+            StandardGuitarTunings.Add(GString5);
 
             StringInstrument SixStringGuitar = new StringInstrument();
 
-            SixStringGuitar.Name = "AcousticGuitar";
+            SixStringGuitar.Name = "SixStringGuitar";
             SixStringGuitar.FretCount = 30;
-            SixStringGuitar.MusicStrings = StandardTunings;
+            SixStringGuitar.MusicStrings = StandardGuitarTunings;
 
             List<SongsterrSong> Songs = GetJsonSongs(path);
-            List<MusicalBeat> songBeats = GetSongBeats(Songs[4], SixStringGuitar);
+            List<MusicalBeat> songBeats = GetSongBeats(Songs[3], SixStringGuitar);
 
             // **TESTS**
 
-            var tab = new Tab(Songs[4], SixStringGuitar, songBeats);
+            var tab = new Tab(Songs[3], SixStringGuitar, songBeats);
 
             List<string> tabOne = tab.TabLines[0];
             int tabLength = tabOne.Count;
@@ -54,7 +54,12 @@ namespace TabTranslator
             int tabLineStartPoint = 0;
             int tabLineEndPoint = measuresPerLine;
 
-            Console.WriteLine();
+            Console.WriteLine($"{tab.TitleOfSong}\n{tab.InstrumentString}");
+            foreach(long tuning in tab.Tuning)
+            {
+                Console.Write(tuning.ToString());
+            }
+            Console.WriteLine($"\nCapo on Fret {tab.Capo.ToString()}\n");
 
             while (tabLineStartPoint < tabLength)
             {
@@ -63,7 +68,7 @@ namespace TabTranslator
                 {
                     List<string> tabLine = tab.TabLines[i];
                     for (int h = tabLineStartPoint; h < tabLineEndPoint; h++)
-                    {
+                    { 
                         string measure = tabLine[h];
                         int dashCount = measure.Length;
 
