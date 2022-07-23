@@ -12,7 +12,9 @@ namespace TabTranslator
         {
             string path = @"..\..\..\..\JSONFiles";
 
-            //Defining instrument
+            //Defining SixStringGuitar
+
+            // Standard Tuning
 
             MusicString GString0 = new MusicString();
             GString0.Tuning = RootNotes.E;
@@ -38,15 +40,66 @@ namespace TabTranslator
             StringInstrument SixStringGuitar = new StringInstrument();
 
             SixStringGuitar.Name = "SixStringGuitar";
-            SixStringGuitar.FretCount = 30;
+            SixStringGuitar.FretCount = 21;
             SixStringGuitar.MusicStrings = StandardGuitarTunings;
 
-            List<SongsterrSong> Songs = GetJsonSongs(path);
-            List<MusicalBeat> songBeats = GetSongBeats(Songs[3], SixStringGuitar);
+            // Defining BassGuitar
+
+            // Standard Tuning
+
+            MusicString BGString0 = new MusicString();
+            BGString0.Tuning = RootNotes.G;
+            MusicString BGString1 = new MusicString();
+            BGString1.Tuning = RootNotes.D;
+            MusicString BGString2 = new MusicString();
+            BGString2.Tuning = RootNotes.A;
+            MusicString BGString3 = new MusicString();
+            BGString3.Tuning = RootNotes.E;
+
+            List<MusicString> StandardBassGuitarTunings = new List<MusicString>();
+            StandardBassGuitarTunings.Add(BGString0);
+            StandardBassGuitarTunings.Add(BGString1);
+            StandardBassGuitarTunings.Add(BGString2);
+            StandardBassGuitarTunings.Add(BGString3);
+
+            StringInstrument BassGuitar = new StringInstrument();
+
+            BassGuitar.Name = "BassGuitar";
+            BassGuitar.FretCount = 21;
+            BassGuitar.MusicStrings = StandardBassGuitarTunings;
+
+            // Defining Ukelele
+
+            // Standard tuning
+
+            MusicString UkString0 = new MusicString();
+            UkString0.Tuning = RootNotes.A;
+            MusicString UkString1 = new MusicString();
+            UkString1.Tuning = RootNotes.E;
+            MusicString UkString2 = new MusicString();
+            UkString2.Tuning = RootNotes.C;
+            MusicString UkString3 = new MusicString();
+            UkString3.Tuning = RootNotes.G;
+
+            List<MusicString> StandardUkeleleTunings = new List<MusicString>();
+            StandardUkeleleTunings.Add(BGString0);
+            StandardUkeleleTunings.Add(BGString1);
+            StandardUkeleleTunings.Add(BGString2);
+            StandardUkeleleTunings.Add(BGString3);
+
+            StringInstrument Ukelele = new StringInstrument();
+
+            Ukelele.Name = "Ukelele";
+            Ukelele.FretCount = 12;
+            Ukelele.MusicStrings = StandardUkeleleTunings;
+
 
             // **TESTS**
 
-            var tab = new Tab(Songs[3], SixStringGuitar, songBeats);
+            List<SongsterrSong> Songs = GetJsonSongs(path);
+            List<MusicalBeat> songBeats = GetSongBeats(Songs[3], Ukelele);
+
+            var tab = new Tab(Songs[3], Ukelele, songBeats);
 
             List<string> tabOne = tab.TabLines[0];
             int tabLength = tabOne.Count;

@@ -63,7 +63,7 @@ namespace TabTranslator
         /// <returns>enum rootnote</returns>
         public static RootNotes GetRootNote(FingerPosition fingerPosition, MusicString musicString)
         {
-            int s = 0;
+            int strng = 0;
             int fretNr = 0;
 
             if (fretNr < 12)
@@ -108,15 +108,15 @@ namespace TabTranslator
                 {
                     if (musicString.Tuning == rootnotes[i])
                     {
-                        s = Convert.ToInt32(rootnotes[i]);
+                        strng = Convert.ToInt32(rootnotes[i]);
                         break;
                     }                    
                 }
-                for (int i = 0;i < s; i++)
+                for (int i = 0;i < strng; i++)
                 {
                     removedNotes.Add(rootnotes[i]);
                 }
-                for (int i = 0; i < s; i++) //removing incorrect notes!!
+                for (int i = 0; i < strng; i++) //removing incorrect notes!!
                 {
                     rootnotes.RemoveAt(0);
 
