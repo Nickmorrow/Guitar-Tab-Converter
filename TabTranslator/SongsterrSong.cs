@@ -9,6 +9,7 @@ using Newtonsoft.Json.Converters;
 
 namespace TabTranslator
 {
+    // is missing certain parameters, check json data for other songs
     public partial class SongsterrSong
     {
         [JsonProperty("strings")]
@@ -187,6 +188,9 @@ namespace TabTranslator
 
         [JsonProperty("vibrato", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Vibrato { get; set; }
+
+        [JsonProperty("dead", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? Dead { get; set; }
     }
 
     public partial class Bend

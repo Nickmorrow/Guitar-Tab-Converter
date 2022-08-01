@@ -12,13 +12,22 @@ namespace TabTranslator
         public int Octave;
         public long Duration16ths;
         public long SongsterrDuration;
-        public bool? NullableBool;
+        public bool? NullableBoolRest;
+        public bool? NullableBoolDead;
         public bool IsRest;
+        public bool Dead;
         public FingerPosition FingerPosition = new FingerPosition();
 
-        public static bool GetRestNote(bool? NullableBool)
+        public static bool GetDeadNote(bool? NullableBoolDead)
         {
-            bool actualBool = NullableBool.GetValueOrDefault();
+            bool actualBool = NullableBoolDead.GetValueOrDefault();
+            return actualBool;
+
+        }
+
+        public static bool GetRestNote(bool? NullableBoolRest)
+        {
+            bool actualBool = NullableBoolRest.GetValueOrDefault();
             return actualBool;
 
         }

@@ -10,7 +10,8 @@ namespace TabTranslator
     {
         static void Main(string[] args)
         {
-            string path = @"..\..\..\..\JSONFiles";
+            //string path = @"..\..\..\..\JSONFiles";
+            string path = "/Users/Nick/Documents/GitHub/TabTranslator/JSONFiles";
 
             //Defining SixStringGuitar
 
@@ -97,9 +98,9 @@ namespace TabTranslator
             // **TESTS**
 
             List<SongsterrSong> Songs = GetJsonSongs(path);
-            List<MusicalBeat> songBeats = GetSongBeats(Songs[3], Ukelele);
+            List<MusicalBeat> songBeats = GetSongBeats(Songs[1], SixStringGuitar);
 
-            var tab = new Tab(Songs[3], Ukelele, songBeats);
+            var tab = new Tab(Songs[1], SixStringGuitar, songBeats);
 
             List<string> tabOne = tab.TabLines[0];
             int tabLength = tabOne.Count;
@@ -108,7 +109,8 @@ namespace TabTranslator
             int tabLineEndPoint = measuresPerLine;
 
             Console.WriteLine($"{tab.TitleOfSong}\n{tab.InstrumentString}");
-            foreach(long tuning in tab.Tuning)
+
+            foreach (RootNotes tuning in tab.Tuning.Reverse<RootNotes>())
             {
                 Console.Write(tuning.ToString());
             }
@@ -144,6 +146,7 @@ namespace TabTranslator
                 }
                 Console.Write($"\n");
             }
+            Console.ReadLine();
         }
         /// <summary>
         /// Gets the notes, duration. and octave from songster json
@@ -158,7 +161,6 @@ namespace TabTranslator
 
             for (int measureNum = 0; measureNum < song.Measures.Count(); measureNum++)
             {
-
                 for (int voiceNum = 0; voiceNum < song.Measures[measureNum].Voices.Count(); voiceNum++)
                 {
                     for (int beatNum = 0; beatNum < song.Measures[measureNum].Voices[voiceNum].Beats.Count(); beatNum++)
@@ -177,8 +179,11 @@ namespace TabTranslator
                             note.FingerPosition.FretNr = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret;
                             note.RootNote = MusicalNote.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
                             note.Octave = MusicalNote.GetOctave(note.FingerPosition);
-                            note.NullableBool = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
-                            note.IsRest = MusicalNote.GetRestNote(note.NullableBool);
+                            note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
+                            note.IsRest = MusicalNote.GetRestNote(note.NullableBoolRest);
+                            note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
+                            note.Dead = MusicalNote.GetDeadNote(note.NullableBoolDead);
+
                             notes.Add(note);
                         }
                         beat.MusicalNotes = notes;
@@ -212,6 +217,8 @@ namespace TabTranslator
 
             return Songs;
         }
+
+
 
 
     }
