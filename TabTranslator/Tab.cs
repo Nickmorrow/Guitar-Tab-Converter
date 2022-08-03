@@ -13,7 +13,6 @@ namespace TabTranslator
         public string Difficulty;
         public StringInstrument Instrument;
         public string InstrumentString;
-        //public long[] Tuning;
         public List<RootNotes> Tuning;
         public long Capo;
         public string Description;
