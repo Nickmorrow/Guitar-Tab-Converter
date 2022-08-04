@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
@@ -14,27 +15,24 @@ namespace TabTranslator
 {
     internal class Program
     {
-        private static readonly HttpClient client = new HttpClient();
-
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
-            var repositories = await ProcessRepositories();
+            string webPath = HttpGet("https://www.songsterr.com/a/wsa/elliott-smith-a-fond-farewell-tab-s17777");
 
-            foreach (var repo in repositories)
-                Console.WriteLine(repo.Name);
+            Console.WriteLine(webPath);
 
             string path = "";
 
             var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             if (isWindows)
             {
-                Console.WriteLine("Hello, this is windows");
+                //Console.WriteLine("Hello, this is windows");
                 path = @"..\..\..\..\JSONFiles";
             }
             var isOSX = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
             if (isOSX)
             {
-                Console.WriteLine("Hello, this is Mac OS");
+                //Console.WriteLine("Hello, this is Mac OS");
                 path = "/Users/Nick/Documents/GitHub/TabTranslator/JSONFiles";
             }
             //var isLinux = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
@@ -248,19 +246,14 @@ namespace TabTranslator
             return Songs;
         }
 
-        private static async Task<List<Repository>> ProcessRepositories()
+        private static string HttpGet(string uri)
         {
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
-            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+            string content = null;
 
-            var streamTask = client.GetStreamAsync("https://api.github.com/orgs/dotnet/repos");
-            var repositories = await System.Text.Json.JsonSerializer.DeserializeAsync<List<Repository>>(await streamTask);
-            return repositories;
+            var wc = new WebClient();
+            content = wc.DownloadString(uri);
 
-            foreach (var repo in repositories)
-                Console.WriteLine(repo.Name);
+            return content;
         }
 
 
