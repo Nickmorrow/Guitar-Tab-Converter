@@ -19,6 +19,8 @@ namespace TabTranslator
         {
             string webPath = HttpGet("https://www.songsterr.com/a/wsa/elliott-smith-a-fond-farewell-tab-s17777");
 
+
+
             Console.WriteLine(webPath);
 
             string path = "";
@@ -250,7 +252,7 @@ namespace TabTranslator
         {
             string content = null;
 
-            var wc = new WebClient();
+            var wc = new MyWebClient();
             content = wc.DownloadString(uri);
 
             return content;
@@ -260,4 +262,6 @@ namespace TabTranslator
 
 
     }
+
+
 }
