@@ -19,8 +19,6 @@ namespace TabTranslator
         {
             string webPath = HttpGet("https://www.songsterr.com/a/wsa/elliott-smith-a-fond-farewell-tab-s17777");
 
-
-
             Console.WriteLine(webPath);
 
             string path = "";
@@ -139,12 +137,15 @@ namespace TabTranslator
             int tabLineEndPoint = measuresPerLine;
 
             Console.WriteLine($"{tab.TitleOfSong}\n{tab.InstrumentString}");
+            File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"{tab.TitleOfSong}\n{tab.InstrumentString}\n");
 
             foreach (RootNotes tuning in tab.Tuning.Reverse<RootNotes>())
             {
                 Console.Write(tuning.ToString());
+                File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"{tuning.ToString()}");
             }
             Console.WriteLine($"\nCapo on Fret {tab.Capo.ToString()}\n");
+            File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"\nCapo on Fret {tab.Capo.ToString()}\n");
 
             while (tabLineStartPoint < tabLength)
             {
@@ -160,10 +161,11 @@ namespace TabTranslator
                         for (int k = 0; k < dashCount; k++)
                         {
                             Console.Write(measure[k]);
+                            File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"{measure[k]}");
                         }
                     }
                     Console.Write($"\n");
-                    //       File.AppendAllText(@"c:\test.txt", "lol");
+                    File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt",$"\n");
                 }
                 tabLineStartPoint += 10;
                 if (remainingMeasures >= 10)
@@ -175,6 +177,7 @@ namespace TabTranslator
                     tabLineEndPoint = tabLength;
                 }
                 Console.Write($"\n");
+                File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"\n");
             }
             Console.ReadLine();
         }
