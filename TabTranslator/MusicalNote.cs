@@ -18,14 +18,14 @@ namespace TabTranslator
         public bool Dead;
         public FingerPosition FingerPosition = new FingerPosition();
 
-        public static bool GetDeadNote(bool? NullableBoolDead)
+        public bool GetDeadNote(bool? NullableBoolDead)
         {
             bool actualBool = NullableBoolDead.GetValueOrDefault();
             return actualBool;
 
         }
 
-        public static bool GetRestNote(bool? NullableBoolRest)
+        public bool GetRestNote(bool? NullableBoolRest)
         {
             bool actualBool = NullableBoolRest.GetValueOrDefault();
             return actualBool;
@@ -36,7 +36,7 @@ namespace TabTranslator
         /// </summary>
         /// <param name="SongsterrDuration"></param>
         /// <returns>long Duration16ths</returns>
-        public static long Get16ths(long SongsterrDuration)
+        public long Get16ths(long SongsterrDuration)
         {
             long Duration16ths = 16 / SongsterrDuration;
             return Duration16ths;
@@ -46,7 +46,7 @@ namespace TabTranslator
         /// </summary>
         /// <param name="fingerPosition"></param>
         /// <returns>int octave</returns>
-        public static int GetOctave(FingerPosition fingerPosition)
+        public int GetOctave(FingerPosition fingerPosition)
         {
             int octave = 0;
             int fretNr = Convert.ToInt32(fingerPosition.FretNr);
@@ -70,7 +70,7 @@ namespace TabTranslator
         /// <param name="fingerPosition"></param>
         /// <param name="musicString"></param>
         /// <returns>enum rootnote</returns>
-        public static RootNotes GetRootNote(FingerPosition fingerPosition, MusicString musicString)
+        public RootNotes GetRootNote(FingerPosition fingerPosition, MusicString musicString)
         {
             int strng = 0;
             int fretNr = 0;

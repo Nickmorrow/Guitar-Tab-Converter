@@ -22,7 +22,7 @@ namespace TabTranslator
 
 
 
-        public static List<List<string>> GetTabLines(SongsterrSong Song, StringInstrument instrument)
+        public List<List<string>> GetTabLines(SongsterrSong Song, StringInstrument instrument)
         {
 
             int TSigNum = 0;
@@ -54,7 +54,7 @@ namespace TabTranslator
             }
             return TabLines;
         }
-        public static string GetFretNrString(MusicalNote Note)
+        public string GetFretNrString(MusicalNote Note)
         {
             string FretNr = Note.FingerPosition.FretNr.ToString();
             return FretNr;
@@ -64,7 +64,7 @@ namespace TabTranslator
         /// </summary>
         /// <param name="TabLines"></param>
         /// <param name="Beats"></param>
-        public static void FillTablines(List<List<string>> TabLines, List<MusicalBeat> Beats, SongsterrSong Song)
+        public void FillTablines(List<List<string>> TabLines, List<MusicalBeat> Beats, SongsterrSong Song)
         {
             for (int idxTabLine = 0; idxTabLine < TabLines.Count; idxTabLine++)
             {
@@ -108,7 +108,7 @@ namespace TabTranslator
             }
         }
 
-        public static RootNotes ConvertMidiNum(long midiNum)
+        public RootNotes ConvertMidiNum(long midiNum)
         {
             int convertedNum = Convert.ToInt32(midiNum);
 

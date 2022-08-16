@@ -14,7 +14,7 @@ namespace TabTranslator
         public bool IsRest;
         public List<MusicalNote> MusicalNotes = new List<MusicalNote>();
 
-        public static bool GetRestBeat(bool? NullableBool)
+        public bool GetRestBeat(bool? NullableBool)
         {
             bool actualBool = NullableBool.GetValueOrDefault();
             return actualBool;
@@ -25,7 +25,7 @@ namespace TabTranslator
         /// </summary>
         /// <param name="SongsterrDuration"></param>
         /// <returns>long Duration16ths</returns>
-        public static long Get16ths(long SongsterrDuration)
+        public long Get16ths(long SongsterrDuration)
         {
             long Duration16ths = 16 / SongsterrDuration;
             return Duration16ths;

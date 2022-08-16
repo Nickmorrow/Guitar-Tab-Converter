@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace TabTranslator
 {
@@ -17,7 +18,9 @@ namespace TabTranslator
     {
         public static void Main(string[] args)
         {
-            string webPath = HttpGet("https://www.songsterr.com/a/wsa/elliott-smith-a-fond-farewell-tab-s17777");
+            string webPath = HttpGet("https://dqsljvtekg760.cloudfront.net/269/505252/jhkA0qMwaF7BX_5lhD99g/2.json");
+            File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/webPath.txt", $"{webPath}");
+            string wPath = "/Users/Nick/Documents/TabTranslatorWebPath";
 
             Console.WriteLine(webPath);
 
@@ -26,13 +29,11 @@ namespace TabTranslator
             var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             if (isWindows)
             {
-                //Console.WriteLine("Hello, this is windows");
                 path = @"..\..\..\..\JSONFiles";
             }
             var isOSX = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
             if (isOSX)
             {
-                //Console.WriteLine("Hello, this is Mac OS");
                 path = "/Users/Nick/Documents/GitHub/TabTranslator/JSONFiles";
             }
             //var isLinux = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
@@ -125,10 +126,11 @@ namespace TabTranslator
 
             // **TESTS**
 
-            List<SongsterrSong> Songs = GetJsonSongs(path);
-            List<MusicalBeat> songBeats = GetSongBeats(Songs[1], SixStringGuitar);
+            //SongsterrSong webSong = GetJsonSong(wPath);
+            List<SongsterrSong> Songs = GetJsonSongs(wPath);
+            List<MusicalBeat> songBeats = GetSongBeats(Songs[0], SixStringGuitar);
 
-            var tab = new Tab(Songs[1], SixStringGuitar, songBeats);
+            var tab = new Tab(Songs[0], SixStringGuitar, songBeats);
 
             List<string> tabOne = tab.TabLines[0];
             int tabLength = tabOne.Count;
@@ -136,17 +138,25 @@ namespace TabTranslator
             int tabLineStartPoint = 0;
             int tabLineEndPoint = measuresPerLine;
 
-            Console.WriteLine($"{tab.TitleOfSong}\n{tab.InstrumentString}");
+            //Console.WriteLine($"{tab.TitleOfSong}\n{tab.InstrumentString}");
             File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"{tab.TitleOfSong}\n{tab.InstrumentString}\n");
 
             foreach (RootNotes tuning in tab.Tuning.Reverse<RootNotes>())
             {
-                Console.Write(tuning.ToString());
+                //Console.Write(tuning.ToString());
                 File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"{tuning.ToString()}");
             }
-            Console.WriteLine($"\nCapo on Fret {tab.Capo.ToString()}\n");
-            File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"\nCapo on Fret {tab.Capo.ToString()}\n");
-
+            if (tab.Capo == 0)
+            {
+                //Console.WriteLine("\nNo Capo\n");
+                File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", "\nNo Capo\n");
+            }
+            else
+            {
+                //Console.WriteLine($"\nCapo on Fret {tab.Capo.ToString()}\n");
+                File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"\nCapo on Fret {tab.Capo.ToString()}\n");
+            }
+            
             while (tabLineStartPoint < tabLength)
             {
                 int remainingMeasures = tabLength - tabLineEndPoint;
@@ -160,11 +170,11 @@ namespace TabTranslator
 
                         for (int k = 0; k < dashCount; k++)
                         {
-                            Console.Write(measure[k]);
+                            //Console.Write(measure[k]);
                             File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"{measure[k]}");
                         }
                     }
-                    Console.Write($"\n");
+                    //Console.Write($"\n");
                     File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt",$"\n");
                 }
                 tabLineStartPoint += 10;
@@ -176,7 +186,7 @@ namespace TabTranslator
                 {
                     tabLineEndPoint = tabLength;
                 }
-                Console.Write($"\n");
+                //Console.Write($"\n");
                 File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"\n");
             }
             Console.ReadLine();
@@ -201,21 +211,21 @@ namespace TabTranslator
                         MusicalBeat beat = new MusicalBeat();
                         List<MusicalNote> notes = new List<MusicalNote>();
                         beat.SongsterrDuration = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Duration[1];
-                        beat.Duration16ths = MusicalBeat.Get16ths(beat.SongsterrDuration);
+                        beat.Duration16ths = beat.Get16ths(beat.SongsterrDuration);
                         beat.NullableBool = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Rest;
-                        beat.IsRest = MusicalBeat.GetRestBeat(beat.NullableBool);
+                        beat.IsRest = beat.GetRestBeat(beat.NullableBool);
 
                         for (int noteNum = 0; noteNum < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); noteNum++)
                         {
                             MusicalNote note = new MusicalNote();
                             note.FingerPosition.StringNum = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String;
                             note.FingerPosition.FretNr = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret;
-                            note.RootNote = MusicalNote.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
-                            note.Octave = MusicalNote.GetOctave(note.FingerPosition);
+                            note.RootNote = note.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
+                            note.Octave = note.GetOctave(note.FingerPosition);
                             note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
-                            note.IsRest = MusicalNote.GetRestNote(note.NullableBoolRest);
+                            note.IsRest = note.GetRestNote(note.NullableBoolRest);
                             note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
-                            note.Dead = MusicalNote.GetDeadNote(note.NullableBoolDead);
+                            note.Dead = note.GetDeadNote(note.NullableBoolDead);
 
                             notes.Add(note);
                         }
@@ -249,6 +259,16 @@ namespace TabTranslator
             }
 
             return Songs;
+        }
+
+        public static SongsterrSong GetJsonSong(string webPath)
+        {
+            SongsterrSong Song = new SongsterrSong();
+            string json = File.ReadAllText(webPath);
+            //string json = webPath;
+            SongsterrSong song = JsonConvert.DeserializeObject<SongsterrSong>(json);
+
+            return Song;
         }
 
         private static string HttpGet(string uri)
