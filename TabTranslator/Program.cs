@@ -18,13 +18,17 @@ namespace TabTranslator
     {
         public static void Main(string[] args)
         {
+        
             string webPath = HttpGet("https://dqsljvtekg760.cloudfront.net/269/505252/jhkA0qMwaF7BX_5lhD99g/2.json");
-            File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/webPath.txt", $"{webPath}");
-            string wPath = "/Users/Nick/Documents/TabTranslatorWebPath";
+            string webPathTwo = HttpGet("https://www.songsterr.com/a/wsa/nirvana-smells-like-teen-spirit-tab-s269t2");
+            //File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/webPath.txt", $"{webPath}");
+            //string wPath = "/Users/Nick/Documents/TabTranslatorWebPath";
 
-            Console.WriteLine(webPath);
+            Console.WriteLine(webPathTwo);
 
             string path = "";
+            string wPath = "";
+
 
             var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             if (isWindows)
@@ -34,7 +38,9 @@ namespace TabTranslator
             var isOSX = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
             if (isOSX)
             {
-                path = "/Users/Nick/Documents/GitHub/TabTranslator/JSONFiles";
+                //path = "/Users/Nick/Documents/GitHub/TabTranslator/JSONFiles";
+                File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/webPath.txt", $"{webPath}");
+                wPath = "/Users/Nick/Documents/TabTranslatorWebPath";
             }
             //var isLinux = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
             //if (isLinux)
