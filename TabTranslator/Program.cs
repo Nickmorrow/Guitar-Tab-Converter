@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Collections.Specialized;
 
 namespace TabTranslator
 {
@@ -18,7 +19,9 @@ namespace TabTranslator
     {
         public static void Main(string[] args)
         {
-        
+            //part 1: https://dqsljvtekg760.cloudfront.net //preload link
+            //part 2: 269 //part of the original url
+
             string webPath = HttpGet("https://dqsljvtekg760.cloudfront.net/269/505252/jhkA0qMwaF7BX_5lhD99g/2.json");
             string webPathTwo = HttpGet("https://www.songsterr.com/a/wsa/nirvana-smells-like-teen-spirit-tab-s269t2");
             //File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/webPath.txt", $"{webPath}");
@@ -26,14 +29,35 @@ namespace TabTranslator
 
             Console.WriteLine(webPathTwo);
 
+            StringCollection resultList = new StringCollection();
+            try
+            {
+                Regex regexObj = new Regex(@"//.+\.cloudfront\.net/");
+                Match matchResult = regexObj.Match(webPathTwo);
+                while (matchResult.Success)
+                {
+                    resultList.Add(matchResult.Value);
+                    matchResult = matchResult.NextMatch();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                // Syntax error in the regular expression
+            }
+
+
+
             string path = "";
             string wPath = "";
-
+            string tPath = "";
 
             var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             if (isWindows)
             {
-                path = @"..\..\..\..\JSONFiles";
+                File.WriteAllText(@"..\..\..\..\JSONFiles\webPath.txt", $"{webPath}");
+                File.WriteAllText(@"..\..\..\..\JSONFiles\webPath2.txt", $"{webPathTwo}");
+                wPath = @"..\..\..\..\JSONFiles";
+                tPath = @"..\..\..\..\TabTxtFiles\Test.txt";
             }
             var isOSX = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
             if (isOSX)
@@ -41,12 +65,8 @@ namespace TabTranslator
                 //path = "/Users/Nick/Documents/GitHub/TabTranslator/JSONFiles";
                 File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/webPath.txt", $"{webPath}");
                 wPath = "/Users/Nick/Documents/TabTranslatorWebPath";
+                tPath = "/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt";
             }
-            //var isLinux = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-            //if (isLinux)
-            //{
-            //    Console.WriteLine("Hello, this is Linux");
-            //}
 
             //Defining SixStringGuitar
 
@@ -145,22 +165,22 @@ namespace TabTranslator
             int tabLineEndPoint = measuresPerLine;
 
             //Console.WriteLine($"{tab.TitleOfSong}\n{tab.InstrumentString}");
-            File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"{tab.TitleOfSong}\n{tab.InstrumentString}\n");
+            File.WriteAllText(@tPath, $"{tab.TitleOfSong}\n{tab.InstrumentString}\n");
 
             foreach (RootNotes tuning in tab.Tuning.Reverse<RootNotes>())
             {
                 //Console.Write(tuning.ToString());
-                File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"{tuning.ToString()}");
+                File.AppendAllText(@tPath, $"{tuning.ToString()}");
             }
             if (tab.Capo == 0)
             {
                 //Console.WriteLine("\nNo Capo\n");
-                File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", "\nNo Capo\n");
+                File.AppendAllText(@tPath, "\nNo Capo\n");
             }
             else
             {
                 //Console.WriteLine($"\nCapo on Fret {tab.Capo.ToString()}\n");
-                File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"\nCapo on Fret {tab.Capo.ToString()}\n");
+                File.AppendAllText(@tPath, $"\nCapo on Fret {tab.Capo.ToString()}\n");
             }
             
             while (tabLineStartPoint < tabLength)
@@ -177,11 +197,11 @@ namespace TabTranslator
                         for (int k = 0; k < dashCount; k++)
                         {
                             //Console.Write(measure[k]);
-                            File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"{measure[k]}");
+                            File.AppendAllText(@tPath, $"{measure[k]}");
                         }
                     }
                     //Console.Write($"\n");
-                    File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt",$"\n");
+                    File.AppendAllText(@tPath, $"\n");
                 }
                 tabLineStartPoint += 10;
                 if (remainingMeasures >= 10)
@@ -193,7 +213,7 @@ namespace TabTranslator
                     tabLineEndPoint = tabLength;
                 }
                 //Console.Write($"\n");
-                File.AppendAllText(@"/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt", $"\n");
+                File.AppendAllText(@tPath, $"\n");
             }
             Console.ReadLine();
         }
