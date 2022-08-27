@@ -20,53 +20,78 @@ namespace TabTranslator
         public static void Main(string[] args)
         {
             //part 1: https://dqsljvtekg760.cloudfront.net //preload link
-            //part 2: 269 //part of the original url
+            //part 2: 269 //part of the original url and "songId":269
+            //part 3: 505252 // "revisionId":505252
+            //part 4: "image":"jhkA0qMwaF7BX_5lhD99g"
 
             string webPath = HttpGet("https://dqsljvtekg760.cloudfront.net/269/505252/jhkA0qMwaF7BX_5lhD99g/2.json");
             string webPathTwo = HttpGet("https://www.songsterr.com/a/wsa/nirvana-smells-like-teen-spirit-tab-s269t2");
             //File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/webPath.txt", $"{webPath}");
             //string wPath = "/Users/Nick/Documents/TabTranslatorWebPath";
 
-            Console.WriteLine(webPathTwo);
+            
 
-            StringCollection resultList = new StringCollection();
-            try
-            {
-                Regex regexObj = new Regex(@"//.+\.cloudfront\.net/");
-                Match matchResult = regexObj.Match(webPathTwo);
-                while (matchResult.Success)
-                {
-                    resultList.Add(matchResult.Value);
-                    matchResult = matchResult.NextMatch();
-                }
-            }
-            catch (ArgumentException ex)
-            {
-                // Syntax error in the regular expression
-            }
+            //StringCollection resultList = new StringCollection();
+            //try
+            //{
+            //    Regex regexObj = new Regex(@"//.+\.cloudfront\.net/");
+            //    Match matchResult = regexObj.Match(webPathTwo);
+            //    while (matchResult.Success)
+            //    {
+            //        resultList.Add(matchResult.Value);
+            //        matchResult = matchResult.NextMatch();
+            //    }
+            //}
+            //catch (ArgumentException ex)
+            //{
+            //    // Syntax error in the regular expression
+            //}
+
+            //try
+            //{
+            //    Regex regexObj = new Regex(@"<script id=\Dstate\D type=\Dapplication/json\D>(?<applicationjson>.*?)</script>");
+            //    Match matchResult = regexObj.Match(webPathTwo);
+            //    while (matchResult.Success)
+            //    {
+            //        resultList.Add(matchResult.Value);
+            //        matchResult = matchResult.NextMatch();
+            //    }
+            //}
+            //catch (ArgumentException ex)
+            //{
+            //    // Syntax error in the regular expression
+            //}
+            //foreach(string str in resultList)
+            //{
+            //    Console.WriteLine(str);
+            //}
 
 
 
-            string path = "";
-            string wPath = "";
-            string tPath = "";
+            string appJsonPath = "";
+            string trackJsonPath = "";
+            string tabTextPath = "";
 
             var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             if (isWindows)
             {
                 File.WriteAllText(@"..\..\..\..\JSONFiles\webPath.txt", $"{webPath}");
-                File.WriteAllText(@"..\..\..\..\JSONFiles\webPath2.txt", $"{webPathTwo}");
-                wPath = @"..\..\..\..\JSONFiles";
-                tPath = @"..\..\..\..\TabTxtFiles\Test.txt";
+                //File.WriteAllText(@"..\..\..\..\JSONFiles\webPath2.txt", $"{webPathTwo}");
+                trackJsonPath = @"..\..\..\..\JSONFiles";
+                tabTextPath = @"..\..\..\..\TabTxtFiles\Test.txt";
+                appJsonPath = @"..\..\..\..\AppJsonFiles";
             }
             var isOSX = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
             if (isOSX)
             {
                 //path = "/Users/Nick/Documents/GitHub/TabTranslator/JSONFiles";
                 File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/webPath.txt", $"{webPath}");
-                wPath = "/Users/Nick/Documents/TabTranslatorWebPath";
-                tPath = "/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt";
+                trackJsonPath = "/Users/Nick/Documents/TabTranslatorWebPath";
+                tabTextPath = "/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt";
             }
+
+            Current AppJson = GetJsonSongInfo(webPathTwo, appJsonPath);
+            Console.WriteLine(AppJson.title);
 
             //Defining SixStringGuitar
 
@@ -153,7 +178,7 @@ namespace TabTranslator
             // **TESTS**
 
             //SongsterrSong webSong = GetJsonSong(wPath);
-            List<SongsterrSong> Songs = GetJsonSongs(wPath);
+            List<SongsterrSong> Songs = GetJsonTracks(trackJsonPath);
             List<MusicalBeat> songBeats = GetSongBeats(Songs[0], SixStringGuitar);
 
             var tab = new Tab(Songs[0], SixStringGuitar, songBeats);
@@ -165,22 +190,22 @@ namespace TabTranslator
             int tabLineEndPoint = measuresPerLine;
 
             //Console.WriteLine($"{tab.TitleOfSong}\n{tab.InstrumentString}");
-            File.WriteAllText(@tPath, $"{tab.TitleOfSong}\n{tab.InstrumentString}\n");
+            File.WriteAllText(tabTextPath, $"{tab.TitleOfSong}\n{tab.InstrumentString}\n");
 
             foreach (RootNotes tuning in tab.Tuning.Reverse<RootNotes>())
             {
                 //Console.Write(tuning.ToString());
-                File.AppendAllText(@tPath, $"{tuning.ToString()}");
+                File.AppendAllText(tabTextPath, $"{tuning.ToString()}");
             }
             if (tab.Capo == 0)
             {
                 //Console.WriteLine("\nNo Capo\n");
-                File.AppendAllText(@tPath, "\nNo Capo\n");
+                File.AppendAllText(tabTextPath, "\nNo Capo\n");
             }
             else
             {
                 //Console.WriteLine($"\nCapo on Fret {tab.Capo.ToString()}\n");
-                File.AppendAllText(@tPath, $"\nCapo on Fret {tab.Capo.ToString()}\n");
+                File.AppendAllText(tabTextPath, $"\nCapo on Fret {tab.Capo.ToString()}\n");
             }
             
             while (tabLineStartPoint < tabLength)
@@ -197,11 +222,11 @@ namespace TabTranslator
                         for (int k = 0; k < dashCount; k++)
                         {
                             //Console.Write(measure[k]);
-                            File.AppendAllText(@tPath, $"{measure[k]}");
+                            File.AppendAllText(tabTextPath, $"{measure[k]}");
                         }
                     }
                     //Console.Write($"\n");
-                    File.AppendAllText(@tPath, $"\n");
+                    File.AppendAllText(tabTextPath, $"\n");
                 }
                 tabLineStartPoint += 10;
                 if (remainingMeasures >= 10)
@@ -213,7 +238,7 @@ namespace TabTranslator
                     tabLineEndPoint = tabLength;
                 }
                 //Console.Write($"\n");
-                File.AppendAllText(@tPath, $"\n");
+                File.AppendAllText(tabTextPath, $"\n");
             }
             Console.ReadLine();
         }
@@ -269,7 +294,7 @@ namespace TabTranslator
         /// </summary>
         /// <param name="dPath"></param>
         /// <returns>List of objects</returns>
-        public static List<SongsterrSong> GetJsonSongs(string dPath)
+        public static List<SongsterrSong> GetJsonTracks(string dPath)
         {
             List<SongsterrSong> Songs = new List<SongsterrSong>();
             DirectoryInfo dir = new DirectoryInfo(dPath);
@@ -287,7 +312,7 @@ namespace TabTranslator
             return Songs;
         }
 
-        public static SongsterrSong GetJsonSong(string webPath)
+        public static SongsterrSong GetJsonTrack(string webPath)
         {
             SongsterrSong Song = new SongsterrSong();
             string json = File.ReadAllText(webPath);
@@ -306,7 +331,61 @@ namespace TabTranslator
 
             return content;
         }
+        public static Current GetJsonSongInfo(string webPathTwo, string filePath)
+        {
 
+            StringCollection resultList = new StringCollection();
+            try
+            {
+                Regex regexObj = new Regex(@"<script id=\Dstate\D type=\Dapplication/json\D>(?<applicationjson>.*?)</script>");
+                Match matchResult = regexObj.Match(webPathTwo);
+                while (matchResult.Success)
+                {
+                    resultList.Add(matchResult.Value);
+                    matchResult = matchResult.NextMatch();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                // Syntax error in the regular expression
+            }
+            //foreach(string str in resultList)
+            //{
+            //    File.WriteAllText(@"..\..\..\..\AppJsonFiles\AppJson.txt", $"{str}");
+            //}
+
+            List<Current> Currents = new List<Current>();
+            DirectoryInfo dir = new DirectoryInfo(filePath);
+            string[] paths = Directory.GetFiles(filePath);
+            string appJson = "";
+            int fileNum = paths.Count();
+
+            for (int i = 0; i < fileNum; i++)
+            {
+                appJson = File.ReadAllText(paths[i]);
+                Current current = JsonConvert.DeserializeObject<Current>(appJson);
+                Currents.Add(current);
+            }
+
+            //try
+            //{
+            //    for (int i = 0; i < fileNum; i++)
+            //    {
+            //        appJson = File.ReadAllText(paths[i]);
+            //        Current current = JsonConvert.DeserializeObject<Current>(appJson);
+            //        Currents.Add(current);
+            //    }
+
+            //}
+            //catch(Newtonsoft.Json.JsonReaderException)
+            //{
+
+            //}
+            Current result = Currents[0];
+
+            return result;
+
+        }
 
 
 
