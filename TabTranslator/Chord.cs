@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TabTranslator
 {
-    internal class Chord
+    internal class MusicChord
     {
         List<MusicalNote> notes;
         int Duration16ths;

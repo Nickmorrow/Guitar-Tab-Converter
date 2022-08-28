@@ -91,7 +91,7 @@ namespace TabTranslator
             }
 
             Current AppJson = GetJsonSongInfo(webPathTwo, appJsonPath);
-            Console.WriteLine(AppJson.title);
+            Console.WriteLine(AppJson.Title);
 
             //Defining SixStringGuitar
 
@@ -311,17 +311,6 @@ namespace TabTranslator
 
             return Songs;
         }
-
-        public static SongsterrSong GetJsonTrack(string webPath)
-        {
-            SongsterrSong Song = new SongsterrSong();
-            string json = File.ReadAllText(webPath);
-            //string json = webPath;
-            SongsterrSong song = JsonConvert.DeserializeObject<SongsterrSong>(json);
-
-            return Song;
-        }
-
         private static string HttpGet(string uri)
         {
             string content = null;
@@ -341,7 +330,7 @@ namespace TabTranslator
                 Match matchResult = regexObj.Match(webPathTwo);
                 while (matchResult.Success)
                 {
-                    resultList.Add(matchResult.Value);
+                    resultList.Add(matchResult.Groups[1].Value);
                     matchResult = matchResult.NextMatch();
                 }
             }
@@ -349,10 +338,11 @@ namespace TabTranslator
             {
                 // Syntax error in the regular expression
             }
-            //foreach(string str in resultList)
-            //{
-            //    File.WriteAllText(@"..\..\..\..\AppJsonFiles\AppJson.txt", $"{str}");
-            //}
+
+            foreach (string str in resultList)
+            {
+                File.WriteAllText(@"..\..\..\..\AppJsonFiles\AppJson.txt", $"{str}");
+            }
 
             List<Current> Currents = new List<Current>();
             DirectoryInfo dir = new DirectoryInfo(filePath);
@@ -364,6 +354,7 @@ namespace TabTranslator
             {
                 appJson = File.ReadAllText(paths[i]);
                 Current current = JsonConvert.DeserializeObject<Current>(appJson);
+                //Current current = JsonConvert.DeserializeObject<List<RetrieveMultipleResponse>>(appJson);
                 Currents.Add(current);
             }
 
@@ -379,7 +370,7 @@ namespace TabTranslator
             //}
             //catch(Newtonsoft.Json.JsonReaderException)
             //{
-
+             ////'Unexpected character encountered while parsing value:          
             //}
             Current result = Currents[0];
 

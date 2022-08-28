@@ -9,131 +9,275 @@ using Newtonsoft.Json.Converters;
 
 namespace TabTranslator
 {
-
-    public class Artist
+    public partial class Welcome3
     {
-        public int id { get; set; }
-        public Artists artists { get; set; }
-        public string pattern { get; set; }
-        public int defaultInstrument { get; set; }
-        public Songs songs { get; set; }
-        public Filters filters { get; set; }
-        public object loading { get; set; }
+
+        [JsonProperty("songs")]
+        public Welcome3Songs Songs { get; set; }
+
+        [JsonProperty("uploads")]
+        public Uploads Uploads { get; set; }
+
+        [JsonProperty("chords")]
+        public Chord Chords { get; set; }
+
+        [JsonProperty("chordpro")]
+        public Chord Chordpro { get; set; }
+
+        [JsonProperty("chordDiagram")]
+        public object[] ChordDiagram { get; set; }
     }
 
-    public class Artists
+    public partial class Artist
     {
-        public string _14 { get; set; }
+        [JsonProperty("id")]
+        public long Id { get; set; }
+
+        [JsonProperty("artists")]
+        public Artists Artists { get; set; }
+
+        [JsonProperty("pattern")]
+        public string Pattern { get; set; }
+
+        [JsonProperty("defaultInstrument")]
+        public long DefaultInstrument { get; set; }
+
+        [JsonProperty("songs")]
+        public ArtistSongs Songs { get; set; }
+
+        [JsonProperty("filters")]
+        public Filters Filters { get; set; }
+
+        [JsonProperty("loading")]
+        public object Loading { get; set; }
     }
 
-    public class Chords
+    public partial class Artists
     {
-        public object current { get; set; }
-        public int songId { get; set; }
-        public object chordsRevisionId { get; set; }
-        public bool isFailed { get; set; }
-        public bool isNotFound { get; set; }
-        public bool isNetworkFailed { get; set; }
-        public object loading { get; set; }
+        [JsonProperty("14")]
+        public string The14 { get; set; }
     }
 
-
-    public class Current
+    public partial class Filters
     {
-        public int songId { get; set; }
-        public int artistId { get; set; }
-        public int revisionId { get; set; }
-        public string title { get; set; }
-        public string artist { get; set; }
-        public DateTime created_at { get; set; }
-        public int personId { get; set; }
-        public string person { get; set; }
-        public string restriction { get; set; }
-        public bool hasChords { get; set; }
-        public List<int> editors { get; set; }
-        public string image { get; set; }
-        public bool hasTracks { get; set; }
-        public bool hasPlayer { get; set; }
-        public int defaultTrackBass { get; set; }
-        public int defaultTrackDrums { get; set; }
-        public int defaultTrack { get; set; }
-        public bool lyrics { get; set; }
-        public List<Track> tracks { get; set; }  //use this to get .json number for url and also to choose which song part
-        public int defaultTrackGuitar { get; set; }
-        public string audioV4Midi { get; set; }
-        public string audioV2Midi { get; set; }
-        public bool hasAudio { get; set; }
-        public string audioV4 { get; set; }
-        public long audioV4Generated { get; set; }
-        public long audioV2Generated { get; set; }
-        public string audioV2 { get; set; }
-        public int views { get; set; }
-        public List<string> tags { get; set; }
+        [JsonProperty("instrument")]
+        public string Instrument { get; set; }
+
+        [JsonProperty("difficulty")]
+        public string Difficulty { get; set; }
     }
 
-    public class Filters
+    public partial class ArtistSongs
     {
-        public string instrument { get; set; }
-        public string difficulty { get; set; }
+        [JsonProperty("id", NullValueHandling = NullValueHandling.Ignore)]
+        public long? Id { get; set; }
+
+        [JsonProperty("list")]
+        public object[] List { get; set; }
+
+        [JsonProperty("hasMore")]
+        public bool HasMore { get; set; }
+
+        [JsonProperty("pattern")]
+        public string Pattern { get; set; }
+
+        [JsonProperty("defaultInstrument")]
+        public long DefaultInstrument { get; set; }
+
+        [JsonProperty("filters")]
+        public Filters Filters { get; set; }
     }
 
-    public class Part
+    public partial class Chord
     {
-        public object current { get; set; }
-        public int songId { get; set; }
-        public int partId { get; set; }
-        public int revisionId { get; set; }
-        public bool isFailed { get; set; }
-        public bool isNotFound { get; set; }
-        public bool isNetworkFailed { get; set; }
-        public object loading { get; set; }
+        [JsonProperty("current")]
+        public object Current { get; set; }
+
+        [JsonProperty("songId")]
+        public long SongId { get; set; }
+
+        [JsonProperty("chordsRevisionId")]
+        public long? ChordsRevisionId { get; set; }
+
+        [JsonProperty("isFailed")]
+        public bool IsFailed { get; set; }
+
+        [JsonProperty("isNotFound")]
+        public bool IsNotFound { get; set; }
+
+        [JsonProperty("isNetworkFailed")]
+        public bool IsNetworkFailed { get; set; }
+
+        [JsonProperty("loading")]
+        public object Loading { get; set; }
     }
 
-    public class Revisions
+    public partial class Current
     {
-        public object revisions { get; set; }
-        public bool isLoading { get; set; }
-        public bool isError { get; set; }
+        [JsonProperty("songId")]
+        public long SongId { get; set; }
+
+        [JsonProperty("artistId")]
+        public long ArtistId { get; set; }
+
+        [JsonProperty("revisionId")]
+        public long RevisionId { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        //[JsonProperty("artist")]
+        //public string Artist { get; set; }   //throwing exception
+
+        [JsonProperty("created_at")]
+        public DateTimeOffset CreatedAt { get; set; }
+
+        [JsonProperty("personId")]
+        public long PersonId { get; set; }
+
+        [JsonProperty("person")]
+        public string Person { get; set; }
+
+        [JsonProperty("restriction")]
+        public string Restriction { get; set; }
+
+        [JsonProperty("hasChords")]
+        public bool HasChords { get; set; }
+
+        [JsonProperty("editors")]
+        public long[] Editors { get; set; }
+
+        [JsonProperty("image")]
+        public string Image { get; set; }
+
+        [JsonProperty("hasTracks")]
+        public bool HasTracks { get; set; }
+
+        [JsonProperty("hasPlayer")]
+        public bool HasPlayer { get; set; }
+
+        [JsonProperty("defaultTrackBass")]
+        public long DefaultTrackBass { get; set; }
+
+        [JsonProperty("defaultTrackDrums")]
+        public long DefaultTrackDrums { get; set; }
+
+        [JsonProperty("defaultTrack")]
+        public long DefaultTrack { get; set; }
+
+        [JsonProperty("lyrics")]
+        public bool Lyrics { get; set; }
+
+        [JsonProperty("tracks")]
+        public Track[] Tracks { get; set; }
+
+        [JsonProperty("defaultTrackGuitar")]
+        public long DefaultTrackGuitar { get; set; }
+
+        [JsonProperty("audioV4Midi")]
+        public string AudioV4Midi { get; set; }
+
+        [JsonProperty("audioV2Midi")]
+        public string AudioV2Midi { get; set; }
+
+        [JsonProperty("hasAudio")]
+        public bool HasAudio { get; set; }
+
+        [JsonProperty("audioV4")]
+        public string AudioV4 { get; set; }
+
+        [JsonProperty("audioV4Generated")]
+        public long AudioV4Generated { get; set; }
+
+        [JsonProperty("audioV2Generated")]
+        public long AudioV2Generated { get; set; }
+
+        [JsonProperty("audioV2")]
+        public string AudioV2 { get; set; }
+
+        [JsonProperty("views")]
+        public long Views { get; set; }
+
+        //[JsonProperty("tags")]
+        //public string[] Tags { get; set; }    //throwing exception
     }
 
-    public class Route
+    public partial class Track
     {
-        public object partInstrument { get; set; }
-        public string page { get; set; }
-        public int songId { get; set; }
-        public int partId { get; set; }
-        public object revisionId { get; set; }
-        public bool isPanel { get; set; }
+        [JsonProperty("tuning", NullValueHandling = NullValueHandling.Ignore)]
+        public long[] Tuning { get; set; }
+
+        [JsonProperty("instrumentId")]
+        public long InstrumentId { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("instrument")]
+        public string Instrument { get; set; }
+
+        [JsonProperty("views")]
+        public long Views { get; set; }
+
+        [JsonProperty("title")]
+        public string Title { get; set; }
+
+        [JsonProperty("partId")]
+        public long PartId { get; set; }
+
+        [JsonProperty("difficulty", NullValueHandling = NullValueHandling.Ignore)]
+        public string Difficulty { get; set; }
+
+        [JsonProperty("difficultyVersion", NullValueHandling = NullValueHandling.Ignore)]
+        public long? DifficultyVersion { get; set; }
+
+        [JsonProperty("isGuitar", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? IsGuitar { get; set; }
+
+        [JsonProperty("isBassGuitar", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? IsBassGuitar { get; set; }
+
+        [JsonProperty("isDrums", NullValueHandling = NullValueHandling.Ignore)]
+        public bool? IsDrums { get; set; }
     }
 
-    public class Songs
+    public partial class Welcome3Songs
     {
-        public int id { get; set; }
-        public List<object> list { get; set; }
-        public bool hasMore { get; set; }
-        public string pattern { get; set; }
-        public int defaultInstrument { get; set; }
-        public Filters filters { get; set; }
-        public Songs songs { get; set; }
-        public object loading { get; set; }
+        [JsonProperty("pattern")]
+        public string Pattern { get; set; }
+
+        [JsonProperty("defaultInstrument")]
+        public long DefaultInstrument { get; set; }
+
+        [JsonProperty("songs")]
+        public ArtistSongs Songs { get; set; }
+
+        [JsonProperty("filters")]
+        public Filters Filters { get; set; }
+
+        [JsonProperty("loading")]
+        public object Loading { get; set; }
     }
 
-    public class Track
+    public partial class Uploads
     {
-        public List<int> tuning { get; set; }
-        public int instrumentId { get; set; }
-        public string name { get; set; }
-        public string instrument { get; set; }
-        public int views { get; set; }
-        public string title { get; set; }
-        public int partId { get; set; }
-        public string difficulty { get; set; }
-        public int? difficultyVersion { get; set; }
-        public bool? isGuitar { get; set; }
-        public bool? isBassGuitar { get; set; }
-        public bool? isDrums { get; set; }
+        [JsonProperty("song")]
+        public object Song { get; set; }
+
+        [JsonProperty("songSubmitted")]
+        public bool SongSubmitted { get; set; }
+
+        [JsonProperty("songError")]
+        public object SongError { get; set; }
+
+        [JsonProperty("revision")]
+        public object Revision { get; set; }
+
+        [JsonProperty("revisionSubmitted")]
+        public bool RevisionSubmitted { get; set; }
+
+        [JsonProperty("revisionError")]
+        public object RevisionError { get; set; }
     }
-
-
 
 }
