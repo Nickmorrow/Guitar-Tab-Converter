@@ -28,8 +28,7 @@ namespace TabTranslator
             string webPathTwo = HttpGet("https://www.songsterr.com/a/wsa/nirvana-smells-like-teen-spirit-tab-s269t2");
             //File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/webPath.txt", $"{webPath}");
             //string wPath = "/Users/Nick/Documents/TabTranslatorWebPath";
-
-            
+       
 
             //StringCollection resultList = new StringCollection();
             //try
@@ -90,8 +89,8 @@ namespace TabTranslator
                 tabTextPath = "/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt";
             }
 
-            Current AppJson = GetJsonSongInfo(webPathTwo, appJsonPath);
-            Console.WriteLine(AppJson.Title);
+            AppJson appJson = GetJsonSongInfo(webPathTwo, appJsonPath);
+            Console.WriteLine(appJson.meta.current.artist);
 
             //Defining SixStringGuitar
 
@@ -320,7 +319,13 @@ namespace TabTranslator
 
             return content;
         }
-        public static Current GetJsonSongInfo(string webPathTwo, string filePath)
+        /// <summary>
+        /// Parses source html for json info and deserializes to object
+        /// </summary>
+        /// <param name="webPathTwo"></param>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static AppJson GetJsonSongInfo(string webPathTwo, string filePath)
         {
 
             StringCollection resultList = new StringCollection();
@@ -344,36 +349,18 @@ namespace TabTranslator
                 File.WriteAllText(@"..\..\..\..\AppJsonFiles\AppJson.txt", $"{str}");
             }
 
-            List<Current> Currents = new List<Current>();
             DirectoryInfo dir = new DirectoryInfo(filePath);
             string[] paths = Directory.GetFiles(filePath);
-            string appJson = "";
+            string appJsonText = "";
             int fileNum = paths.Count();
+            AppJson result = new AppJson();
 
             for (int i = 0; i < fileNum; i++)
             {
-                appJson = File.ReadAllText(paths[i]);
-                Current current = JsonConvert.DeserializeObject<Current>(appJson);
-                //Current current = JsonConvert.DeserializeObject<List<RetrieveMultipleResponse>>(appJson);
-                Currents.Add(current);
+                appJsonText = File.ReadAllText(paths[i]);
+                result = JsonConvert.DeserializeObject<AppJson>(appJsonText);
             }
-
-            //try
-            //{
-            //    for (int i = 0; i < fileNum; i++)
-            //    {
-            //        appJson = File.ReadAllText(paths[i]);
-            //        Current current = JsonConvert.DeserializeObject<Current>(appJson);
-            //        Currents.Add(current);
-            //    }
-
-            //}
-            //catch(Newtonsoft.Json.JsonReaderException)
-            //{
-             ////'Unexpected character encountered while parsing value:          
-            //}
-            Current result = Currents[0];
-
+          
             return result;
 
         }
