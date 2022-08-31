@@ -10,7 +10,7 @@ namespace TabTranslator
     public class AppJson
     {
         public bool isTestMode { get; set; }
-        public Route route { get; set; }
+        //public Route route { get; set; }
         public Query query { get; set; }
         public Player player { get; set; }
         public Meta meta { get; set; }
@@ -42,22 +42,22 @@ namespace TabTranslator
         public object[] chordDiagram { get; set; }
         public Tags tags { get; set; }
         public Curiosity curiosity { get; set; }
-        public Routecontent routeContent { get; set; }
+        //public Routecontent routeContent { get; set; }
         public Querycontent queryContent { get; set; }
         public Device device { get; set; }
         public Browser browser { get; set; }
         public Experiments experiments { get; set; }
     }
 
-    public class Route
-    {
-        public object partInstrument { get; set; }
-        public string page { get; set; }
-        public int songId { get; set; }
-        public int partId { get; set; }
-        public object revisionId { get; set; }
-        public bool isPanel { get; set; }
-    }
+    //public class Route
+    //{
+    //    public object partInstrument { get; set; }
+    //    public string page { get; set; }
+    //    public int songId { get; set; }
+    //    public int partId { get; set; }
+    //    public object revisionId { get; set; }
+    //    public bool isPanel { get; set; }
+    //}
 
     public class Query
     {
@@ -525,15 +525,15 @@ namespace TabTranslator
         public bool Usedfullscreen { get; set; }
     }
 
-    public class Routecontent
-    {
-        public object partInstrument { get; set; }
-        public string page { get; set; }
-        public int songId { get; set; }
-        public int partId { get; set; }
-        public object revisionId { get; set; }
-        public bool isPanel { get; set; }
-    }
+    //public class Routecontent
+    //{
+    //    public object partInstrument { get; set; }
+    //    public string page { get; set; }
+    //    public int songId { get; set; }
+    //    public int partId { get; set; }
+    //    public object revisionId { get; set; }
+    //    public bool isPanel { get; set; }
+    //}
 
     public class Querycontent
     {
