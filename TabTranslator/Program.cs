@@ -19,78 +19,44 @@ namespace TabTranslator
     {
         public static void Main(string[] args)
         {
-            //part 1: https://dqsljvtekg760.cloudfront.net //preload link
-            //part 2: 269 //part of the original url and "songId":269
-            //part 3: 505252 // "revisionId":505252
-            //part 4: "image":"jhkA0qMwaF7BX_5lhD99g"
 
-            string webPath = HttpGet("https://dqsljvtekg760.cloudfront.net/269/505252/jhkA0qMwaF7BX_5lhD99g/2.json");
-            string webPathTwo = HttpGet("https://www.songsterr.com/a/wsa/nirvana-smells-like-teen-spirit-tab-s269t2");
-            //File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/webPath.txt", $"{webPath}");
-            //string wPath = "/Users/Nick/Documents/TabTranslatorWebPath";
-       
-
-            //StringCollection resultList = new StringCollection();
-            //try
-            //{
-            //    Regex regexObj = new Regex(@"//.+\.cloudfront\.net/");
-            //    Match matchResult = regexObj.Match(webPathTwo);
-            //    while (matchResult.Success)
-            //    {
-            //        resultList.Add(matchResult.Value);
-            //        matchResult = matchResult.NextMatch();
-            //    }
-            //}
-            //catch (ArgumentException ex)
-            //{
-            //    // Syntax error in the regular expression
-            //}
-
-            //try
-            //{
-            //    Regex regexObj = new Regex(@"<script id=\Dstate\D type=\Dapplication/json\D>(?<applicationjson>.*?)</script>");
-            //    Match matchResult = regexObj.Match(webPathTwo);
-            //    while (matchResult.Success)
-            //    {
-            //        resultList.Add(matchResult.Value);
-            //        matchResult = matchResult.NextMatch();
-            //    }
-            //}
-            //catch (ArgumentException ex)
-            //{
-            //    // Syntax error in the regular expression
-            //}
-            //foreach(string str in resultList)
-            //{
-            //    Console.WriteLine(str);
-            //}
-
+            //string webPath = HttpGet("https://dqsljvtekg760.cloudfront.net/269/505252/jhkA0qMwaF7BX_5lhD99g/2.json");
+                                     
+            string mainUrl = HttpGet("https://www.songsterr.com/a/wsa/nirvana-smells-like-teen-spirit-tab-s269t2"); // original url, functions
+            //string mainUrl = HttpGet("https://www.songsterr.com/a/wsa/bon-jovi-livin-on-a-prayer-tab-s3131");  //test url
 
 
             string appJsonPath = "";
             string trackJsonPath = "";
             string tabTextPath = "";
 
+            //Allows me to work on either operating system
+
             var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
             if (isWindows)
             {
-                File.WriteAllText(@"..\..\..\..\JSONFiles\webPath.txt", $"{webPath}");
-                //File.WriteAllText(@"..\..\..\..\JSONFiles\webPath2.txt", $"{webPathTwo}");
+                //File.WriteAllText(@"..\..\..\..\JSONFiles\trackUrl.txt", $"{trackUrl}");
                 trackJsonPath = @"..\..\..\..\JSONFiles";
                 tabTextPath = @"..\..\..\..\TabTxtFiles\Test.txt";
                 appJsonPath = @"..\..\..\..\AppJsonFiles";
             }
             var isOSX = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
             if (isOSX)
-            {
-                //path = "/Users/Nick/Documents/GitHub/TabTranslator/JSONFiles";
-                File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/webPath.txt", $"{webPath}");
+            {               
+                //File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/trackUrl.txt", $"{trackUrl}");
                 trackJsonPath = "/Users/Nick/Documents/TabTranslatorWebPath";
                 tabTextPath = "/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt";
             }
+           
+            AppJson appJson = GetJsonSongInfo(mainUrl, appJsonPath);
 
-            AppJson appJson = GetJsonSongInfo(webPathTwo, appJsonPath);
-            Console.WriteLine(appJson.meta.current.artist);
+            Console.WriteLine($"Tracks:{appJson.meta.current.tracks.Count().ToString()}");
+            Console.WriteLine("Select track");
+            int userTrackSelection = Int32.Parse(Console.ReadLine()); 
+
+            string urlParts = GetUrl(mainUrl, appJson, userTrackSelection);
+            string trackUrl = HttpGet(urlParts);
+            File.WriteAllText(@"..\..\..\..\JSONFiles\trackUrl.txt", $"{trackUrl}");
 
             //Defining SixStringGuitar
 
@@ -249,9 +215,7 @@ namespace TabTranslator
         /// <returns>list of MusicalNotes</returns>
         public static List<MusicalBeat> GetSongBeats(SongsterrSong song, StringInstrument stringInstrument)
         {
-
             List<MusicalBeat> beats = new List<MusicalBeat>();
-
             for (int measureNum = 0; measureNum < song.Measures.Count(); measureNum++)
             {
                 for (int voiceNum = 0; voiceNum < song.Measures[measureNum].Voices.Count(); voiceNum++)
@@ -264,7 +228,6 @@ namespace TabTranslator
                         beat.Duration16ths = beat.Get16ths(beat.SongsterrDuration);
                         beat.NullableBool = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Rest;
                         beat.IsRest = beat.GetRestBeat(beat.NullableBool);
-
                         for (int noteNum = 0; noteNum < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); noteNum++)
                         {
                             MusicalNote note = new MusicalNote();
@@ -276,7 +239,6 @@ namespace TabTranslator
                             note.IsRest = note.GetRestNote(note.NullableBoolRest);
                             note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
                             note.Dead = note.GetDeadNote(note.NullableBoolDead);
-
                             notes.Add(note);
                         }
                         beat.MusicalNotes = notes;
@@ -284,7 +246,6 @@ namespace TabTranslator
                     }
                 }
             }
-
             return beats;
         }
 
@@ -300,23 +261,19 @@ namespace TabTranslator
             string[] fPaths = Directory.GetFiles(dPath);
             string json = "";
             int fileNum = fPaths.Count();
-
             for (int i = 0; i < fileNum; i++)
             {
                 json = File.ReadAllText(fPaths[i]);
                 SongsterrSong song = JsonConvert.DeserializeObject<SongsterrSong>(json);
                 Songs.Add(song);
             }
-
             return Songs;
         }
         private static string HttpGet(string uri)
         {
             string content = null;
-
             var wc = new MyWebClient();
             content = wc.DownloadString(uri);
-
             return content;
         }
         /// <summary>
@@ -324,10 +281,9 @@ namespace TabTranslator
         /// </summary>
         /// <param name="webPathTwo"></param>
         /// <param name="filePath"></param>
-        /// <returns></returns>
+        /// <returns>AppJson Object</returns>
         public static AppJson GetJsonSongInfo(string webPathTwo, string filePath)
         {
-
             StringCollection resultList = new StringCollection();
             try
             {
@@ -343,25 +299,65 @@ namespace TabTranslator
             {
                 // Syntax error in the regular expression
             }
-
             foreach (string str in resultList)
             {
                 File.WriteAllText(@"..\..\..\..\AppJsonFiles\AppJson.txt", $"{str}");
             }
-
             DirectoryInfo dir = new DirectoryInfo(filePath);
             string[] paths = Directory.GetFiles(filePath);
             string appJsonText = "";
             int fileNum = paths.Count();
             AppJson result = new AppJson();
-
             for (int i = 0; i < fileNum; i++)
             {
                 appJsonText = File.ReadAllText(paths[i]);
                 result = JsonConvert.DeserializeObject<AppJson>(appJsonText);
-            }
-          
+            }           
             return result;
+        }
+
+        public static string GetUrl(string url, AppJson appJson, int trackSelection)
+        {
+            StringCollection resultList = new StringCollection();
+
+            // first part of url (cloudfrontserver)
+            try
+            {
+                Regex regexObj = new Regex(@"//.+\.cloudfront\.net/");
+                Match matchResult = regexObj.Match(url);
+                while (matchResult.Success)
+                {
+                    resultList.Add(matchResult.Value);
+                    matchResult = matchResult.NextMatch();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                // Syntax error in the regular expression
+            }
+            string firstPartUrl = resultList[3];
+
+            // second part of url (songid)
+
+            string secondPartUrl = appJson.meta.songId.ToString();
+
+            // third part url (revisionId)
+
+            string thirdPartUrl = appJson.meta.current.revisionId.ToString();
+
+            // fourth part url (image)
+
+            string fourthPartUrl = appJson.meta.current.image;
+            
+            // fifth part json file
+
+            int minusOne = trackSelection - 1;
+            string trackNum = minusOne.ToString();
+            string fifthPartUrl = $"{trackNum}.json";
+
+            string finalUrl = $"https:{firstPartUrl}{secondPartUrl}/{thirdPartUrl}/{fourthPartUrl}/{fifthPartUrl}";
+
+            return finalUrl;
 
         }
 
