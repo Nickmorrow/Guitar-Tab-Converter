@@ -20,13 +20,8 @@ namespace TabTranslator
     {
         public static void Main(string[] args)
         {
-
-            //string webPath = HttpGet("https://dqsljvtekg760.cloudfront.net/269/505252/jhkA0qMwaF7BX_5lhD99g/2.json");
-
-            //string mainUrl = HttpGet("https://www.songsterr.com/a/wsa/nirvana-smells-like-teen-spirit-tab-s269t2"); // original url functions
-            //string mainUrl = HttpGet("https://www.songsterr.com/a/wsa/bon-jovi-livin-on-a-prayer-tab-s3131");  //test url 1 functions
-            //string mainUrl = HttpGet("https://www.songsterr.com/a/wsa/metallica-master-of-puppets-tab-s455118");   //test url 2 functions
-            //string mainUrl = HttpGet("https://www.songsterr.com/a/wsa/dua-lipa-new-rules-tab-s436818");   //test url 3 functions
+            //Thread.Sleep(1000); // delay 1 second
+                                             
             string mainUrl = HttpGet("https://www.songsterr.com/a/wsa/pink-floyd-wish-you-were-here-tab-s153t1");   //test url 4
 
             string appJsonPath = "";
@@ -51,7 +46,9 @@ namespace TabTranslator
                 tabTextPath = "/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt";
             }
            
-            AppJson appJson = GetJsonSongInfo(mainUrl, appJsonPath);
+            AppJson appJson = GetJsonSongInfo(mainUrl, appJsonPath); 
+
+            // simple test UI
 
             Console.WriteLine($"Tracks:{appJson.meta.current.tracks.Count().ToString()}");
             Console.WriteLine("Select track");
@@ -141,7 +138,6 @@ namespace TabTranslator
             Ukelele.Name = "Ukelele";
             Ukelele.FretCount = 12;
             Ukelele.MusicStrings = StandardUkeleleTunings;
-
 
             // **TESTS**
 
@@ -351,7 +347,7 @@ namespace TabTranslator
             // fourth part url (image)
 
             string fourthPartUrl = appJson.meta.current.image;
-            
+
             // fifth part json file
 
             int minusOne = trackSelection - 1;
