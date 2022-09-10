@@ -30,7 +30,7 @@ namespace TabTranslator
             //    Console.WriteLine(s);
             //    Thread.Sleep(1000);
             //}
-            string songUrl = $"{mainUrl}{TopSearchedSongs[15]}";
+            string songUrl = HttpGet($"https://www.songsterr.com{TopSearchedSongs[30]}");
 
             string appJsonPath = "";
             string trackJsonPath = "";
@@ -289,16 +289,16 @@ namespace TabTranslator
         /// <summary>
         /// Parses source html for json info and deserializes to object
         /// </summary>
-        /// <param name="webPathTwo"></param>
+        /// <param name="songUrl"></param>
         /// <param name="filePath"></param>
         /// <returns>AppJson Object</returns>
-        public static AppJson GetJsonSongInfo(string webPathTwo, string filePath)
+        public static AppJson GetJsonSongInfo(string songUrl, string filePath)
         {
             StringCollection resultList = new StringCollection();
             try
             {
                 Regex regexObj = new Regex(@"<script id=\Dstate\D type=\Dapplication/json\D>(?<applicationjson>.*?)</script>");
-                Match matchResult = regexObj.Match(webPathTwo);
+                Match matchResult = regexObj.Match(songUrl);
                 while (matchResult.Success)
                 {
                     resultList.Add(matchResult.Groups[1].Value);
