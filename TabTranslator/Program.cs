@@ -13,16 +13,24 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Collections.Specialized;
 
+
 namespace TabTranslator
 {
 
     internal class Program
     {
         public static void Main(string[] args)
-        {
-            //Thread.Sleep(1000); // delay 1 second
-                                             
-            string mainUrl = HttpGet("https://www.songsterr.com/a/wsa/pink-floyd-wish-you-were-here-tab-s153t1");   //test url 4
+        {                                             
+            string mainUrl = HttpGet("https://www.songsterr.com");
+
+            StringCollection TopSearchedSongs = GetTopSearchedSongUrls(mainUrl);
+
+            //foreach (String s in TopSearchedSongs)
+            //{
+            //    Console.WriteLine(s);
+            //    Thread.Sleep(1000);
+            //}
+            string songUrl = $"{mainUrl}{TopSearchedSongs[15]}";
 
             string appJsonPath = "";
             string trackJsonPath = "";
@@ -46,15 +54,15 @@ namespace TabTranslator
                 tabTextPath = "/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt";
             }
            
-            AppJson appJson = GetJsonSongInfo(mainUrl, appJsonPath); 
+            AppJson appJson = GetJsonSongInfo(songUrl, appJsonPath); 
 
             // simple test UI
 
             Console.WriteLine($"Tracks:{appJson.meta.current.tracks.Count().ToString()}");
             Console.WriteLine("Select track");
-            int userTrackSelection = Int32.Parse(Console.ReadLine()); 
+            int trackIndex = Int32.Parse(Console.ReadLine()); 
 
-            string urlParts = GetUrl(mainUrl, appJson, userTrackSelection);
+            string urlParts = GetUrl(songUrl, appJson, trackIndex);
             string trackUrl = HttpGet(urlParts);
             File.WriteAllText(@"..\..\..\..\JSONFiles\trackUrl.txt", $"{trackUrl}");
 
@@ -205,6 +213,9 @@ namespace TabTranslator
                 File.AppendAllText(tabTextPath, $"\n");
             }
             Console.ReadLine();
+
+
+
         }
         /// <summary>
         /// Gets the notes, duration. and octave from songster json
@@ -315,7 +326,7 @@ namespace TabTranslator
             return result;
         }
 
-        public static string GetUrl(string url, AppJson appJson, int trackSelection)
+        public static string GetUrl(string url, AppJson appJson, int trackIndex)
         {
             StringCollection resultList = new StringCollection();
 
@@ -334,32 +345,51 @@ namespace TabTranslator
             {
                 // Syntax error in the regular expression
             }
-            string firstPartUrl = resultList[3];
+            string cloudFrontServer = resultList[3];
 
             // second part of url (songid)
 
-            string secondPartUrl = appJson.meta.songId.ToString();
+            string songId = appJson.meta.songId.ToString();
 
             // third part url (revisionId)
 
-            string thirdPartUrl = appJson.meta.current.revisionId.ToString();
+            string revisionId = appJson.meta.current.revisionId.ToString();
 
             // fourth part url (image)
 
-            string fourthPartUrl = appJson.meta.current.image;
+            string imageName = appJson.meta.current.image;
 
             // fifth part json file
-
-            int minusOne = trackSelection - 1;
-            string trackNum = minusOne.ToString();
-            string fifthPartUrl = $"{trackNum}.json";
-
-            string finalUrl = $"https:{firstPartUrl}{secondPartUrl}/{thirdPartUrl}/{fourthPartUrl}/{fifthPartUrl}";
+           
+            trackIndex--;
+            string trackNum = trackIndex.ToString();
+            string jsonFile = $"{trackNum}.json";
+            string finalUrl = $"https:{cloudFrontServer}{songId}/{revisionId}/{imageName}/{jsonFile}";
 
             return finalUrl;
-
         }
 
+        public static StringCollection GetTopSearchedSongUrls(string url)
+        {
+            StringCollection resultList = new StringCollection();
+            try
+            {                
+                Regex regexObj = new Regex(@"<a.*?href=\D(/a/wsa/.*?)\D\s");
+                Match matchResult = regexObj.Match(url);
+                while (matchResult.Success)
+                {
+                    resultList.Add(matchResult.Groups[1].Value);
+                    matchResult = matchResult.NextMatch();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                // Syntax error in the regular expression
+            }
+
+            return resultList;
+
+        }
 
 
     }
