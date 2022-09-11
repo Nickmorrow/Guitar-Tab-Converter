@@ -25,14 +25,23 @@ namespace TabTranslator
 
             StringCollection TopSearchedSongs = GetTopSearchedSongUrls(mainUrl);
 
-            //foreach (String s in TopSearchedSongs)
-            //{
-            //    Console.WriteLine(s);
-            //    Thread.Sleep(1000);
-            //}
+            //testing top songs appjson deserialization
+
+            List<AppJson> TopSongJson = new List<AppJson>();
+            AppJson TopSong = new AppJson();
+            string topSongUrl;
+
+            foreach (String s in TopSearchedSongs)
+            {
+                Console.WriteLine(s);
+                topSongUrl = HttpGet($"https://www.songsterr.com{s}");
+                TopSong = GetJsonSongInfo(topSongUrl);
+                TopSongJson.Add(TopSong);
+                Thread.Sleep(1000);
+            }
+
             string songUrl = HttpGet($"https://www.songsterr.com{TopSearchedSongs[30]}");
 
-            string appJsonPath = "";
             string trackJsonPath = "";
             string tabTextPath = "";
 
@@ -44,7 +53,6 @@ namespace TabTranslator
                 //File.WriteAllText(@"..\..\..\..\JSONFiles\trackUrl.txt", $"{trackUrl}");
                 trackJsonPath = @"..\..\..\..\JSONFiles";
                 tabTextPath = @"..\..\..\..\TabTxtFiles\Test.txt";
-                appJsonPath = @"..\..\..\..\AppJsonFiles";
             }
             var isOSX = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
             if (isOSX)
@@ -54,7 +62,7 @@ namespace TabTranslator
                 tabTextPath = "/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt";
             }
            
-            AppJson appJson = GetJsonSongInfo(songUrl, appJsonPath); 
+            AppJson appJson = GetJsonSongInfo(songUrl); 
 
             // simple test UI
 
@@ -292,7 +300,7 @@ namespace TabTranslator
         /// <param name="songUrl"></param>
         /// <param name="filePath"></param>
         /// <returns>AppJson Object</returns>
-        public static AppJson GetJsonSongInfo(string songUrl, string filePath)
+        public static AppJson GetJsonSongInfo(string songUrl)
         {
             StringCollection resultList = new StringCollection();
             try
@@ -309,20 +317,7 @@ namespace TabTranslator
             {
                 // Syntax error in the regular expression
             }
-            foreach (string str in resultList)
-            {
-                File.WriteAllText(@"..\..\..\..\AppJsonFiles\AppJson.txt", $"{str}");
-            }
-            DirectoryInfo dir = new DirectoryInfo(filePath);
-            string[] paths = Directory.GetFiles(filePath);
-            string appJsonText = "";
-            int fileNum = paths.Count();
-            AppJson result = new AppJson();
-            for (int i = 0; i < fileNum; i++)
-            {
-                appJsonText = File.ReadAllText(paths[i]);
-                result = JsonConvert.DeserializeObject<AppJson>(appJsonText);
-            }           
+            AppJson result = JsonConvert.DeserializeObject<AppJson>(resultList[0]);
             return result;
         }
 
