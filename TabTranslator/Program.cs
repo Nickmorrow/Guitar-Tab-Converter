@@ -21,147 +21,50 @@ namespace TabTranslator
     {
         public static void Main(string[] args)
         {                                             
-            string mainUrl = HttpGet("https://www.songsterr.com");
+            string mainSourceHTML = HttpGet("https://www.songsterr.com");
 
-            StringCollection TopSearchedSongs = GetTopSearchedSongUrls(mainUrl);
+            StringCollection TopSearchedSongs = GetTopSearchedSongUrls(mainSourceHTML);
 
             //testing top songs appjson deserialization
 
             List<AppJson> TopSongJson = new List<AppJson>();
             AppJson TopSong = new AppJson();
-            string topSongUrl;
+            string topSongSourceHTML;
 
             foreach (String s in TopSearchedSongs)
             {
+                if (s.Contains("chord"))
+                    continue;
                 Console.WriteLine(s);
-                topSongUrl = HttpGet($"https://www.songsterr.com{s}");
-                TopSong = GetJsonSongInfo(topSongUrl);
+                topSongSourceHTML = HttpGet($"https://www.songsterr.com{s}");
+                TopSong = GetJsonSongInfo(topSongSourceHTML);
                 TopSongJson.Add(TopSong);
                 Thread.Sleep(1000);
             }
 
-            string songUrl = HttpGet($"https://www.songsterr.com{TopSearchedSongs[30]}");
+            string songSourceHTML = HttpGet($"https://www.songsterr.com{TopSearchedSongs[30]}");
 
-            string trackJsonPath = "";
-            string tabTextPath = "";
+            List<string> OSFilePaths = GetFilePathsForOS();
+            string trackJsonPath = OSFilePaths[0];
+            string tabTextPath = OSFilePaths[1];           
 
-            //Allows me to work on either operating system
+            AppJson appJson = GetJsonSongInfo(songSourceHTML);
 
-            var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-            if (isWindows)
-            {
-                //File.WriteAllText(@"..\..\..\..\JSONFiles\trackUrl.txt", $"{trackUrl}");
-                trackJsonPath = @"..\..\..\..\JSONFiles";
-                tabTextPath = @"..\..\..\..\TabTxtFiles\Test.txt";
-            }
-            var isOSX = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-            if (isOSX)
-            {               
-                //File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/trackUrl.txt", $"{trackUrl}");
-                trackJsonPath = "/Users/Nick/Documents/TabTranslatorWebPath";
-                tabTextPath = "/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt";
-            }
-           
-            AppJson appJson = GetJsonSongInfo(songUrl); 
+            int trackIndex = UIMethods.GetTrackIndex(appJson);
 
-            // simple test UI
+            string urlParts = GetUrl(songSourceHTML, appJson, trackIndex);
+            string trackJSON = HttpGet(urlParts);
+            File.WriteAllText(@"..\..\..\..\JSONFiles\trackJSON.txt", $"{trackJSON}");
 
-            Console.WriteLine($"Tracks:{appJson.meta.current.tracks.Count().ToString()}");
-            Console.WriteLine("Select track");
-            int trackIndex = Int32.Parse(Console.ReadLine()); 
-
-            string urlParts = GetUrl(songUrl, appJson, trackIndex);
-            string trackUrl = HttpGet(urlParts);
-            File.WriteAllText(@"..\..\..\..\JSONFiles\trackUrl.txt", $"{trackUrl}");
-
-            //Defining SixStringGuitar
-
-            // Standard Tuning
-
-            MusicString GString0 = new MusicString();
-            GString0.Tuning = RootNotes.E;
-            MusicString GString1 = new MusicString();
-            GString1.Tuning = RootNotes.B;
-            MusicString GString2 = new MusicString();
-            GString2.Tuning = RootNotes.G;
-            MusicString GString3 = new MusicString();
-            GString3.Tuning = RootNotes.D;
-            MusicString GString4 = new MusicString();
-            GString4.Tuning = RootNotes.A;
-            MusicString GString5 = new MusicString();
-            GString5.Tuning = RootNotes.E;
-
-            List<MusicString> StandardGuitarTunings = new List<MusicString>(); //string list is reverse of normal to match json data
-            StandardGuitarTunings.Add(GString0);
-            StandardGuitarTunings.Add(GString1);
-            StandardGuitarTunings.Add(GString2);
-            StandardGuitarTunings.Add(GString3);
-            StandardGuitarTunings.Add(GString4);
-            StandardGuitarTunings.Add(GString5);
-
-            StringInstrument SixStringGuitar = new StringInstrument();
-
-            SixStringGuitar.Name = "SixStringGuitar";
-            SixStringGuitar.FretCount = 21;
-            SixStringGuitar.MusicStrings = StandardGuitarTunings;
-
-            // Defining BassGuitar
-
-            // Standard Tuning
-
-            MusicString BGString0 = new MusicString();
-            BGString0.Tuning = RootNotes.G;
-            MusicString BGString1 = new MusicString();
-            BGString1.Tuning = RootNotes.D;
-            MusicString BGString2 = new MusicString();
-            BGString2.Tuning = RootNotes.A;
-            MusicString BGString3 = new MusicString();
-            BGString3.Tuning = RootNotes.E;
-
-            List<MusicString> StandardBassGuitarTunings = new List<MusicString>();
-            StandardBassGuitarTunings.Add(BGString0);
-            StandardBassGuitarTunings.Add(BGString1);
-            StandardBassGuitarTunings.Add(BGString2);
-            StandardBassGuitarTunings.Add(BGString3);
-
-            StringInstrument BassGuitar = new StringInstrument();
-
-            BassGuitar.Name = "BassGuitar";
-            BassGuitar.FretCount = 21;
-            BassGuitar.MusicStrings = StandardBassGuitarTunings;
-
-            // Defining Ukelele
-
-            // Standard tuning
-
-            MusicString UkString0 = new MusicString();
-            UkString0.Tuning = RootNotes.A;
-            MusicString UkString1 = new MusicString();
-            UkString1.Tuning = RootNotes.E;
-            MusicString UkString2 = new MusicString();
-            UkString2.Tuning = RootNotes.C;
-            MusicString UkString3 = new MusicString();
-            UkString3.Tuning = RootNotes.G;
-
-            List<MusicString> StandardUkeleleTunings = new List<MusicString>();
-            StandardUkeleleTunings.Add(BGString0);
-            StandardUkeleleTunings.Add(BGString1);
-            StandardUkeleleTunings.Add(BGString2);
-            StandardUkeleleTunings.Add(BGString3);
-
-            StringInstrument Ukelele = new StringInstrument();
-
-            Ukelele.Name = "Ukelele";
-            Ukelele.FretCount = 12;
-            Ukelele.MusicStrings = StandardUkeleleTunings;
+            List<StringInstrument> stringInstruments = InstObjects.DefStrInstruments();
 
             // **TESTS**
 
             //SongsterrSong webSong = GetJsonSong(wPath);
             List<SongsterrSong> Songs = GetJsonTracks(trackJsonPath);
-            List<MusicalBeat> songBeats = GetSongBeats(Songs[0], SixStringGuitar);
+            List<MusicalBeat> songBeats = GetSongBeats(Songs[0], stringInstruments[0]);
 
-            var tab = new Tab(Songs[0], SixStringGuitar, songBeats);
+            var tab = new Tab(Songs[0], stringInstruments[0], songBeats);
 
             List<string> tabOne = tab.TabLines[0];
             int tabLength = tabOne.Count;
@@ -381,11 +284,32 @@ namespace TabTranslator
             {
                 // Syntax error in the regular expression
             }
-
             return resultList;
-
         }
 
+        public static List<string> GetFilePathsForOS()
+        {
+            string trackJsonPath = "";
+            string tabTextPath = "";
+            List<string> resultList = new List<string>();
+            var isWindows = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+            if (isWindows)
+            {
+                //File.WriteAllText(@"..\..\..\..\JSONFiles\trackUrl.txt", $"{trackUrl}");
+                trackJsonPath = @"..\..\..\..\JSONFiles";
+                tabTextPath = @"..\..\..\..\TabTxtFiles\Test.txt";
+            }
+            var isOSX = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+            if (isOSX)
+            {
+                //File.WriteAllText(@"/Users/Nick/Documents/TabTranslatorWebPath/trackUrl.txt", $"{trackUrl}");
+                trackJsonPath = "/Users/Nick/Documents/TabTranslatorWebPath";
+                tabTextPath = "/Users/Nick/Documents/TabTranslatorTextFiles/Test.txt";
+            }
+            resultList.Add(trackJsonPath);
+            resultList.Add(tabTextPath);
+            return resultList;
+        }
 
     }
 
