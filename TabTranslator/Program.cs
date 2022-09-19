@@ -16,117 +16,126 @@ using System.Collections.Specialized;
 
 namespace TabTranslator
 {
-
     internal class Program
     {
         public static void Main(string[] args)
-        {                                             
+        {             
             string mainSourceHTML = HttpGet("https://www.songsterr.com");
-
-            StringCollection TopSearchedSongs = GetTopSearchedSongUrls(mainSourceHTML);
-
-            //testing top songs appjson deserialization
-
-            List<AppJson> TopSongJson = new List<AppJson>();
-            AppJson TopSong = new AppJson();
-            string topSongSourceHTML;
-
-            foreach (String s in TopSearchedSongs)
+            string songSourceHTML = "";
+            bool isOpen = true;
+            while (isOpen)
             {
-                if (s.Contains("chord"))
-                    continue;
-                Console.WriteLine(s);
-                topSongSourceHTML = HttpGet($"https://www.songsterr.com{s}");
-                TopSong = GetJsonSongInfo(topSongSourceHTML);
-                TopSongJson.Add(TopSong);
-                Thread.Sleep(1000);
-            }
-
-            string songSourceHTML = HttpGet($"https://www.songsterr.com{TopSearchedSongs[30]}");
-
-            List<string> OSFilePaths = GetFilePathsForOS();
-            string trackJsonPath = OSFilePaths[0];
-            string tabTextPath = OSFilePaths[1];           
-
-            AppJson appJson = GetJsonSongInfo(songSourceHTML);
-
-            int trackIndex = UIMethods.GetTrackIndex(appJson);
-
-            string urlParts = GetUrl(songSourceHTML, appJson, trackIndex);
-            string trackJSON = HttpGet(urlParts);
-            File.WriteAllText(@"..\..\..\..\JSONFiles\trackJSON.txt", $"{trackJSON}");
-
-            List<StringInstrument> stringInstruments = InstObjects.DefStrInstruments();
-
-            // **TESTS**
-
-            //SongsterrSong webSong = GetJsonSong(wPath);
-            List<SongsterrSong> Songs = GetJsonTracks(trackJsonPath);
-            List<MusicalBeat> songBeats = GetSongBeats(Songs[0], stringInstruments[0]);
-
-            var tab = new Tab(Songs[0], stringInstruments[0], songBeats);
-
-            List<string> tabOne = tab.TabLines[0];
-            int tabLength = tabOne.Count;
-            int measuresPerLine = 10;
-            int tabLineStartPoint = 0;
-            int tabLineEndPoint = measuresPerLine;
-
-            //Console.WriteLine($"{tab.TitleOfSong}\n{tab.InstrumentString}");
-            File.WriteAllText(tabTextPath, $"{tab.TitleOfSong}\n{tab.InstrumentString}\n");
-
-            foreach (RootNotes tuning in tab.Tuning.Reverse<RootNotes>())
-            {
-                //Console.Write(tuning.ToString());
-                File.AppendAllText(tabTextPath, $"{tuning.ToString()}");
-            }
-            if (tab.Capo == 0)
-            {
-                //Console.WriteLine("\nNo Capo\n");
-                File.AppendAllText(tabTextPath, "\nNo Capo\n");
-            }
-            else
-            {
-                //Console.WriteLine($"\nCapo on Fret {tab.Capo.ToString()}\n");
-                File.AppendAllText(tabTextPath, $"\nCapo on Fret {tab.Capo.ToString()}\n");
-            }
-            
-            while (tabLineStartPoint < tabLength)
-            {
-                int remainingMeasures = tabLength - tabLineEndPoint;
-                for (int i = 0; i < tab.TabLines.Count; i++)
+                UIMethods.Welcome();
+                bool seeTopSearched = UIMethods.TopSearchedYN();
+                StringCollection TopSearchedSongs;
+                List<AppJson> TopSongJson;
+                int topSongIndex;
+                if (seeTopSearched)
                 {
-                    List<string> tabLine = tab.TabLines[i];
-                    for (int h = tabLineStartPoint; h < tabLineEndPoint; h++)
-                    { 
-                        string measure = tabLine[h];
-                        int dashCount = measure.Length;
-
-                        for (int k = 0; k < dashCount; k++)
+                    TopSearchedSongs = GetSongUrls(mainSourceHTML);
+                    TopSongJson = GetTopSearchedSongs(TopSearchedSongs);
+                    bool indexIsValid = false;
+                    while (!indexIsValid)
+                    {
+                        topSongIndex = UIMethods.TopSongSelected();
+                        for (int topSongNum = 0; topSongNum < TopSearchedSongs.Count; topSongNum++)
                         {
-                            //Console.Write(measure[k]);
-                            File.AppendAllText(tabTextPath, $"{measure[k]}");
+                            if (topSongIndex - 1 == TopSearchedSongs[topSongNum].Count())
+                            {
+                                songSourceHTML = HttpGet($"https://www.songsterr.com{TopSearchedSongs[topSongNum]}");
+                                indexIsValid = true;
+                                break;
+                            }
+                            else
+                            {
+                                UIMethods.TopSongInvalidInput();
+                                break;
+                            }
                         }
+                    }
+                }
+                
+
+                List<string> OSFilePaths = GetFilePathsForOS();     //allows me to work on mac or pc
+                string trackJsonPath = OSFilePaths[0];
+                string tabTextPath = OSFilePaths[1];
+
+                AppJson appJson = GetJsonSongInfo(songSourceHTML);
+
+                int trackIndex = UIMethods.GetTrackIndex(appJson);      //Test UI
+
+                string urlParts = GetUrl(songSourceHTML, appJson, trackIndex);
+                string trackJSON = HttpGet(urlParts);
+                File.WriteAllText(@"..\..\..\..\JSONFiles\trackJSON.txt", $"{trackJSON}");
+
+                List<StringInstrument> stringInstruments = InstObjects.DefStrInstruments();     //list of string instruments
+
+                // **TESTS**
+
+                List<SongsterrSong> Songs = GetJsonTracks(trackJsonPath);
+                List<MusicalBeat> songBeats = GetSongBeats(Songs[0], stringInstruments[0]);
+
+                var tab = new Tab(Songs[0], stringInstruments[0], songBeats);
+
+                List<string> tabOne = tab.TabLines[0];
+                int tabLength = tabOne.Count;
+                int measuresPerLine = 10;
+                int tabLineStartPoint = 0;
+                int tabLineEndPoint = measuresPerLine;
+
+                //Console.WriteLine($"{tab.TitleOfSong}\n{tab.InstrumentString}");
+                File.WriteAllText(tabTextPath, $"{tab.TitleOfSong}\n{tab.InstrumentString}\n");
+
+                foreach (RootNotes tuning in tab.Tuning.Reverse<RootNotes>())
+                {
+                    //Console.Write(tuning.ToString());
+                    File.AppendAllText(tabTextPath, $"{tuning.ToString()}");
+                }
+                if (tab.Capo == 0)
+                {
+                    //Console.WriteLine("\nNo Capo\n");
+                    File.AppendAllText(tabTextPath, "\nNo Capo\n");
+                }
+                else
+                {
+                    //Console.WriteLine($"\nCapo on Fret {tab.Capo.ToString()}\n");
+                    File.AppendAllText(tabTextPath, $"\nCapo on Fret {tab.Capo.ToString()}\n");
+                }
+
+                while (tabLineStartPoint < tabLength)
+                {
+                    int remainingMeasures = tabLength - tabLineEndPoint;
+                    for (int i = 0; i < tab.TabLines.Count; i++)
+                    {
+                        List<string> tabLine = tab.TabLines[i];
+                        for (int h = tabLineStartPoint; h < tabLineEndPoint; h++)
+                        {
+                            string measure = tabLine[h];
+                            int dashCount = measure.Length;
+
+                            for (int k = 0; k < dashCount; k++)
+                            {
+                                //Console.Write(measure[k]);
+                                File.AppendAllText(tabTextPath, $"{measure[k]}");
+                            }
+                        }
+                        //Console.Write($"\n");
+                        File.AppendAllText(tabTextPath, $"\n");
+                    }
+                    tabLineStartPoint += 10;
+                    if (remainingMeasures >= 10)
+                    {
+                        tabLineEndPoint += 10;
+                    }
+                    else
+                    {
+                        tabLineEndPoint = tabLength;
                     }
                     //Console.Write($"\n");
                     File.AppendAllText(tabTextPath, $"\n");
                 }
-                tabLineStartPoint += 10;
-                if (remainingMeasures >= 10)
-                {
-                    tabLineEndPoint += 10;
-                }
-                else
-                {
-                    tabLineEndPoint = tabLength;
-                }
-                //Console.Write($"\n");
-                File.AppendAllText(tabTextPath, $"\n");
+                Console.ReadLine();
             }
-            Console.ReadLine();
-
-
-
         }
         /// <summary>
         /// Gets the notes, duration. and octave from songster json
@@ -246,19 +255,15 @@ namespace TabTranslator
             string cloudFrontServer = resultList[3];
 
             // second part of url (songid)
-
             string songId = appJson.meta.songId.ToString();
 
             // third part url (revisionId)
-
             string revisionId = appJson.meta.current.revisionId.ToString();
 
             // fourth part url (image)
-
             string imageName = appJson.meta.current.image;
 
-            // fifth part json file
-           
+            // fifth part json file          
             trackIndex--;
             string trackNum = trackIndex.ToString();
             string jsonFile = $"{trackNum}.json";
@@ -267,13 +272,13 @@ namespace TabTranslator
             return finalUrl;
         }
 
-        public static StringCollection GetTopSearchedSongUrls(string url)
+        public static StringCollection GetSongUrls(string html)
         {
             StringCollection resultList = new StringCollection();
             try
             {                
                 Regex regexObj = new Regex(@"<a.*?href=\D(/a/wsa/.*?)\D\s");
-                Match matchResult = regexObj.Match(url);
+                Match matchResult = regexObj.Match(html);
                 while (matchResult.Success)
                 {
                     resultList.Add(matchResult.Groups[1].Value);
@@ -311,6 +316,28 @@ namespace TabTranslator
             return resultList;
         }
 
+        public static List<AppJson> GetTopSearchedSongs(StringCollection TopSearchedSongs)
+        {            
+
+            List<AppJson> TopSongJson = new List<AppJson>();
+            AppJson TopSong = new AppJson();
+            string topSongSourceHTML;
+            int counter = 0;
+
+            foreach (String s in TopSearchedSongs)
+            {
+                if (s.Contains("chord"))
+                    continue;
+                //Console.WriteLine(s);
+                topSongSourceHTML = HttpGet($"https://www.songsterr.com{s}");
+                TopSong = GetJsonSongInfo(topSongSourceHTML);
+                TopSongJson.Add(TopSong);
+                Console.WriteLine($"{counter + 1}. {TopSongJson[counter].meta.current.artist}-{TopSongJson[counter].meta.current.title}");
+                counter++;
+                Thread.Sleep(1000);
+            }
+            return TopSongJson;
+        }
     }
 
 
