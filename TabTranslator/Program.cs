@@ -33,29 +33,11 @@ namespace TabTranslator
                 if (seeTopSearched)
                 {
                     TopSearchedSongs = GetSongUrls(mainSourceHTML);
-                    TopSongJson = GetTopSearchedSongs(TopSearchedSongs);
-                    bool indexIsValid = false;
-                    while (!indexIsValid)
-                    {
-                        topSongIndex = UIMethods.TopSongSelected();
-                        for (int topSongNum = 0; topSongNum < TopSearchedSongs.Count; topSongNum++)
-                        {
-                            if (topSongIndex - 1 == TopSearchedSongs[topSongNum].Count())
-                            {
-                                songSourceHTML = HttpGet($"https://www.songsterr.com{TopSearchedSongs[topSongNum]}");
-                                indexIsValid = true;
-                                break;
-                            }
-                            else
-                            {
-                                UIMethods.TopSongInvalidInput();
-                                break;
-                            }
-                        }
-                    }
+                    TopSongJson = GetTopSearchedSongs(TopSearchedSongs);                      
+                    topSongIndex = UIMethods.TopSongSelected(TopSongJson, TopSearchedSongs);
+                    songSourceHTML = HttpGet($"https://www.songsterr.com{TopSearchedSongs[topSongIndex-1]}");
                 }
-                
-
+                                
                 List<string> OSFilePaths = GetFilePathsForOS();     //allows me to work on mac or pc
                 string trackJsonPath = OSFilePaths[0];
                 string tabTextPath = OSFilePaths[1];
@@ -335,6 +317,7 @@ namespace TabTranslator
                 Console.WriteLine($"{counter + 1}. {TopSongJson[counter].meta.current.artist}-{TopSongJson[counter].meta.current.title}");
                 counter++;
                 Thread.Sleep(1000);
+                Console.Clear();
             }
             return TopSongJson;
         }
