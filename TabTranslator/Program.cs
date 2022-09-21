@@ -27,9 +27,12 @@ namespace TabTranslator
             {
                 UIMethods.Welcome();
                 bool seeTopSearched = UIMethods.TopSearchedYN();
-                StringCollection TopSearchedSongs;
+                List<string> TopSearchedSongs;
                 List<AppJson> TopSongJson;
                 int topSongIndex;
+                List<string> UserSearchedSongs;
+                List<AppJson> UserSearchedJson;
+                int userSearchedIndex;
                 if (seeTopSearched)
                 {
                     TopSearchedSongs = GetSongUrls(mainSourceHTML);
@@ -37,7 +40,10 @@ namespace TabTranslator
                     topSongIndex = UIMethods.TopSongSelected(TopSongJson, TopSearchedSongs);
                     songSourceHTML = HttpGet($"https://www.songsterr.com{TopSearchedSongs[topSongIndex-1]}");
                 }
-                                
+                else
+                {
+
+                }               
                 List<string> OSFilePaths = GetFilePathsForOS();     //allows me to work on mac or pc
                 string trackJsonPath = OSFilePaths[0];
                 string tabTextPath = OSFilePaths[1];
@@ -196,7 +202,7 @@ namespace TabTranslator
         /// <returns>AppJson Object</returns>
         public static AppJson GetJsonSongInfo(string songUrl)
         {
-            StringCollection resultList = new StringCollection();
+            List<string> resultList = new List<string>();
             try
             {
                 Regex regexObj = new Regex(@"<script id=\Dstate\D type=\Dapplication/json\D>(?<applicationjson>.*?)</script>");
@@ -217,7 +223,7 @@ namespace TabTranslator
 
         public static string GetUrl(string url, AppJson appJson, int trackIndex)
         {
-            StringCollection resultList = new StringCollection();
+            List<string> resultList = new List<string>();
 
             // first part of url (cloudfrontserver)
             try
@@ -254,9 +260,9 @@ namespace TabTranslator
             return finalUrl;
         }
 
-        public static StringCollection GetSongUrls(string html)
+        public static List<string> GetSongUrls(string html)
         {
-            StringCollection resultList = new StringCollection();
+            List<string> resultList = new List<string>();
             try
             {                
                 Regex regexObj = new Regex(@"<a.*?href=\D(/a/wsa/.*?)\D\s");
@@ -271,6 +277,8 @@ namespace TabTranslator
             {
                 // Syntax error in the regular expression
             }
+            //List<int> distinct = arr1.Distinct().ToList();
+            resultList = resultList.Distinct().ToList();
             return resultList;
         }
 
@@ -298,7 +306,7 @@ namespace TabTranslator
             return resultList;
         }
 
-        public static List<AppJson> GetTopSearchedSongs(StringCollection TopSearchedSongs)
+        public static List<AppJson> GetTopSearchedSongs(List<string> TopSearchedSongs)
         {            
 
             List<AppJson> TopSongJson = new List<AppJson>();

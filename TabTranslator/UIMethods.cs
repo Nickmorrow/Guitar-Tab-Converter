@@ -22,7 +22,7 @@ namespace TabTranslator
             return topSearched;
         }
 
-        public static int TopSongSelected(List<AppJson> TopSongJson, StringCollection TopSearchedSongs)
+        public static int TopSongSelected(List<AppJson> TopSongJson, List<string> TopSearchedSongs)
         {           
             int songNum = 0;
             bool inputIsValid = false;
