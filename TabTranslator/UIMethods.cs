@@ -21,8 +21,21 @@ namespace TabTranslator
             Console.Clear();
             return topSearched;
         }
+        public static bool SearchOrExit(List<AppJson> SongJson)
+        {
+            int counter = 0;
+            foreach (AppJson A in SongJson)
+            {
+                Console.WriteLine($"{counter + 1}. {SongJson[counter].meta.current.artist}-{SongJson[counter].meta.current.title}");
+                counter++;
+            }
+            Console.WriteLine("\nPress Enter to move on to selection, press any other key to exit");
+            bool moveOn = Console.ReadKey().Key == ConsoleKey.Enter;
+            Console.Clear();
+            return moveOn;
 
-        public static int TopSongSelected(List<AppJson> TopSongJson, List<string> TopSearchedSongs)
+        }
+        public static int SongSelected(List<AppJson> SongJson, List<string> SearchedSongs)
         {           
             int songNum = 0;
             bool inputIsValid = false;
@@ -30,17 +43,17 @@ namespace TabTranslator
             while (!inputIsValid)
             {
                 int counter = 0;
-                foreach (AppJson A in TopSongJson)
+                foreach (AppJson A in SongJson)
                 {
-                    Console.WriteLine($"{counter + 1}. {TopSongJson[counter].meta.current.artist}-{TopSongJson[counter].meta.current.title}");
+                    Console.WriteLine($"{counter + 1}. {SongJson[counter].meta.current.artist}-{SongJson[counter].meta.current.title}");
                     counter++;
                 }                       
-                Console.WriteLine("Enter the number of the song");
+                Console.WriteLine("\nEnter the number of the song");
                 input = Console.ReadLine();
                 Console.Clear();
                 if (int.TryParse(input, out songNum))
                 {
-                    if (songNum > TopSongJson.Count() || songNum < 1)
+                    if (songNum > SongJson.Count() || songNum < 1)
                     {
                         Console.WriteLine("Number exceeds songs in list, press any key to continue");
                         Console.ReadKey();
@@ -60,8 +73,24 @@ namespace TabTranslator
             }                       
             Console.Clear();
             return songNum;
-
         }
+
+        public static string UserSearchInput()
+        {
+            Console.WriteLine("Enter an artist, song title, or key word to search for tabs");
+            string input = Console.ReadLine();
+            Console.Clear();
+            return input;
+        }
+
+        public static void NoSearchResults()
+        {
+            Console.WriteLine("No results found, press any key to continue");
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+
         public static int GetTrackIndex(AppJson appJson)
         {
             Console.WriteLine($"Tracks:{appJson.meta.current.tracks.Count().ToString()}");

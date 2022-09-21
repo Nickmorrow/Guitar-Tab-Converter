@@ -36,13 +36,41 @@ namespace TabTranslator
                 if (seeTopSearched)
                 {
                     TopSearchedSongs = GetSongUrls(mainSourceHTML);
-                    TopSongJson = GetTopSearchedSongs(TopSearchedSongs);                      
-                    topSongIndex = UIMethods.TopSongSelected(TopSongJson, TopSearchedSongs);
+                    TopSongJson = GetSearchedSongs(TopSearchedSongs);                      
+                    topSongIndex = UIMethods.SongSelected(TopSongJson, TopSearchedSongs);
                     songSourceHTML = HttpGet($"https://www.songsterr.com{TopSearchedSongs[topSongIndex-1]}");
                 }
                 else
                 {
-
+                    bool isSearching = true;
+                    string userSearch = "";
+                    string userSearchedHTML = "";
+                    while (isSearching)
+                    {
+                        userSearch = $"/?pattern={UIMethods.UserSearchInput()}";
+                        userSearchedHTML = HttpGet($"https://www.songsterr.com{userSearch}");
+                        UserSearchedSongs = GetSongUrls(userSearchedHTML);
+                        if (UserSearchedSongs.Count == 0)
+                        {
+                            UIMethods.NoSearchResults();
+                            continue;
+                        }
+                        else
+                        {
+                            UserSearchedJson = GetSearchedSongs(UserSearchedSongs);
+                            bool searchSuccess = UIMethods.SearchOrExit(UserSearchedJson);
+                            if(searchSuccess)
+                            {
+                                userSearchedIndex = UIMethods.SongSelected(UserSearchedJson, UserSearchedSongs);
+                                songSourceHTML = HttpGet($"https://www.songsterr.com{UserSearchedSongs[userSearchedIndex - 1]}");
+                                isSearching = false;
+                            }
+                            else
+                            {
+                                continue;
+                            }                           
+                        }
+                    }
                 }               
                 List<string> OSFilePaths = GetFilePathsForOS();     //allows me to work on mac or pc
                 string trackJsonPath = OSFilePaths[0];
@@ -306,28 +334,28 @@ namespace TabTranslator
             return resultList;
         }
 
-        public static List<AppJson> GetTopSearchedSongs(List<string> TopSearchedSongs)
+        public static List<AppJson> GetSearchedSongs(List<string> searchedSongs)
         {            
 
-            List<AppJson> TopSongJson = new List<AppJson>();
-            AppJson TopSong = new AppJson();
-            string topSongSourceHTML;
+            List<AppJson> SongJson = new List<AppJson>();
+            AppJson Song = new AppJson();
+            string songSourceHTML;
             int counter = 0;
 
-            foreach (String s in TopSearchedSongs)
+            foreach (String s in searchedSongs)
             {
                 if (s.Contains("chord"))
                     continue;
                 //Console.WriteLine(s);
-                topSongSourceHTML = HttpGet($"https://www.songsterr.com{s}");
-                TopSong = GetJsonSongInfo(topSongSourceHTML);
-                TopSongJson.Add(TopSong);
-                Console.WriteLine($"{counter + 1}. {TopSongJson[counter].meta.current.artist}-{TopSongJson[counter].meta.current.title}");
+                songSourceHTML = HttpGet($"https://www.songsterr.com{s}");
+                Song = GetJsonSongInfo(songSourceHTML);
+                SongJson.Add(Song);
+                Console.WriteLine($"{counter + 1}. {SongJson[counter].meta.current.artist}-{SongJson[counter].meta.current.title}");
                 counter++;
                 Thread.Sleep(1000);
                 Console.Clear();
             }
-            return TopSongJson;
+            return SongJson;
         }
     }
 
