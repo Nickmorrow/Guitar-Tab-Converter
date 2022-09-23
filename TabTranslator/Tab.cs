@@ -9,7 +9,7 @@ namespace TabTranslator
     public class Tab
     {
         public string TitleOfSong;
-        public string Artist;
+        public string ArtistName;
         public string Difficulty;
         public StringInstrument Instrument;
         public string InstrumentString;
@@ -39,7 +39,7 @@ namespace TabTranslator
 
                 for (int i = 0; i < Song.Measures.Count(); i++)
                 {
-                    String MeasureDashes = "";
+                    string MeasureDashes = "";
                     MeasureDashes += "|";
                     for (int iDashCnt = 0; iDashCnt < TSigNum; iDashCnt++)
                     {
@@ -267,10 +267,10 @@ namespace TabTranslator
             return midiNote;
         }
 
-        public Tab(SongsterrSong Song, StringInstrument Instrument, List<MusicalBeat> songBeats)
+        public Tab(SongsterrSong Song, StringInstrument Instrument, List<MusicalBeat> songBeats,AppJson appjson)
         {
-           
-            TitleOfSong = Song.Name;
+            ArtistName = appjson.meta.current.artist;
+            TitleOfSong = appjson.meta.current.title;
             Instrument = Instrument;
             InstrumentString = Song.Instrument;
 

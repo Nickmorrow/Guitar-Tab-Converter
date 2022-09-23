@@ -93,10 +93,30 @@ namespace TabTranslator
 
         public static int GetTrackIndex(AppJson appJson)
         {
-            Console.WriteLine($"Tracks:{appJson.meta.current.tracks.Count().ToString()}");
-            Console.WriteLine("Select track");
+            //Console.WriteLine($"Tracks:{appJson.meta.current.tracks.Count().ToString()}");
+            //Console.WriteLine("Select track");
+            //List<Track> trackList = new List<Track>();
+            int counter = 0;
+            Console.WriteLine("Enter the number of a track\n");
+            foreach (Track T in appJson.meta.current.tracks)
+            {
+                counter++;
+                if (T.isBassGuitar || T.isGuitar)
+                {
+                    Console.WriteLine($"{counter}. {T.instrument}-{T.name}");
+                }
+            }
             int trackIndex = Int32.Parse(Console.ReadLine());
+            Console.Clear();
             return trackIndex;
+        }
+
+        public static void ContinueOrExit(bool isOpen)
+        {
+            Console.WriteLine("Press Enter to continue searching, press any other key to exit");
+            isOpen = Console.ReadKey().Key == ConsoleKey.Enter;
+            Console.Clear();
+            
         }
     }
 }

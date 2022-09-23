@@ -91,7 +91,7 @@ namespace TabTranslator
                 List<SongsterrSong> Songs = GetJsonTracks(trackJsonPath);
                 List<MusicalBeat> songBeats = GetSongBeats(Songs[0], stringInstruments[0]);
 
-                var tab = new Tab(Songs[0], stringInstruments[0], songBeats);
+                var tab = new Tab(Songs[0], stringInstruments[0], songBeats, appJson);
 
                 List<string> tabOne = tab.TabLines[0];
                 int tabLength = tabOne.Count;
@@ -100,7 +100,7 @@ namespace TabTranslator
                 int tabLineEndPoint = measuresPerLine;
 
                 //Console.WriteLine($"{tab.TitleOfSong}\n{tab.InstrumentString}");
-                File.WriteAllText(tabTextPath, $"{tab.TitleOfSong}\n{tab.InstrumentString}\n");
+                File.WriteAllText(tabTextPath, $"{tab.ArtistName}\n{tab.TitleOfSong}\n{tab.InstrumentString}\n");
 
                 foreach (RootNotes tuning in tab.Tuning.Reverse<RootNotes>())
                 {
@@ -150,7 +150,7 @@ namespace TabTranslator
                     //Console.Write($"\n");
                     File.AppendAllText(tabTextPath, $"\n");
                 }
-                Console.ReadLine();
+                UIMethods.ContinueOrExit(isOpen);
             }
         }
         /// <summary>
