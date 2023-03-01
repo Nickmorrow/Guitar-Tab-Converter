@@ -93,9 +93,6 @@ namespace TabTranslator
 
         public static int GetTrackIndex(AppJson appJson)
         {
-            //Console.WriteLine($"Tracks:{appJson.meta.current.tracks.Count().ToString()}");
-            //Console.WriteLine("Select track");
-            //List<Track> trackList = new List<Track>();
             int counter = 0;
             Console.WriteLine("Enter the number of a track\n");
             foreach (Track T in appJson.meta.current.tracks)

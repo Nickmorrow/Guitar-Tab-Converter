@@ -43,10 +43,10 @@ namespace TabTranslator
                     MeasureDashes += "|";
                     for (int iDashCnt = 0; iDashCnt < TSigNum; iDashCnt++)
                     {
-                        MeasureDashes += "-";
-                        MeasureDashes += "-";
-                        MeasureDashes += "-";
-                        MeasureDashes += "-";
+                        MeasureDashes += "- ";
+                        MeasureDashes += "- ";
+                        MeasureDashes += "- ";
+                        MeasureDashes += "- ";
                     }
                     Measures.Add(MeasureDashes);
                 }
@@ -96,7 +96,8 @@ namespace TabTranslator
                                 }
                                 else
                                 {
-                                    TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, 1);
+                                    var fretNrLength = 1; ;// currentNote.FingerPosition.FretNr.ToString().Length;
+                                    TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, fretNrLength);
                                     TabLine[tabLineIndex] = TabLine[tabLineIndex].Insert(dashCount, currentNote.FingerPosition.FretNr.ToString());
                                 }      
                             }
