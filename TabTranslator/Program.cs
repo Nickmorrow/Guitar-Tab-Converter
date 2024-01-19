@@ -22,7 +22,7 @@ namespace TabTranslator
         {             
             string mainSourceHTML = HttpGet("https://www.songsterr.com");
             string songSourceHTML = "";
-            bool isOpen = true;
+            bool isOpen = true;        
             while (isOpen)
             {
                 UIMethods.Welcome();
@@ -215,11 +215,11 @@ namespace TabTranslator
             }
             return Songs;
         }
-        private static string HttpGet(string uri)
+        private static string HttpGet(string url)
         {
             string content = null;
             var wc = new MyWebClient();
-            content = wc.DownloadString(uri);
+            content = wc.DownloadString(url);
             return content;
         }
         /// <summary>
@@ -268,7 +268,7 @@ namespace TabTranslator
             {
                 // Syntax error in the regular expression
             }
-            string cloudFrontServer = resultList[3];
+            string cloudFrontServer = resultList[0];
 
             // second part of url (songid)
             string songId = appJson.meta.songId.ToString();
@@ -352,8 +352,8 @@ namespace TabTranslator
                 SongJson.Add(Song);
                 Console.WriteLine($"{counter + 1}. {SongJson[counter].meta.current.artist}-{SongJson[counter].meta.current.title}");
                 counter++;
-                Thread.Sleep(1000);
-                Console.Clear();
+                //Thread.Sleep(1000);
+                //Console.Clear();
             }
             return SongJson;
         }

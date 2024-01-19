@@ -106,7 +106,7 @@ namespace TabTranslator
         public Current current { get; set; }
         public bool allowedByLicense { get; set; }
         public int songId { get; set; }
-        public int partId { get; set; }
+        public int? partId { get; set; }
         public object revisionId { get; set; }
         public bool isFailed { get; set; }
         public bool isNotFound { get; set; }
