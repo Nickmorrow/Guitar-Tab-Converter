@@ -268,7 +268,7 @@ namespace TabTranslator
             {
                 // Syntax error in the regular expression
             }
-            string cloudFrontServer = resultList[0];
+            string cloudFrontServer = resultList[0];    //changed from [3]
 
             // second part of url (songid)
             string songId = appJson.meta.songId.ToString();
