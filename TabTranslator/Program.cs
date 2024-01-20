@@ -95,7 +95,7 @@ namespace TabTranslator
 
                 List<string> tabOne = tab.TabLines[0];
                 int tabLength = tabOne.Count;
-                int measuresPerLine = 10;
+                int measuresPerLine = 5;
                 int tabLineStartPoint = 0;
                 int tabLineEndPoint = measuresPerLine;
 

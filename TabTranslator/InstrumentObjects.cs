@@ -79,19 +79,19 @@ namespace TabTranslator
             // Standard tuning
 
             MusicString UkString0 = new MusicString();
-            UkString0.Tuning = RootNotes.A;
+            UkString0.Tuning = RootNotes.D;
             MusicString UkString1 = new MusicString();
-            UkString1.Tuning = RootNotes.E;
+            UkString1.Tuning = RootNotes.B;
             MusicString UkString2 = new MusicString();
             UkString2.Tuning = RootNotes.C;
             MusicString UkString3 = new MusicString();
-            UkString3.Tuning = RootNotes.G;
+            UkString3.Tuning = RootNotes.D;
 
             List<MusicString> StandardUkeleleTunings = new List<MusicString>();
-            StandardUkeleleTunings.Add(BGString0);
-            StandardUkeleleTunings.Add(BGString1);
-            StandardUkeleleTunings.Add(BGString2);
-            StandardUkeleleTunings.Add(BGString3);
+            StandardUkeleleTunings.Add(UkString0);
+            StandardUkeleleTunings.Add(UkString1);
+            StandardUkeleleTunings.Add(UkString2);
+            StandardUkeleleTunings.Add(UkString3);
 
             StringInstrument Ukelele = new StringInstrument();
 
@@ -100,6 +100,35 @@ namespace TabTranslator
             Ukelele.MusicStrings = StandardUkeleleTunings;
 
             instruments.Add(Ukelele);
+
+            return instruments;
+
+            // Defining Banjo
+
+            // Standard tuning
+
+            MusicString BanjoString0 = new MusicString();
+            BanjoString0.Tuning = RootNotes.A;
+            MusicString BanjoString1 = new MusicString();
+            BanjoString1.Tuning = RootNotes.E;
+            MusicString BanjoString2 = new MusicString();
+            BanjoString2.Tuning = RootNotes.C;
+            MusicString BanjoString3 = new MusicString();
+            BanjoString3.Tuning = RootNotes.G;
+
+            List<MusicString> StandardBanjoTunings = new List<MusicString>();
+            StandardBanjoTunings.Add(BanjoString0);
+            StandardBanjoTunings.Add(BanjoString1);
+            StandardBanjoTunings.Add(BanjoString2);
+            StandardBanjoTunings.Add(BanjoString3);
+
+            StringInstrument Banjo = new StringInstrument();
+
+            Banjo.Name = "Banjo";
+            Banjo.FretCount = 22;
+            Banjo.MusicStrings = StandardBanjoTunings;
+
+            instruments.Add(Banjo);
 
             return instruments;
         }
