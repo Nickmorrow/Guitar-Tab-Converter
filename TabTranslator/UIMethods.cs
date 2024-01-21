@@ -118,9 +118,9 @@ namespace TabTranslator
 
         public static bool ConvertYorN()
         {
-            bool answered;
+            bool answered = false;
             bool isYes = false;
-            while (answered = false)
+            while (!answered)
             {
                 Console.WriteLine("Would you like to convert this tab to another instrument? y/n");
                 string answer = Console.ReadLine().ToUpper();
@@ -140,6 +140,45 @@ namespace TabTranslator
                 }                               
             }
             return isYes;
+        }
+
+        public static StringInstrument InstChoice(List<StringInstrument> StringInstruments)
+        {
+            StringInstrument InstChoice = StringInstruments[0];
+            int counter = 0;
+            List<int> instNumList = new List<int>();
+            bool InstNumInList;
+            int instNum;
+            bool choiceMade = false;
+            while (!choiceMade)
+            {
+                Console.WriteLine("Enter the number of an Instrument \n");
+
+                foreach (StringInstrument S in StringInstruments)
+                {
+                    counter++;
+                    Console.WriteLine($"{counter}. {S.Name}");
+                    instNumList.Add(counter);
+                }
+                //Console.WriteLine("\nIf you would like to go back, Press Esc");
+                //bool goBack = Console.ReadKey().Key == ConsoleKey.Escape;
+                //if (goBack)
+                //{
+                //    break;
+                //}
+                instNum = Int32.Parse(Console.ReadLine())-1;
+                if (instNumList.Contains(instNum))
+                {
+                    InstChoice = StringInstruments[instNum];
+                    choiceMade = true;
+                }
+                else
+                {
+                    continue;
+                }
+                Console.Clear();
+            }
+            return InstChoice;
         }
     }
 }

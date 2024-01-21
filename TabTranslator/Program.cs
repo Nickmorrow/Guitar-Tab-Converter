@@ -91,14 +91,13 @@ namespace TabTranslator
 
                 List<SongsterrSong> Songs = GetJsonTracks(trackJsonPath);
                 List<MusicalBeat> songBeats = GetSongBeats(Songs[0], stringInstruments[0]);
-                StringInstrument stringInstrument;
+                StringInstrument stringInstrument = stringInstruments[0];
                 bool converted = UIMethods.ConvertYorN();
                 if(converted)
                 {
-                    //Method to choose intrument   
+                    stringInstrument = UIMethods.InstChoice(stringInstruments); //Method to choose intrument                   
                 }
-
-                var tab = new Tab(Songs[0], stringInstruments[0], songBeats, appJson);
+                var tab = new Tab(Songs[0], stringInstrument, songBeats, appJson);
 
                 List<string> tabOne = tab.TabLines[0];
                 int tabLength = tabOne.Count;

@@ -42,7 +42,7 @@ namespace TabTranslator
             StringInstrument SixStringGuitar = new StringInstrument();
 
             SixStringGuitar.Name = "SixStringGuitar";
-            SixStringGuitar.FretCount = 21;
+            SixStringGuitar.FretCount = 22;
             SixStringGuitar.MusicStrings = StandardGuitarTunings;
 
             instruments.Add(SixStringGuitar);
@@ -69,7 +69,7 @@ namespace TabTranslator
             StringInstrument BassGuitar = new StringInstrument();
 
             BassGuitar.Name = "BassGuitar";
-            BassGuitar.FretCount = 21;
+            BassGuitar.FretCount = 22;
             BassGuitar.MusicStrings = StandardBassGuitarTunings;
 
             instruments.Add(BassGuitar);
@@ -99,9 +99,7 @@ namespace TabTranslator
             Ukelele.FretCount = 12;
             Ukelele.MusicStrings = StandardUkeleleTunings;
 
-            instruments.Add(Ukelele);
-
-            return instruments;
+            instruments.Add(Ukelele);           
 
             // Defining Banjo
 

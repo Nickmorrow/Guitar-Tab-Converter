@@ -273,7 +273,7 @@ namespace TabTranslator
             ArtistName = appjson.meta.current.artist;
             TitleOfSong = appjson.meta.current.title;
             Instrument = Instrument;
-            InstrumentString = Song.Instrument;
+            InstrumentString = Instrument.Name; //Song.Instrument;
 
             List<RootNotes> convertedTunings = new List<RootNotes>();
             for (int i = 0; i < Song.Tuning.Count(); i++)
