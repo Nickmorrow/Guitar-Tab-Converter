@@ -82,6 +82,7 @@ namespace TabTranslator
 
                 string urlParts = GetUrl(songSourceHTML, appJson, trackIndex);
                 string trackJSON = HttpGet(urlParts);
+
                 File.WriteAllText(@"..\..\..\..\JSONFiles\trackJSON.txt", $"{trackJSON}");
 
                 List<StringInstrument> stringInstruments = InstObjects.DefStrInstruments();     //list of string instruments
@@ -90,6 +91,12 @@ namespace TabTranslator
 
                 List<SongsterrSong> Songs = GetJsonTracks(trackJsonPath);
                 List<MusicalBeat> songBeats = GetSongBeats(Songs[0], stringInstruments[0]);
+                StringInstrument stringInstrument;
+                bool converted = UIMethods.ConvertYorN();
+                if(converted)
+                {
+                    //Method to choose intrument   
+                }
 
                 var tab = new Tab(Songs[0], stringInstruments[0], songBeats, appJson);
 

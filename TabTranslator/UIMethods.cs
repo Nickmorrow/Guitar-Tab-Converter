@@ -115,5 +115,31 @@ namespace TabTranslator
             Console.Clear();
             
         }
+
+        public static bool ConvertYorN()
+        {
+            bool answered;
+            bool isYes = false;
+            while (answered = false)
+            {
+                Console.WriteLine("Would you like to convert this tab to another instrument? y/n");
+                string answer = Console.ReadLine().ToUpper();
+                Console.Clear();
+                if (answer == "N")
+                {
+                    answered = true;  
+                }
+                if (answer == "Y")
+                {
+                    isYes = true;
+                    answered = true;
+                }
+                else
+                {
+                    continue;
+                }                               
+            }
+            return isYes;
+        }
     }
 }
