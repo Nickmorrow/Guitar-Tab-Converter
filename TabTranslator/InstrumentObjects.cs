@@ -79,13 +79,13 @@ namespace TabTranslator
             // Standard tuning
 
             MusicString UkString0 = new MusicString();
-            UkString0.Tuning = RootNotes.D;
+            UkString0.Tuning = RootNotes.A;
             MusicString UkString1 = new MusicString();
-            UkString1.Tuning = RootNotes.B;
+            UkString1.Tuning = RootNotes.E;
             MusicString UkString2 = new MusicString();
             UkString2.Tuning = RootNotes.C;
             MusicString UkString3 = new MusicString();
-            UkString3.Tuning = RootNotes.D;
+            UkString3.Tuning = RootNotes.G;
 
             List<MusicString> StandardUkeleleTunings = new List<MusicString>();
             StandardUkeleleTunings.Add(UkString0);
@@ -106,13 +106,13 @@ namespace TabTranslator
             // Standard tuning
 
             MusicString BanjoString0 = new MusicString();
-            BanjoString0.Tuning = RootNotes.A;
+            BanjoString0.Tuning = RootNotes.D;
             MusicString BanjoString1 = new MusicString();
-            BanjoString1.Tuning = RootNotes.E;
+            BanjoString1.Tuning = RootNotes.B;
             MusicString BanjoString2 = new MusicString();
-            BanjoString2.Tuning = RootNotes.C;
+            BanjoString2.Tuning = RootNotes.G;
             MusicString BanjoString3 = new MusicString();
-            BanjoString3.Tuning = RootNotes.G;
+            BanjoString3.Tuning = RootNotes.D;
 
             List<MusicString> StandardBanjoTunings = new List<MusicString>();
             StandardBanjoTunings.Add(BanjoString0);

@@ -90,12 +90,13 @@ namespace TabTranslator
                 // **TESTS**
 
                 List<SongsterrSong> Songs = GetJsonTracks(trackJsonPath);
-                List<MusicalBeat> songBeats = GetSongBeats(Songs[0], stringInstruments[0]);
+                List<MusicalBeat> songBeats = GetSongBeats(Songs[0], stringInstruments[0], stringInstruments);
                 StringInstrument stringInstrument = stringInstruments[0];
                 bool converted = UIMethods.ConvertYorN();
                 if(converted)
                 {
-                    stringInstrument = UIMethods.InstChoice(stringInstruments); //Method to choose intrument                   
+                    stringInstrument = UIMethods.InstChoice(stringInstruments); //Method to choose intrument
+                    songBeats = GetSongBeats(Songs[0], stringInstrument, stringInstruments);
                 }
                 var tab = new Tab(Songs[0], stringInstrument, songBeats, appJson);
 
@@ -113,6 +114,11 @@ namespace TabTranslator
                     //Console.Write(tuning.ToString());
                     File.AppendAllText(tabTextPath, $"{tuning.ToString()}");
                 }
+                //foreach (MusicString S in stringInstrument.MusicStrings.Reverse<MusicString>())
+                //{
+                //    //Console.Write(tuning.ToString());
+                //    File.AppendAllText(tabTextPath, $"{stringInstrument.MusicStrings.MusicString.Tuning.ToString()}");
+                //}
                 if (tab.Capo == 0)
                 {
                     //Console.WriteLine("\nNo Capo\n");
@@ -165,7 +171,7 @@ namespace TabTranslator
         /// <param name="song"></param>
         /// <param name="stringInstrument"></param>
         /// <returns>list of MusicalNotes</returns>
-        public static List<MusicalBeat> GetSongBeats(SongsterrSong song, StringInstrument stringInstrument)
+        public static List<MusicalBeat> GetSongBeats(SongsterrSong song, StringInstrument stringInstrument, List<StringInstrument> stringInstruments)
         {
             List<MusicalBeat> beats = new List<MusicalBeat>();
             for (int measureNum = 0; measureNum < song.Measures.Count(); measureNum++)
@@ -181,17 +187,44 @@ namespace TabTranslator
                         beat.NullableBool = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Rest;
                         beat.IsRest = beat.GetRestBeat(beat.NullableBool);
                         for (int noteNum = 0; noteNum < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); noteNum++)
-                        {
+                        {                           
                             MusicalNote note = new MusicalNote();
-                            note.FingerPosition.StringNum = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String;
-                            note.FingerPosition.FretNr = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret;
-                            note.RootNote = note.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
-                            note.Octave = note.GetOctave(note.FingerPosition);
-                            note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
-                            note.IsRest = note.GetRestNote(note.NullableBoolRest);
-                            note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
-                            note.Dead = note.GetDeadNote(note.NullableBoolDead);
-                            notes.Add(note);
+                            int ogStringNum = Convert.ToInt32(song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String);
+                            if (stringInstrument != stringInstruments[0])
+                            {
+                                if (ogStringNum < 2)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    note.FingerPosition.StringNum = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String - 2;
+                                    note.FingerPosition.FretNr = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret;
+                                    note.RootNote = note.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
+
+                                    note.FingerPosition.FretNr = note.FingerPosition.GetFretNr(stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)], note.FingerPosition.FretNr);
+                                    note.Octave = note.GetOctave(note.FingerPosition);
+                                    note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
+                                    note.IsRest = note.GetRestNote(note.NullableBoolRest);
+                                    note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
+                                    note.Dead = note.GetDeadNote(note.NullableBoolDead);
+
+                                    notes.Add(note);
+                                }                              
+                            }
+                            else
+                            {
+                                note.FingerPosition.StringNum = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String;
+                                note.FingerPosition.FretNr = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret;
+                                note.RootNote = note.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
+                                note.Octave = note.GetOctave(note.FingerPosition);
+                                note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
+                                note.IsRest = note.GetRestNote(note.NullableBoolRest);
+                                note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
+                                note.Dead = note.GetDeadNote(note.NullableBoolDead);
+
+                                notes.Add(note);
+                            }                            
                         }
                         beat.MusicalNotes = notes;
                         beats.Add(beat);
