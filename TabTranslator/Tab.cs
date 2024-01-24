@@ -268,21 +268,33 @@ namespace TabTranslator
             return midiNote;
         }
 
-        public Tab(SongsterrSong Song, StringInstrument Instrument, List<MusicalBeat> songBeats,AppJson appjson)
+        public Tab(SongsterrSong Song, StringInstrument Instrument, List<MusicalBeat> songBeats,AppJson appjson,bool converted)
         {
             ArtistName = appjson.meta.current.artist;
             TitleOfSong = appjson.meta.current.title;
             Instrument = Instrument;
             InstrumentString = Instrument.Name; //Song.Instrument;
-
             List<RootNotes> convertedTunings = new List<RootNotes>();
-            for (int i = 0; i < Song.Tuning.Count(); i++)
-            {
-                RootNotes note = ConvertMidiNum(Song.Tuning[i]);
-                convertedTunings.Add(note);
-            }
 
-            Tuning = convertedTunings;
+            if (!converted)
+            {
+                for (int i = 0; i < Song.Tuning.Count(); i++)
+                {
+                    RootNotes note = ConvertMidiNum(Song.Tuning[i]);
+                    convertedTunings.Add(note);
+                }
+                Tuning = convertedTunings;
+            }
+            else
+            {
+                for (int i =0; i < Instrument.MusicStrings.Count; i++)
+                {
+                    RootNotes note = Instrument.MusicStrings[i].Tuning;
+                    convertedTunings.Add(note);
+                }
+                Tuning = convertedTunings;
+            }
+                        
             Capo = Song.Capo;
             TabLines = GetTabLines(Song, Instrument);
             FillTablines(TabLines, songBeats, Song);

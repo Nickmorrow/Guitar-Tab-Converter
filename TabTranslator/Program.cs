@@ -98,7 +98,7 @@ namespace TabTranslator
                     stringInstrument = UIMethods.InstChoice(stringInstruments); //Method to choose intrument
                     songBeats = GetSongBeats(Songs[0], stringInstrument, stringInstruments);
                 }
-                var tab = new Tab(Songs[0], stringInstrument, songBeats, appJson);
+                var tab = new Tab(Songs[0], stringInstrument, songBeats, appJson, converted);
 
                 List<string> tabOne = tab.TabLines[0];
                 int tabLength = tabOne.Count;
