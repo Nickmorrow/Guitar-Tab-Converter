@@ -97,6 +97,10 @@ namespace TabTranslator
                                 else
                                 {
                                     var fretNrLength = 1; // add condition where if fretnumber is over 10 fretnumberlength is 2
+                                    //if (currentNote.FingerPosition.FretNr > 9)
+                                    //{
+                                    //    fretNrLength = 2;
+                                    //}
                                     TabLine[tabLineIndex] = TabLine[tabLineIndex].Remove(dashCount, fretNrLength);
                                     TabLine[tabLineIndex] = TabLine[tabLineIndex].Insert(dashCount, currentNote.FingerPosition.FretNr.ToString());
                                 }      
