@@ -196,7 +196,7 @@ namespace TabTranslator
                         for (int noteNum = 0; noteNum < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); noteNum++)
                         {                           
                             MusicalNote note = new MusicalNote();
-                            int ogStringNum = Convert.ToInt32(song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String);
+                            long ogStringNum = Convert.ToInt64(song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String);
                             if (stringInstrument != stringInstruments[0])
                             {
                                     note.FingerPosition.StringNum = note.FingerPosition.GetStringNr(song, stringInstrument.MusicStrings, ogStringNum);
@@ -212,7 +212,7 @@ namespace TabTranslator
                                     note.FingerPosition.FretNr = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret;
                                     note.RootNote = note.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
 
-                                    note.FingerPosition.FretNr = note.FingerPosition.GetFretNr(stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)], note.FingerPosition.FretNr); // gets fretnumber of converted inst
+                                    note.FingerPosition.FretNr = note.FingerPosition.GetFretNr(stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)],ogStringNum, note.FingerPosition.FretNr); // gets fretnumber of converted inst
                                     note.Octave = note.GetOctave(note.FingerPosition);
                                     note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
                                     note.IsRest = note.GetRestNote(note.NullableBoolRest);

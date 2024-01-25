@@ -177,12 +177,12 @@ namespace TabTranslator
             long? stringNr = null;
             List<long?> stringNrs = new List<long?>();
             RootNotes midiNote;
-            List<RootNotes> convertedMidiNotes = new List<RootNotes>();
+            List<RootNotes> ogTunings = new List<RootNotes>();
 
             for (int sT = 0; (sT < Song.Tuning.Count()); sT++) //converts original tuning midi numbers to rootnotes
             {
                 midiNote = ConvertMidiNum(Song.Tuning[sT]);
-                convertedMidiNotes.Add(midiNote);
+                ogTunings.Add(midiNote);
                 stringNr = Convert.ToInt64(sT);
                 stringNrs.Add(stringNr);
             }
@@ -190,9 +190,9 @@ namespace TabTranslator
             {
                 MusicString musicString = new MusicString();
                 musicString = musicStrings[mT];
-                for(int cM = 0; (cM < convertedMidiNotes.Count()); cM++) //changes numbers in stringnumber list
+                for(int cM = 0; (cM < ogTunings.Count()); cM++) //changes numbers in stringnumber list
                 {
-                    if (musicString.Tuning == convertedMidiNotes[cM])
+                    if (musicString.Tuning == ogTunings[cM])
                     {
 
                         stringNrs[mT] = cM;
@@ -223,7 +223,7 @@ namespace TabTranslator
             return endStringNr;
         }
 
-        public long? GetFretNr(MusicString musicString, long? ogFretNr)
+        public long? GetFretNr(MusicString musicString, long ogStringNr, long? ogFretNr)
         {
             int index = 0;
             long? fretNr = null;
@@ -255,7 +255,6 @@ namespace TabTranslator
                 notes.Add(RootNotes.A);
                 notes.Add(RootNotes.As);
                 notes.Add(RootNotes.B);
-                notes.Add(RootNotes.B);
                 notes.Add(RootNotes.C);
                 notes.Add(RootNotes.Cs);
                 notes.Add(RootNotes.D);
@@ -277,7 +276,7 @@ namespace TabTranslator
                 }
                 else
                 {
-                    for (int noteNum = 0; noteNum < notes.Count; noteNum++)
+                    for (int noteNum = 0; noteNum < notes.Count; noteNum++) // } rearranging the list of notes to start at correct tuning for string
                     {
                         if (musicString.Tuning == notes[noteNum])
                         {
@@ -293,17 +292,14 @@ namespace TabTranslator
                     {
                         notes.RemoveAt(0);
 
-                    }
+                    }                                                        
                     for (int i = 0; i < removedNotes.Count(); i++)
                     {
                         notes.Add(removedNotes[i]);
-                    }
-                    for (int i = 0; i < notes.Count; i++)
+                    }                                                       // }
+                    for (int i = 0; i < notes.Count; i++) // adds number removed notes to original fretnr to get correct new fretnr 
                     {
-                        if (musicString.Tuning == notes[i])
-                        {
-                            fretNr = Convert.ToInt64(notes[i]);
-                        }
+                        fretNr = ogFretNr + removedNotes.Count - 1;
                     }
                 }
 
