@@ -197,30 +197,18 @@ namespace TabTranslator
                         {                           
                             MusicalNote note = new MusicalNote();
                             long ogStringNum = Convert.ToInt64(song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String);
+                            long ogFretNum = Convert.ToInt64(song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret);
                             if (stringInstrument != stringInstruments[0])
                             {
-                                    note.FingerPosition.StringNum = note.FingerPosition.GetStringNr(song, stringInstrument.MusicStrings, ogStringNum);
-
-                                //if (ogStringNum < 2) //leftover string numbers that are out of range discarded here
-                                //{
-                                //    continue;
-                                //}
-                                //else
-                                //{
-                                    //note.FingerPosition.StringNum = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String - 2;
-
-                                    note.FingerPosition.FretNr = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret;
+                                    note.FingerPosition = note.FingerPosition.GetFingerPos(song, stringInstrument.MusicStrings, ogStringNum, ogFretNum);
                                     note.RootNote = note.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
-
-                                    note.FingerPosition.FretNr = note.FingerPosition.GetFretNr(stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)],ogStringNum, note.FingerPosition.FretNr); // gets fretnumber of converted inst
                                     note.Octave = note.GetOctave(note.FingerPosition);
                                     note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
                                     note.IsRest = note.GetRestNote(note.NullableBoolRest);
                                     note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
                                     note.Dead = note.GetDeadNote(note.NullableBoolDead);
 
-                                    //notes.Add(note);
-                                //}                              
+                                    
                             }
                             else
                             {
@@ -255,8 +243,8 @@ namespace TabTranslator
                                 notes.Add(note);
                             }
                         }
+                        // method to find fingerposition duplicates, use list of strings.count compare fingerpos.stringnum if dup, push to next highest dup string in list, also need condition if all strings are filled
 
-                        beat.MusicalNotes = notes;
                         beats.Add(beat);
                     }
                 }

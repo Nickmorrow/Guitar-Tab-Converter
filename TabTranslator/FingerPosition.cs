@@ -171,142 +171,145 @@ namespace TabTranslator
             return midiNote;
         }
 
-        public long? GetStringNr(SongsterrSong Song, List<MusicString> musicStrings, long? ogStringNr)
+        public FingerPosition GetFingerPos(SongsterrSong Song, List<MusicString> musicStrings, long? ogStringNr, long ogFretNr) // * change method to find string that has lowest fret number for note
         {
-            long? endStringNr = null;
             long? stringNr = null;
             List<long?> stringNrs = new List<long?>();
             RootNotes midiNote;
+            RootNotes ogTuning = 0;
+            RootNotes targetNote = 0;
             List<RootNotes> ogTunings = new List<RootNotes>();
+            FingerPosition fingerPos = new FingerPosition();
+            List<FingerPosition> fingerPositions = new List<FingerPosition>();
 
-            for (int sT = 0; (sT < Song.Tuning.Count()); sT++) //converts original tuning midi numbers to rootnotes
-            {
-                midiNote = ConvertMidiNum(Song.Tuning[sT]);
-                ogTunings.Add(midiNote);
-                stringNr = Convert.ToInt64(sT);
-                stringNrs.Add(stringNr);
-            }
-            for (int mT = 0; (mT < musicStrings.Count()); mT++)//sorts through new instrument tuning and checks if string tuning is the same as guitar, if so it will replace the guitar string number with the new instrument string number
-            {
-                MusicString musicString = new MusicString();
-                musicString = musicStrings[mT];
-                for(int cM = 0; (cM < ogTunings.Count()); cM++) //changes numbers in stringnumber list
+            if (ogFretNr != null)
+            {               
+                for (int sT = 0; (sT < Song.Tuning.Count()); sT++) //converts original tuning midi numbers to rootnotes
                 {
-                    if (musicString.Tuning == ogTunings[cM])
-                    {
+                    midiNote = ConvertMidiNum(Song.Tuning[sT]);
+                    ogTunings.Add(midiNote);
+                    stringNr = Convert.ToInt64(sT);
+                    stringNrs.Add(stringNr);
+                }
 
-                        stringNrs[mT] = cM;
-                        
+                for (int ogTuningIndex = 0; ogTuningIndex < ogTunings.Count; ogTuningIndex++) // gets tuning note of original string number
+                {
+                    if (ogStringNr == ogTuningIndex)
+                    {
+                        ogTuning = ogTunings[ogTuningIndex];
+                    }
+                }
+                List<RootNotes> notes = new List<RootNotes>();
+                List<RootNotes> removedNotes = new List<RootNotes>();
+
+                notes.Add(RootNotes.C);
+                notes.Add(RootNotes.Cs);
+                notes.Add(RootNotes.D);
+                notes.Add(RootNotes.Ds);
+                notes.Add(RootNotes.E);
+                notes.Add(RootNotes.F);
+                notes.Add(RootNotes.Fs);
+                notes.Add(RootNotes.G);
+                notes.Add(RootNotes.Gs);
+                notes.Add(RootNotes.A);
+                notes.Add(RootNotes.As);
+                notes.Add(RootNotes.B);
+                notes.Add(RootNotes.C);
+                notes.Add(RootNotes.Cs);
+                notes.Add(RootNotes.D);
+                notes.Add(RootNotes.Ds);
+                notes.Add(RootNotes.E);
+                notes.Add(RootNotes.F);
+                notes.Add(RootNotes.Fs);
+                notes.Add(RootNotes.G);
+                notes.Add(RootNotes.Gs);
+                notes.Add(RootNotes.A);
+                notes.Add(RootNotes.As);
+                notes.Add(RootNotes.B);
+                notes.Add(RootNotes.C);
+                notes.Add(RootNotes.Cs);
+                notes.Add(RootNotes.D);
+                notes.Add(RootNotes.Ds);
+                notes.Add(RootNotes.E);
+                notes.Add(RootNotes.F);
+                notes.Add(RootNotes.Fs);
+                notes.Add(RootNotes.G);
+                notes.Add(RootNotes.Gs);
+                notes.Add(RootNotes.A);
+                notes.Add(RootNotes.As);
+                notes.Add(RootNotes.B);
+
+                for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++) // rearranges list of notes to start at original tuning 
+                {
+                    if (ogTuning == notes[notesIndex])
+                    {
+                        break;
                     }
                     else
                     {
-                        continue;
+                        removedNotes.Add(notes[notesIndex]);
+                        notes.RemoveAt(notesIndex);
                     }
                 }
-            }
-            for (int i = 0; (i < stringNrs.Count()); i++)
-            {
-                if ( ogStringNr == i)
+                for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++) // finds target note 
                 {
-                    endStringNr = stringNrs[i];
-                }
-                else
-                {
-                    endStringNr = ogStringNr;
-                    
-                }
-                if (endStringNr > 3)
-                {
-                    endStringNr = endStringNr - 2;
-                }
-            }
-            return endStringNr;
-        }
-
-        public long? GetFretNr(MusicString musicString, long ogStringNr, long? ogFretNr)
-        {
-            int index = 0;
-            long? fretNr = null;
-
-            if (ogFretNr != null)
-            {
-                List<RootNotes> notes = new List<RootNotes>();
-                notes.Add(RootNotes.C);
-                notes.Add(RootNotes.Cs);
-                notes.Add(RootNotes.D);
-                notes.Add(RootNotes.Ds);
-                notes.Add(RootNotes.E);
-                notes.Add(RootNotes.F);
-                notes.Add(RootNotes.Fs);
-                notes.Add(RootNotes.G);
-                notes.Add(RootNotes.Gs);
-                notes.Add(RootNotes.A);
-                notes.Add(RootNotes.As);
-                notes.Add(RootNotes.B);
-                notes.Add(RootNotes.C);
-                notes.Add(RootNotes.Cs);
-                notes.Add(RootNotes.D);
-                notes.Add(RootNotes.Ds);
-                notes.Add(RootNotes.E);
-                notes.Add(RootNotes.F);
-                notes.Add(RootNotes.Fs);
-                notes.Add(RootNotes.G);
-                notes.Add(RootNotes.Gs);
-                notes.Add(RootNotes.A);
-                notes.Add(RootNotes.As);
-                notes.Add(RootNotes.B);
-                notes.Add(RootNotes.C);
-                notes.Add(RootNotes.Cs);
-                notes.Add(RootNotes.D);
-                notes.Add(RootNotes.Ds);
-                notes.Add(RootNotes.E);
-                notes.Add(RootNotes.F);
-                notes.Add(RootNotes.Fs);
-                notes.Add(RootNotes.G);
-                notes.Add(RootNotes.Gs);
-                notes.Add(RootNotes.A);
-                notes.Add(RootNotes.As);
-                notes.Add(RootNotes.B);
-
-                List<RootNotes> removedNotes = new List<RootNotes>();
-
-                if (musicString.Tuning == notes[0] && ogFretNr == 0)
-                {
-                    fretNr = 0;
-                }
-                else
-                {
-                    for (int noteNum = 0; noteNum < notes.Count; noteNum++) // } rearranging the list of notes to start at correct tuning for string
+                    if (notesIndex == ogFretNr)
                     {
-                        if (musicString.Tuning == notes[noteNum])
+                        targetNote = notes[notesIndex];
+                    }
+                }
+                for (int tuningNum = 0; tuningNum < musicStrings.Count(); tuningNum++) // finds fretnr for each string in new instrument with target note
+                {
+                    fingerPositions.Add(fingerPos);
+                    fingerPositions[tuningNum].StringNum = tuningNum;
+                    for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++)
+                    {
+                        if (musicStrings[notesIndex].Tuning == notes[notesIndex]) // rearranges notes list to start at new instrument tuning
                         {
-                            index = Convert.ToInt32(notes[noteNum]);
                             break;
                         }
+                        else
+                        {
+                            removedNotes.Add(notes[notesIndex]);
+                            notes.RemoveAt(notesIndex);
+                        }
                     }
-                    for (int i = 0; i < index; i++)
+                    for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++) // finds fretnr to arrive at target note
                     {
-                        removedNotes.Add(notes[i]);
-                    }
-                    for (int i = 0; i < index; i++) //removing incorrect notes!!
-                    {
-                        notes.RemoveAt(0);
-
-                    }                                                        
-                    for (int i = 0; i < removedNotes.Count(); i++)
-                    {
-                        notes.Add(removedNotes[i]);
-                    }                                                       // }
-                    for (int i = 0; i < notes.Count; i++) // adds number removed notes to original fretnr to get correct new fretnr 
-                    {
-                        fretNr = ogFretNr + removedNotes.Count - 1;
+                        if (targetNote == notes[notesIndex])
+                        {
+                            fingerPositions[tuningNum].FretNr = notesIndex;
+                        }
                     }
                 }
-
+                for (int fp = 0; fp < fingerPositions.Count; fp++) // finds finger position with lowest fretnr eliminates the rest
+                {
+                    for (int i = 0; i < fingerPositions.Count; i++)
+                    {
+                        if (fingerPositions[fp].FretNr < fingerPositions[i].FretNr)
+                        {
+                            fingerPositions.RemoveAt(i);
+                        }
+                    }
+                }
+                for (int fp = 0; fp < fingerPositions.Count; fp++)  // removes duplicates and prioritizes lowest string number
+                {
+                    for (int i = 0; i < fingerPositions.Count; i++)
+                    {
+                        if (fingerPositions[fp].StringNum < fingerPositions[i].StringNum)
+                        {
+                            fingerPositions.RemoveAt(i);
+                        }
+                    }
+                }
+                fingerPos = fingerPositions[0];
             }
-            return fretNr;
+            else
+            {
+                fingerPos.StringNum = null;
+                fingerPos.FretNr = null;
+            }
+            return fingerPos;
         }
     }
-
-    
-}
+}     
