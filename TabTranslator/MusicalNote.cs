@@ -185,6 +185,7 @@ namespace TabTranslator
             RootNotes midiNote;
             RootNotes ogTuning = 0;
             RootNotes targetNote = 0;
+            var ogMidiNumTunings = new List<long>();
             var ogTunings = new List<RootNotes>();
             var fingerPos = new FingerPosition();
             var fingerPositions = new List<FingerPosition>();
@@ -194,6 +195,7 @@ namespace TabTranslator
             {
                 for (int sT = 0; (sT < Song.Tuning.Count()); sT++) //converts original tuning midi numbers to rootnotes
                 {
+                    ogMidiNumTunings.Add(Song.Tuning[sT]);
                     midiNote = ConvertMidiNum(Song.Tuning[sT]);
                     ogTunings.Add(midiNote);
                     stringNr = Convert.ToInt64(sT);
@@ -307,7 +309,7 @@ namespace TabTranslator
                         notes.Add(removedNotes[0]);
                         removedNotes.RemoveAt(0);                       
                     }
-                    for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++) // finds fretnr to arrive at target note
+                    for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++) // finds fretnr to arrive at target note, ads fingerposition to list
                     {
                         if (targetNote == notes[notesIndex])
                         {
@@ -316,7 +318,7 @@ namespace TabTranslator
                         }
                     }                                                                                                                                   // }
                 }
-                var newFingerPositions = fingerPositions.OrderBy(x => x.FretNr).ThenBy(x => x.StringNum).ToList();
+                var newFingerPositions = fingerPositions.OrderBy(x => x.FretNr).ThenBy(x => x.StringNum).ToList(); //
                 fingerPositions = newFingerPositions;
             }
             else

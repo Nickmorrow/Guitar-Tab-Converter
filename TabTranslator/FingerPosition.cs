@@ -11,6 +11,7 @@ namespace TabTranslator
         //RootNotes Note;
         public long? StringNum;
         public long? FretNr;
+        public long? MidiNum;
 
 
 

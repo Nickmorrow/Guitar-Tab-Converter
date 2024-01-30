@@ -259,6 +259,8 @@ namespace TabTranslator
                                 }
                             }
                         }
+
+
                         beat.MusicalNotes = notes;
                         beats.Add(beat);
                     }
