@@ -8,7 +8,7 @@ namespace TabTranslator
 {
     public class Midi
     {
-        public List<RootNotes> DefineMidiNotes()
+        public static List<RootNotes> DefineMidiNotes()
         {
             List<RootNotes> midiNotes = new List<RootNotes>();
             midiNotes.Add(RootNotes.C);

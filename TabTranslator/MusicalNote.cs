@@ -190,6 +190,7 @@ namespace TabTranslator
             var fingerPos = new FingerPosition();
             var fingerPositions = new List<FingerPosition>();
             var removedFingerPositions = new List<FingerPosition>();
+            List<RootNotes> MidiNums = Midi.DefineMidiNotes();
 
             if (ogFretNr != null)
             {
@@ -200,6 +201,8 @@ namespace TabTranslator
                     ogTunings.Add(midiNote);
                     stringNr = Convert.ToInt64(sT);
                     stringNrs.Add(stringNr);
+                    Console.WriteLine(ogMidiNumTunings[sT].ToString());
+                    Console.WriteLine(midiNote.ToString());
                 }
                 for (int ogTuningIndex = 0; ogTuningIndex < ogTunings.Count; ogTuningIndex++) // gets tuning note of original string number
                 {

@@ -9,7 +9,7 @@ namespace TabTranslator
     public class MusicString
     {
         public RootNotes Tuning;
-        //int Octave;
+        public long MidiNum;
         
     }
 }
