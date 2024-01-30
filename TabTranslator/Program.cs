@@ -101,12 +101,6 @@ namespace TabTranslator
                 }
                 var tab = new Tab(Songs[0], stringInstrument, songBeats, appJson, converted);
 
-                //for (int i = 0; i < tab.Tuning.Count(); i++)
-                //{
-                //    Console.WriteLine($"{tab.Tuning[i].ToString()}");
-                //}
-                //Console.ReadLine();
-
                 List<string> tabOne = tab.TabLines[0];
                 int tabLength = tabOne.Count;
                 int measuresPerLine = 5;
@@ -265,6 +259,7 @@ namespace TabTranslator
                                 }
                             }
                         }
+                        beat.MusicalNotes = notes;
                         beats.Add(beat);
                     }
                 }
