@@ -201,14 +201,15 @@ namespace TabTranslator
 
                             if (stringInstrument != stringInstruments[0])
                             {
-                                    note.FingerPositions = note.GetFingerPositions(song, stringInstrument.MusicStrings, ogStringNum, ogFretNum); // list of all possible fingerings for note, starts at the lowest fret                                                                                                            
-                                    note.FingerPosition = note.FingerPositions[0];                                                               
-                                    note.RootNote = note.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
-                                    note.Octave = note.GetOctave(note.FingerPosition);
-                                    note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
-                                    note.IsRest = note.GetRestNote(note.NullableBoolRest);
-                                    note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
-                                    note.Dead = note.GetDeadNote(note.NullableBoolDead);                                    
+                                note.FingerPositions = note.GetFingerPositions(song, stringInstrument.MusicStrings, ogStringNum, ogFretNum); // list of all possible fingerings for note, starts at the lowest fret                                                                                                            
+                                note.FingerPosition = note.FingerPositions[0];                                                               
+                                note.RootNote = note.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
+                                note.Octave = note.GetOctave(note.FingerPosition);
+                                note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
+                                note.IsRest = note.GetRestNote(note.NullableBoolRest);
+                                note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
+                                note.Dead = note.GetDeadNote(note.NullableBoolDead);
+
                             }
                             else
                             {
@@ -220,18 +221,17 @@ namespace TabTranslator
                                 note.IsRest = note.GetRestNote(note.NullableBoolRest);
                                 note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
                                 note.Dead = note.GetDeadNote(note.NullableBoolDead);
-                                //notes.Add(note);
-                            }
 
+                            }
                             notes.Add(note);
                         }
                         // method to find fingerposition duplicates, use list of strings.count compare fingerpos.stringnum if dup, push to next highest dup string in list, also need condition if all strings are filled
 
-                        for (int selectedNote = 0; selectedNote < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); selectedNote++) 
+                        for (int selectedNote = 0; selectedNote < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); selectedNote++)
                         {
                             for (int comparedNote = 0; comparedNote < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); comparedNote++) // compares finger positions between notes
                             {
-                                if(selectedNote == comparedNote)
+                                if (selectedNote == comparedNote)
                                 {
                                     continue;
                                 }

@@ -16,7 +16,7 @@ namespace TabTranslator
         public bool? NullableBoolDead;
         public bool IsRest;
         public bool Dead;
-        public FingerPosition FingerPosition;
+        public FingerPosition FingerPosition = new FingerPosition();
         public List<FingerPosition> FingerPositions; // a list of all possible fingerings for note
 
         public RootNotes ConvertMidiNum(long midiNum)
@@ -185,10 +185,10 @@ namespace TabTranslator
             RootNotes midiNote;
             RootNotes ogTuning = 0;
             RootNotes targetNote = 0;
-            List<RootNotes> ogTunings = new List<RootNotes>();
-            FingerPosition fingerPos = new FingerPosition();
-            List<FingerPosition> fingerPositions = new List<FingerPosition>();
-            List<FingerPosition> removedFingerPositions = new List<FingerPosition>();
+            var ogTunings = new List<RootNotes>();
+            var fingerPos = new FingerPosition();
+            var fingerPositions = new List<FingerPosition>();
+            var removedFingerPositions = new List<FingerPosition>();
 
             if (ogFretNr != null)
             {
@@ -199,7 +199,6 @@ namespace TabTranslator
                     stringNr = Convert.ToInt64(sT);
                     stringNrs.Add(stringNr);
                 }
-
                 for (int ogTuningIndex = 0; ogTuningIndex < ogTunings.Count; ogTuningIndex++) // gets tuning note of original string number
                 {
                     if (ogStringNr == ogTuningIndex)
@@ -207,8 +206,8 @@ namespace TabTranslator
                         ogTuning = ogTunings[ogTuningIndex];
                     }
                 }
-                List<RootNotes> notes = new List<RootNotes>();
-                List<RootNotes> removedNotes = new List<RootNotes>();
+                var notes = new List<RootNotes>();
+                var removedNotes = new List<RootNotes>();
 
                 notes.Add(RootNotes.C);
                 notes.Add(RootNotes.Cs);
@@ -255,8 +254,20 @@ namespace TabTranslator
                     }
                     else
                     {
-                        removedNotes.Add(notes[notesIndex]);
-                        notes.RemoveAt(notesIndex);
+                        removedNotes.Add(notes[notesIndex]);                        
+                    }
+                }
+                for (int rIndex = removedNotes.Count; rIndex > 0; rIndex--)
+                {
+                    notes.RemoveAt(0);
+                }
+                for (int notesIndex = notes.Count; notesIndex > 0; notesIndex--)
+                {
+                    notes.Add(removedNotes[0]);
+                    removedNotes.RemoveAt(0);
+                    if (removedNotes.Count == 0)
+                    {
+                        break;
                     }
                 }
                 for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++) // finds target note 
@@ -266,65 +277,56 @@ namespace TabTranslator
                         targetNote = notes[notesIndex];
                     }
                 }
-                for (int tuningNum = 0; tuningNum < musicStrings.Count(); tuningNum++) // finds fretnr for each string in new instrument with target note
+                for (int tuningNum = 0; tuningNum < musicStrings.Count(); tuningNum++) // finds fretnr for each string in new instrument with target note }
                 {
+                    fingerPos = new FingerPosition();
                     fingerPositions.Add(fingerPos);
                     fingerPositions[tuningNum].StringNum = tuningNum;
                     for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++)
                     {
-                        if (musicStrings[notesIndex].Tuning == notes[notesIndex]) // rearranges notes list to start at new instrument tuning
+                        if (musicStrings[tuningNum].Tuning == notes[notesIndex]) // rearranges notes list to start at new instrument tuning
                         {
                             break;
                         }
                         else
                         {
                             removedNotes.Add(notes[notesIndex]);
-                            notes.RemoveAt(notesIndex);
+                            //notes.RemoveAt(notesIndex);
+                        }                       
+                    }
+                    for (int rIndex = removedNotes.Count; rIndex > 0; rIndex--)
+                    {
+                        notes.RemoveAt(0);
+                    }
+                    for (int notesIndex = notes.Count; notesIndex > 0; notesIndex--)
+                    {
+                        if (removedNotes.Count == 0)
+                        {
+                            break;
                         }
+                        notes.Add(removedNotes[0]);
+                        removedNotes.RemoveAt(0);                       
                     }
                     for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++) // finds fretnr to arrive at target note
                     {
                         if (targetNote == notes[notesIndex])
                         {
                             fingerPositions[tuningNum].FretNr = notesIndex;
+                            break;
                         }
-                    }
+                    }                                                                                                                                   // }
                 }
-                for (int fp = 0; fp < fingerPositions.Count; fp++) // finds finger position with lowest fretnr eliminates the rest
-                {
-                    for (int i = 0; i < fingerPositions.Count; i++)
-                    {
-                        if (fingerPositions[fp].FretNr < fingerPositions[i].FretNr)
-                        {
-                            removedFingerPositions.Add(fingerPositions[i]);
-                            fingerPositions.RemoveAt(i);
-                        }
-                    }
-                }
-                for (int fp = 0; fp < fingerPositions.Count; fp++)  // removes duplicates and prioritizes lowest string number
-                {
-                    for (int i = 0; i < fingerPositions.Count; i++)
-                    {
-                        if (fingerPositions[fp].StringNum < fingerPositions[i].StringNum)
-                        {
-                            fingerPositions.RemoveAt(i);
-                            removedFingerPositions.Add(fingerPositions[i]);
-                        }
-                    }
-                }
-                for (int R = 0; R < removedFingerPositions.Count; R++)
-                {
-                    fingerPositions.Add(removedFingerPositions[R]); // adds removed fingerpos behind chosen one in list
-                }
+                var newFingerPositions = fingerPositions.OrderBy(x => x.FretNr).ThenBy(x => x.StringNum).ToList();
+                fingerPositions = newFingerPositions;
             }
             else
             {
                 fingerPos.StringNum = null;
                 fingerPos.FretNr = null;
                 fingerPositions.Add(fingerPos);
-            }
 
-            return fingerPositions;
+            }
+            return fingerPositions;   
         }
 
         public bool GetDeadNote(bool? NullableBoolDead)
