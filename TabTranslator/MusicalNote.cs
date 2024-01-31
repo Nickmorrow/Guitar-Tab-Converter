@@ -26,142 +26,142 @@ namespace TabTranslator
             List<RootNotes> midiNotes = new List<RootNotes>();
 
             midiNotes.Add(RootNotes.C);
-            midiNotes.Add(RootNotes.Cs);
+            midiNotes.Add(RootNotes.CsDb);
             midiNotes.Add(RootNotes.D);
-            midiNotes.Add(RootNotes.Ds);
+            midiNotes.Add(RootNotes.DsEb);
             midiNotes.Add(RootNotes.E);
             midiNotes.Add(RootNotes.F);
-            midiNotes.Add(RootNotes.Fs);
+            midiNotes.Add(RootNotes.FsGb);
             midiNotes.Add(RootNotes.G);
-            midiNotes.Add(RootNotes.Gs);
+            midiNotes.Add(RootNotes.GsAb);
             midiNotes.Add(RootNotes.A);
-            midiNotes.Add(RootNotes.As);
+            midiNotes.Add(RootNotes.AsBb);
             midiNotes.Add(RootNotes.B);
 
             midiNotes.Add(RootNotes.C);
-            midiNotes.Add(RootNotes.Cs);
+            midiNotes.Add(RootNotes.CsDb);
             midiNotes.Add(RootNotes.D);
-            midiNotes.Add(RootNotes.Ds);
+            midiNotes.Add(RootNotes.DsEb);
             midiNotes.Add(RootNotes.E);
             midiNotes.Add(RootNotes.F);
-            midiNotes.Add(RootNotes.Fs);
+            midiNotes.Add(RootNotes.FsGb);
             midiNotes.Add(RootNotes.G);
-            midiNotes.Add(RootNotes.Gs);
+            midiNotes.Add(RootNotes.GsAb);
             midiNotes.Add(RootNotes.A);
-            midiNotes.Add(RootNotes.As);
+            midiNotes.Add(RootNotes.AsBb);
             midiNotes.Add(RootNotes.B);
 
             midiNotes.Add(RootNotes.C);
-            midiNotes.Add(RootNotes.Cs);
+            midiNotes.Add(RootNotes.CsDb);
             midiNotes.Add(RootNotes.D);
-            midiNotes.Add(RootNotes.Ds);
+            midiNotes.Add(RootNotes.DsEb);
             midiNotes.Add(RootNotes.E);
             midiNotes.Add(RootNotes.F);
-            midiNotes.Add(RootNotes.Fs);
+            midiNotes.Add(RootNotes.FsGb);
             midiNotes.Add(RootNotes.G);
-            midiNotes.Add(RootNotes.Gs);
+            midiNotes.Add(RootNotes.GsAb);
             midiNotes.Add(RootNotes.A);
-            midiNotes.Add(RootNotes.As);
+            midiNotes.Add(RootNotes.AsBb);
             midiNotes.Add(RootNotes.B);
 
             midiNotes.Add(RootNotes.C);
-            midiNotes.Add(RootNotes.Cs);
+            midiNotes.Add(RootNotes.CsDb);
             midiNotes.Add(RootNotes.D);
-            midiNotes.Add(RootNotes.Ds);
+            midiNotes.Add(RootNotes.DsEb);
             midiNotes.Add(RootNotes.E);
             midiNotes.Add(RootNotes.F);
-            midiNotes.Add(RootNotes.Fs);
+            midiNotes.Add(RootNotes.FsGb);
             midiNotes.Add(RootNotes.G);
-            midiNotes.Add(RootNotes.Gs);
+            midiNotes.Add(RootNotes.GsAb);
             midiNotes.Add(RootNotes.A);
-            midiNotes.Add(RootNotes.As);
+            midiNotes.Add(RootNotes.AsBb);
             midiNotes.Add(RootNotes.B);
 
             midiNotes.Add(RootNotes.C);
-            midiNotes.Add(RootNotes.Cs);
+            midiNotes.Add(RootNotes.CsDb);
             midiNotes.Add(RootNotes.D);
-            midiNotes.Add(RootNotes.Ds);
+            midiNotes.Add(RootNotes.DsEb);
             midiNotes.Add(RootNotes.E);
             midiNotes.Add(RootNotes.F);
-            midiNotes.Add(RootNotes.Fs);
+            midiNotes.Add(RootNotes.FsGb);
             midiNotes.Add(RootNotes.G);
-            midiNotes.Add(RootNotes.Gs);
+            midiNotes.Add(RootNotes.GsAb);
             midiNotes.Add(RootNotes.A);
-            midiNotes.Add(RootNotes.As);
+            midiNotes.Add(RootNotes.AsBb);
             midiNotes.Add(RootNotes.B);
 
             midiNotes.Add(RootNotes.C);
-            midiNotes.Add(RootNotes.Cs);
+            midiNotes.Add(RootNotes.CsDb);
             midiNotes.Add(RootNotes.D);
-            midiNotes.Add(RootNotes.Ds);
+            midiNotes.Add(RootNotes.DsEb);
             midiNotes.Add(RootNotes.E);
             midiNotes.Add(RootNotes.F);
-            midiNotes.Add(RootNotes.Fs);
+            midiNotes.Add(RootNotes.FsGb);
             midiNotes.Add(RootNotes.G);
-            midiNotes.Add(RootNotes.Gs);
+            midiNotes.Add(RootNotes.GsAb);
             midiNotes.Add(RootNotes.A);
-            midiNotes.Add(RootNotes.As);
+            midiNotes.Add(RootNotes.AsBb);
             midiNotes.Add(RootNotes.B);
 
             midiNotes.Add(RootNotes.C);
-            midiNotes.Add(RootNotes.Cs);
+            midiNotes.Add(RootNotes.CsDb);
             midiNotes.Add(RootNotes.D);
-            midiNotes.Add(RootNotes.Ds);
+            midiNotes.Add(RootNotes.DsEb);
             midiNotes.Add(RootNotes.E);
             midiNotes.Add(RootNotes.F);
-            midiNotes.Add(RootNotes.Fs);
+            midiNotes.Add(RootNotes.FsGb);
             midiNotes.Add(RootNotes.G);
-            midiNotes.Add(RootNotes.Gs);
+            midiNotes.Add(RootNotes.GsAb);
             midiNotes.Add(RootNotes.A);
-            midiNotes.Add(RootNotes.As);
+            midiNotes.Add(RootNotes.AsBb);
             midiNotes.Add(RootNotes.B);
 
             midiNotes.Add(RootNotes.C);
-            midiNotes.Add(RootNotes.Cs);
+            midiNotes.Add(RootNotes.CsDb);
             midiNotes.Add(RootNotes.D);
-            midiNotes.Add(RootNotes.Ds);
+            midiNotes.Add(RootNotes.DsEb);
             midiNotes.Add(RootNotes.E);
             midiNotes.Add(RootNotes.F);
-            midiNotes.Add(RootNotes.Fs);
+            midiNotes.Add(RootNotes.FsGb);
             midiNotes.Add(RootNotes.G);
-            midiNotes.Add(RootNotes.Gs);
+            midiNotes.Add(RootNotes.GsAb);
             midiNotes.Add(RootNotes.A);
-            midiNotes.Add(RootNotes.As);
+            midiNotes.Add(RootNotes.AsBb);
             midiNotes.Add(RootNotes.B);
 
             midiNotes.Add(RootNotes.C);
-            midiNotes.Add(RootNotes.Cs);
+            midiNotes.Add(RootNotes.CsDb);
             midiNotes.Add(RootNotes.D);
-            midiNotes.Add(RootNotes.Ds);
+            midiNotes.Add(RootNotes.DsEb);
             midiNotes.Add(RootNotes.E);
             midiNotes.Add(RootNotes.F);
-            midiNotes.Add(RootNotes.Fs);
+            midiNotes.Add(RootNotes.FsGb);
             midiNotes.Add(RootNotes.G);
-            midiNotes.Add(RootNotes.Gs);
+            midiNotes.Add(RootNotes.GsAb);
             midiNotes.Add(RootNotes.A);
-            midiNotes.Add(RootNotes.As);
+            midiNotes.Add(RootNotes.AsBb);
             midiNotes.Add(RootNotes.B);
 
             midiNotes.Add(RootNotes.C);
-            midiNotes.Add(RootNotes.Cs);
+            midiNotes.Add(RootNotes.CsDb);
             midiNotes.Add(RootNotes.D);
-            midiNotes.Add(RootNotes.Ds);
+            midiNotes.Add(RootNotes.DsEb);
             midiNotes.Add(RootNotes.E);
             midiNotes.Add(RootNotes.F);
-            midiNotes.Add(RootNotes.Fs);
+            midiNotes.Add(RootNotes.FsGb);
             midiNotes.Add(RootNotes.G);
-            midiNotes.Add(RootNotes.Gs);
+            midiNotes.Add(RootNotes.GsAb);
             midiNotes.Add(RootNotes.A);
-            midiNotes.Add(RootNotes.As);
+            midiNotes.Add(RootNotes.AsBb);
             midiNotes.Add(RootNotes.B);
 
             midiNotes.Add(RootNotes.C);
-            midiNotes.Add(RootNotes.Cs);
+            midiNotes.Add(RootNotes.CsDb);
             midiNotes.Add(RootNotes.D);
-            midiNotes.Add(RootNotes.Ds);
+            midiNotes.Add(RootNotes.DsEb);
             midiNotes.Add(RootNotes.E);
             midiNotes.Add(RootNotes.F);
-            midiNotes.Add(RootNotes.Fs);
+            midiNotes.Add(RootNotes.FsGb);
             midiNotes.Add(RootNotes.G);
 
             RootNotes midiNote = RootNotes.C;
@@ -182,147 +182,81 @@ namespace TabTranslator
         {
             long? stringNr = null;
             List<long?> stringNrs = new List<long?>();
-            RootNotes midiNote;
-            RootNotes ogTuning = 0;
+            long targetMidiNum = 0;
             RootNotes targetNote = 0;
-            var ogMidiNumTunings = new List<long>();
-            var ogTunings = new List<RootNotes>();
-            var fingerPos = new FingerPosition();
-            var fingerPositions = new List<FingerPosition>();
-            var removedFingerPositions = new List<FingerPosition>();
+            FingerPosition fingerPos = new FingerPosition();
+            List<FingerPosition> fingerPositions = new List<FingerPosition>();
+            List<FingerPosition> removedFingerPositions = new List<FingerPosition>();
             List<RootNotes> MidiNums = Midi.DefineMidiNotes();
 
             if (ogFretNr != null)
-            {
-                for (int sT = 0; (sT < Song.Tuning.Count()); sT++) //converts original tuning midi numbers to rootnotes
+            {               
+                int fretCounter = 0;
+                for (long midiIndex = Song.Tuning[Convert.ToInt32(ogStringNr)]; midiIndex < MidiNums.Count; midiIndex++) // finds target note 
                 {
-                    ogMidiNumTunings.Add(Song.Tuning[sT]);
-                    midiNote = ConvertMidiNum(Song.Tuning[sT]);
-                    ogTunings.Add(midiNote);
-                    stringNr = Convert.ToInt64(sT);
-                    stringNrs.Add(stringNr);
-                    Console.WriteLine(ogMidiNumTunings[sT].ToString());
-                    Console.WriteLine(midiNote.ToString());
-                }
-                for (int ogTuningIndex = 0; ogTuningIndex < ogTunings.Count; ogTuningIndex++) // gets tuning note of original string number
-                {
-                    if (ogStringNr == ogTuningIndex)
+                    if (fretCounter == ogFretNr)
                     {
-                        ogTuning = ogTunings[ogTuningIndex];
-                    }
-                }
-                var notes = new List<RootNotes>();
-                var removedNotes = new List<RootNotes>();
-
-                notes.Add(RootNotes.C);
-                notes.Add(RootNotes.Cs);
-                notes.Add(RootNotes.D);
-                notes.Add(RootNotes.Ds);
-                notes.Add(RootNotes.E);
-                notes.Add(RootNotes.F);
-                notes.Add(RootNotes.Fs);
-                notes.Add(RootNotes.G);
-                notes.Add(RootNotes.Gs);
-                notes.Add(RootNotes.A);
-                notes.Add(RootNotes.As);
-                notes.Add(RootNotes.B);
-                notes.Add(RootNotes.C);
-                notes.Add(RootNotes.Cs);
-                notes.Add(RootNotes.D);
-                notes.Add(RootNotes.Ds);
-                notes.Add(RootNotes.E);
-                notes.Add(RootNotes.F);
-                notes.Add(RootNotes.Fs);
-                notes.Add(RootNotes.G);
-                notes.Add(RootNotes.Gs);
-                notes.Add(RootNotes.A);
-                notes.Add(RootNotes.As);
-                notes.Add(RootNotes.B);
-                notes.Add(RootNotes.C);
-                notes.Add(RootNotes.Cs);
-                notes.Add(RootNotes.D);
-                notes.Add(RootNotes.Ds);
-                notes.Add(RootNotes.E);
-                notes.Add(RootNotes.F);
-                notes.Add(RootNotes.Fs);
-                notes.Add(RootNotes.G);
-                notes.Add(RootNotes.Gs);
-                notes.Add(RootNotes.A);
-                notes.Add(RootNotes.As);
-                notes.Add(RootNotes.B);
-
-                for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++) // rearranges list of notes to start at original tuning 
-                {
-                    if (ogTuning == notes[notesIndex])
-                    {
+                        targetNote = MidiNums[Convert.ToInt32(midiIndex)];
+                        targetMidiNum = midiIndex;
                         break;
+                    }
+                    fretCounter++;
+                }
+                for (int stringIndex = 0; stringIndex < musicStrings.Count; stringIndex++) // finds finger position of each string on target instrument and places in list || todo: if ogfretnr < 12 && fretCounter > 12 fretnr - 12 loop for lower tunings
+                {
+                    if (musicStrings[stringIndex].MidiNum <= targetMidiNum) //if tuning of string is less than target note
+                    {
+                        fretCounter = 0;
+                        for (long midiIndex = musicStrings[stringIndex].MidiNum; midiIndex < MidiNums.Count; midiIndex++)
+                        {
+                            if (MidiNums[Convert.ToInt32(midiIndex)] == targetNote)
+                            {
+                                FingerPosition convertedFingPos = new FingerPosition();
+                                convertedFingPos.MidiNum = targetMidiNum;
+                                convertedFingPos.MidiNote = targetNote;
+                                convertedFingPos.StringNum = stringIndex;
+                                convertedFingPos.FretNr = fretCounter;
+                                fingerPositions.Add(convertedFingPos);
+                                break;
+                            }
+                            fretCounter++;
+                        }
                     }
                     else
                     {
-                        removedNotes.Add(notes[notesIndex]);                        
-                    }
-                }
-                for (int rIndex = removedNotes.Count; rIndex > 0; rIndex--)
-                {
-                    notes.RemoveAt(0);
-                }
-                for (int notesIndex = notes.Count; notesIndex > 0; notesIndex--)
-                {
-                    notes.Add(removedNotes[0]);
-                    removedNotes.RemoveAt(0);
-                    if (removedNotes.Count == 0)
-                    {
-                        break;
-                    }
-                }
-                for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++) // finds target note 
-                {
-                    if (notesIndex == ogFretNr)
-                    {
-                        targetNote = notes[notesIndex];
-                    }
-                }
-                for (int tuningNum = 0; tuningNum < musicStrings.Count(); tuningNum++) // finds fretnr for each string in new instrument with target note }
-                {
-                    fingerPos = new FingerPosition();
-                    fingerPositions.Add(fingerPos);
-                    fingerPositions[tuningNum].StringNum = tuningNum;
-                    for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++)
-                    {
-                        if (musicStrings[tuningNum].Tuning == notes[notesIndex]) // rearranges notes list to start at new instrument tuning
+                        long targetMidiNumHigh = targetMidiNum;
+                        RootNotes targetNoteHigh = 0;
+                        for (long midiIndex = musicStrings[stringIndex].MidiNum; midiIndex < MidiNums.Count; midiIndex++) //if tuning of string is higher than target note moves up target note in octaves until it is higher than tuning
                         {
-                            break;
+                            if (musicStrings[stringIndex].MidiNum > targetMidiNumHigh)
+                            {
+                                targetMidiNumHigh = targetMidiNumHigh + 12;
+                                targetNoteHigh = MidiNums[Convert.ToInt32(targetMidiNumHigh)];
+                            }
+                            else
+                            {
+                                break;
+                            }
                         }
-                        else
+                        fretCounter = 0;
+                        for (long midiIndex = musicStrings[stringIndex].MidiNum; midiIndex < MidiNums.Count; midiIndex++)
                         {
-                            removedNotes.Add(notes[notesIndex]);
-                            //notes.RemoveAt(notesIndex);
-                        }                       
-                    }
-                    for (int rIndex = removedNotes.Count; rIndex > 0; rIndex--)
-                    {
-                        notes.RemoveAt(0);
-                    }
-                    for (int notesIndex = notes.Count; notesIndex > 0; notesIndex--)
-                    {
-                        if (removedNotes.Count == 0)
-                        {
-                            break;
+                            if (MidiNums[Convert.ToInt32(midiIndex)] == targetNoteHigh)
+                            {
+                                FingerPosition convertedFingPos = new FingerPosition();
+                                convertedFingPos.MidiNum = targetMidiNumHigh;
+                                convertedFingPos.MidiNote = targetNoteHigh;
+                                convertedFingPos.StringNum = stringIndex;
+                                convertedFingPos.FretNr = fretCounter;
+                                fingerPositions.Add(convertedFingPos);
+                                break;
+                            }
+                            fretCounter++;
                         }
-                        notes.Add(removedNotes[0]);
-                        removedNotes.RemoveAt(0);                       
                     }
-                    for (int notesIndex = 0; notesIndex < notes.Count; notesIndex++) // finds fretnr to arrive at target note, ads fingerposition to list
-                    {
-                        if (targetNote == notes[notesIndex])
-                        {
-                            fingerPositions[tuningNum].FretNr = notesIndex;
-                            break;
-                        }
-                    }                                                                                                                                   // }
-                }
-                var newFingerPositions = fingerPositions.OrderBy(x => x.FretNr).ThenBy(x => x.StringNum).ToList(); //
-                fingerPositions = newFingerPositions;
+                    var orderedFingerPositions = fingerPositions.OrderBy(x => x.MidiNum).ThenBy(x => x.FretNr).ToList();
+                    fingerPositions = orderedFingerPositions;
+                }                
             }
             else
             {
@@ -408,16 +342,16 @@ namespace TabTranslator
 
             List<RootNotes> rootnotes = new List<RootNotes>();
             rootnotes.Add(RootNotes.C);
-            rootnotes.Add(RootNotes.Cs);
+            rootnotes.Add(RootNotes.CsDb);
             rootnotes.Add(RootNotes.D);
-            rootnotes.Add(RootNotes.Ds);
+            rootnotes.Add(RootNotes.DsEb);
             rootnotes.Add(RootNotes.E);
             rootnotes.Add(RootNotes.F);
-            rootnotes.Add(RootNotes.Fs);
+            rootnotes.Add(RootNotes.FsGb);
             rootnotes.Add(RootNotes.G);
-            rootnotes.Add(RootNotes.Gs);
+            rootnotes.Add(RootNotes.GsAb);
             rootnotes.Add(RootNotes.A);
-            rootnotes.Add(RootNotes.As);
+            rootnotes.Add(RootNotes.AsBb);
             rootnotes.Add(RootNotes.B);
 
             List<RootNotes> removedNotes = new List<RootNotes>();

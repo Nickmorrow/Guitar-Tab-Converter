@@ -17,22 +17,22 @@ namespace TabTranslator
             // Standard Tuning
 
             MusicString GString0 = new MusicString();
-            GString0.Tuning = RootNotes.E;
+            GString0.Tuning = RootNotes.E4;
             GString0.MidiNum = 64; 
             MusicString GString1 = new MusicString();
-            GString1.Tuning = RootNotes.B;
+            GString1.Tuning = RootNotes.B3;
             GString1.MidiNum = 59;
             MusicString GString2 = new MusicString();
-            GString2.Tuning = RootNotes.G;
+            GString2.Tuning = RootNotes.G3;
             GString2.MidiNum = 55;
             MusicString GString3 = new MusicString();
-            GString3.Tuning = RootNotes.D;
+            GString3.Tuning = RootNotes.D3;
             GString3.MidiNum = 50;
             MusicString GString4 = new MusicString();
-            GString4.Tuning = RootNotes.A;
+            GString4.Tuning = RootNotes.A2;
             GString4.MidiNum = 45;
             MusicString GString5 = new MusicString();
-            GString5.Tuning = RootNotes.E;
+            GString5.Tuning = RootNotes.E2;
             GString5.MidiNum = 40;
 
             List<MusicString> StandardGuitarTunings = new List<MusicString>(); //string list is reverse of normal to match json data
@@ -58,16 +58,16 @@ namespace TabTranslator
             // Standard Tuning
 
             MusicString BGString0 = new MusicString();
-            BGString0.Tuning = RootNotes.G;
+            BGString0.Tuning = RootNotes.G2;
             BGString0.MidiNum = 43;
             MusicString BGString1 = new MusicString();
-            BGString1.Tuning = RootNotes.D;
+            BGString1.Tuning = RootNotes.D2;
             BGString1.MidiNum = 38;
             MusicString BGString2 = new MusicString();
-            BGString2.Tuning = RootNotes.A;
+            BGString2.Tuning = RootNotes.A1;
             BGString2.MidiNum = 33;
             MusicString BGString3 = new MusicString();
-            BGString3.Tuning = RootNotes.E;
+            BGString3.Tuning = RootNotes.E1;
             BGString3.MidiNum = 28;
 
             List<MusicString> StandardBassGuitarTunings = new List<MusicString>();
@@ -89,16 +89,16 @@ namespace TabTranslator
             // Standard tuning
 
             MusicString UkString0 = new MusicString();
-            UkString0.Tuning = RootNotes.A;
+            UkString0.Tuning = RootNotes.A4;
             UkString0.MidiNum = 69;
             MusicString UkString1 = new MusicString();
-            UkString1.Tuning = RootNotes.E;
+            UkString1.Tuning = RootNotes.E4;
             UkString1.MidiNum = 64;
             MusicString UkString2 = new MusicString();
-            UkString2.Tuning = RootNotes.C;
+            UkString2.Tuning = RootNotes.C4;
             UkString2.MidiNum = 60;
             MusicString UkString3 = new MusicString();
-            UkString3.Tuning = RootNotes.G;
+            UkString3.Tuning = RootNotes.G4;
             UkString3.MidiNum = 67;
 
             List<MusicString> StandardUkeleleTunings = new List<MusicString>();
@@ -120,16 +120,16 @@ namespace TabTranslator
             // Standard tuning
 
             MusicString BanjoString0 = new MusicString();
-            BanjoString0.Tuning = RootNotes.D;
+            BanjoString0.Tuning = RootNotes.D4;
             BanjoString0.MidiNum = 62;
             MusicString BanjoString1 = new MusicString();
-            BanjoString1.Tuning = RootNotes.B;
+            BanjoString1.Tuning = RootNotes.B3;
             BanjoString1.MidiNum = 59;
             MusicString BanjoString2 = new MusicString();
-            BanjoString2.Tuning = RootNotes.G;
+            BanjoString2.Tuning = RootNotes.G3;
             BanjoString2.MidiNum = 55;
             MusicString BanjoString3 = new MusicString();
-            BanjoString3.Tuning = RootNotes.D;
+            BanjoString3.Tuning = RootNotes.D3;
             BanjoString3.MidiNum = 50;
 
             List<MusicString> StandardBanjoTunings = new List<MusicString>();

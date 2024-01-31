@@ -12,6 +12,7 @@ namespace TabTranslator
         public long? StringNum;
         public long? FretNr;
         public long? MidiNum;
+        public RootNotes MidiNote;
 
 
 

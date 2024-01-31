@@ -221,44 +221,44 @@ namespace TabTranslator
                         }
                         // method to find fingerposition duplicates, use list of strings.count compare fingerpos.stringnum if dup, push to next highest dup string in list, also need condition if all strings are filled
 
-                        for (int selectedNote = 0; selectedNote < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); selectedNote++)
-                        {
-                            for (int comparedNote = 0; comparedNote < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); comparedNote++) // compares finger positions between notes
-                            {
-                                if (selectedNote == comparedNote)
-                                {
-                                    continue;
-                                }
-                                else
-                                {
-                                    if (notes[selectedNote].FingerPosition == notes[comparedNote].FingerPosition)  // removes problem duplicate finger position
-                                    {
-                                        List<FingerPosition> removed = new List<FingerPosition>();
+                        //for (int selectedNote = 0; selectedNote < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); selectedNote++)
+                        //{
+                        //    for (int comparedNote = 0; comparedNote < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); comparedNote++) // compares finger positions between notes
+                        //    {
+                        //        if (selectedNote == comparedNote)
+                        //        {
+                        //            continue;
+                        //        }
+                        //        else
+                        //        {
+                        //            if (notes[selectedNote].FingerPosition == notes[comparedNote].FingerPosition)  // removes problem duplicate finger position
+                        //            {
+                        //                List<FingerPosition> removed = new List<FingerPosition>();
 
-                                        removed.Add(notes[selectedNote].FingerPosition);
-                                        notes[selectedNote].FingerPositions.RemoveAt(0);
+                        //                removed.Add(notes[selectedNote].FingerPosition);
+                        //                notes[selectedNote].FingerPositions.RemoveAt(0);
 
-                                        for (int sF = 0; sF < notes[selectedNote].FingerPositions.Count; sF++)  // finds and selects finger position with next lowest fretnr and removes the rest  
-                                        {
-                                            for (int cF = 0; cF < notes[selectedNote].FingerPositions.Count; cF++)
-                                            {
-                                                if (notes[selectedNote].FingerPositions[sF].FretNr < notes[selectedNote].FingerPositions[cF].FretNr)
-                                                {
-                                                    removed.Add(notes[selectedNote].FingerPositions[cF]);
-                                                    notes[selectedNote].FingerPositions.RemoveAt(cF);
-                                                }
-                                            }
-                                        }
-                                        notes[selectedNote].FingerPosition = notes[selectedNote].FingerPositions[0]; // new finger position is the last remaining
+                        //                for (int sF = 0; sF < notes[selectedNote].FingerPositions.Count; sF++)  // finds and selects finger position with next lowest fretnr and removes the rest  
+                        //                {
+                        //                    for (int cF = 0; cF < notes[selectedNote].FingerPositions.Count; cF++)
+                        //                    {
+                        //                        if (notes[selectedNote].FingerPositions[sF].FretNr < notes[selectedNote].FingerPositions[cF].FretNr)
+                        //                        {
+                        //                            removed.Add(notes[selectedNote].FingerPositions[cF]);
+                        //                            notes[selectedNote].FingerPositions.RemoveAt(cF);
+                        //                        }
+                        //                    }
+                        //                }
+                        //                notes[selectedNote].FingerPosition = notes[selectedNote].FingerPositions[0]; // new finger position is the last remaining
 
-                                        for (int R = 0; R < removed.Count; R++)
-                                        {
-                                            notes[selectedNote].FingerPositions.Add(removed[R]); // adds removed fingerpos behind chosen one in list
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        //                for (int R = 0; R < removed.Count; R++)
+                        //                {
+                        //                    notes[selectedNote].FingerPositions.Add(removed[R]); // adds removed fingerpos behind chosen one in list
+                        //                }
+                        //            }
+                        //        }
+                        //    }
+                        //}
 
 
                         beat.MusicalNotes = notes;
