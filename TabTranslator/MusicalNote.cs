@@ -206,14 +206,23 @@ namespace TabTranslator
                 {
                     if (musicStrings[stringIndex].MidiNum <= targetMidiNum) //if tuning of string is less than target note
                     {
+                        long targetMidiNumLow = targetMidiNum;
+                        RootNotes targetNoteLow = targetNote;
                         fretCounter = 0;
                         for (long midiIndex = musicStrings[stringIndex].MidiNum; midiIndex < MidiNums.Count; midiIndex++)
                         {
+                            
                             if (MidiNums[Convert.ToInt32(midiIndex)] == targetNote)
                             {
+                                while (ogFretNr < 12 && fretCounter > 12)
+                                {
+                                    fretCounter -= 12;
+                                    targetMidiNumLow = targetMidiNum - 12;
+                                    targetNoteLow = MidiNums[Convert.ToInt32(targetMidiNumLow)];
+                                }
                                 FingerPosition convertedFingPos = new FingerPosition();
-                                convertedFingPos.MidiNum = targetMidiNum;
-                                convertedFingPos.MidiNote = targetNote;
+                                convertedFingPos.MidiNum = targetMidiNumLow;
+                                convertedFingPos.MidiNote = targetNoteLow;
                                 convertedFingPos.StringNum = stringIndex;
                                 convertedFingPos.FretNr = fretCounter;
                                 fingerPositions.Add(convertedFingPos);
@@ -230,7 +239,7 @@ namespace TabTranslator
                         {
                             if (musicStrings[stringIndex].MidiNum > targetMidiNumHigh)
                             {
-                                targetMidiNumHigh = targetMidiNumHigh + 12;
+                                targetMidiNumHigh = targetMidiNum + 12;
                                 targetNoteHigh = MidiNums[Convert.ToInt32(targetMidiNumHigh)];
                             }
                             else
