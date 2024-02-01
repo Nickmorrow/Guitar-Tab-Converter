@@ -183,6 +183,8 @@ namespace TabTranslator
                     {
                         MusicalBeat beat = new MusicalBeat();
                         List<MusicalNote> notes = new List<MusicalNote>();
+                        List<MusicalNote> bassNotes = new List<MusicalNote>();                       
+                        List<long?> bassMidiNums = new List<long?>();
                         beat.SongsterrDuration = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Duration[1];
                         beat.Duration16ths = beat.Get16ths(beat.SongsterrDuration);
                         beat.NullableBool = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Rest;
@@ -192,18 +194,23 @@ namespace TabTranslator
                             MusicalNote note = new MusicalNote();
                             long ogStringNum = Convert.ToInt64(song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String);
                             long ogFretNum = Convert.ToInt64(song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret);
-
                             if (stringInstrument != stringInstruments[0])
                             {
-                                note.FingerPositions = note.GetFingerPositions(song, stringInstrument.MusicStrings, ogStringNum, ogFretNum); // list of all possible fingerings for note, starts at the lowest fret                                                                                                            
-                                note.FingerPosition = note.FingerPositions[0];                                                               
-                                note.RootNote = note.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
-                                note.Octave = note.GetOctave(note.FingerPosition);
-                                note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
-                                note.IsRest = note.GetRestNote(note.NullableBoolRest);
-                                note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
-                                note.Dead = note.GetDeadNote(note.NullableBoolDead);
-
+                                note.FingerPositions = note.GetFingerPositions(song, stringInstrument.MusicStrings, ogStringNum, ogFretNum); // list of all possible fingerings for note, starts at the lowest fret
+                                if (note.FingerPositions.Count == 0)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    note.FingerPosition = note.FingerPositions[0];
+                                    note.RootNote = note.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
+                                    note.Octave = note.GetOctave(note.FingerPosition);
+                                    note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
+                                    note.IsRest = note.GetRestNote(note.NullableBoolRest);
+                                    note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
+                                    note.Dead = note.GetDeadNote(note.NullableBoolDead);
+                                }                               
                             }
                             else
                             {
@@ -215,53 +222,34 @@ namespace TabTranslator
                                 note.IsRest = note.GetRestNote(note.NullableBoolRest);
                                 note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
                                 note.Dead = note.GetDeadNote(note.NullableBoolDead);
-
                             }
-                            notes.Add(note);
+                            notes.Add(note);                          
                         }
-                        // method to find fingerposition duplicates, use list of strings.count compare fingerpos.stringnum if dup, push to next highest dup string in list, also need condition if all strings are filled
-
-                        //for (int selectedNote = 0; selectedNote < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); selectedNote++)
-                        //{
-                        //    for (int comparedNote = 0; comparedNote < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); comparedNote++) // compares finger positions between notes
-                        //    {
-                        //        if (selectedNote == comparedNote)
-                        //        {
-                        //            continue;
-                        //        }
-                        //        else
-                        //        {
-                        //            if (notes[selectedNote].FingerPosition == notes[comparedNote].FingerPosition)  // removes problem duplicate finger position
-                        //            {
-                        //                List<FingerPosition> removed = new List<FingerPosition>();
-
-                        //                removed.Add(notes[selectedNote].FingerPosition);
-                        //                notes[selectedNote].FingerPositions.RemoveAt(0);
-
-                        //                for (int sF = 0; sF < notes[selectedNote].FingerPositions.Count; sF++)  // finds and selects finger position with next lowest fretnr and removes the rest  
-                        //                {
-                        //                    for (int cF = 0; cF < notes[selectedNote].FingerPositions.Count; cF++)
-                        //                    {
-                        //                        if (notes[selectedNote].FingerPositions[sF].FretNr < notes[selectedNote].FingerPositions[cF].FretNr)
-                        //                        {
-                        //                            removed.Add(notes[selectedNote].FingerPositions[cF]);
-                        //                            notes[selectedNote].FingerPositions.RemoveAt(cF);
-                        //                        }
-                        //                    }
-                        //                }
-                        //                notes[selectedNote].FingerPosition = notes[selectedNote].FingerPositions[0]; // new finger position is the last remaining
-
-                        //                for (int R = 0; R < removed.Count; R++)
-                        //                {
-                        //                    notes[selectedNote].FingerPositions.Add(removed[R]); // adds removed fingerpos behind chosen one in list
-                        //                }
-                        //            }
-                        //        }
-                        //    }
-                        //}
-
-
-                        beat.MusicalNotes = notes;
+                        if ( stringInstrument.Name == "BassGuitar")
+                        {
+                            List<FingerPosition> bassMidis = new List<FingerPosition>();
+                            for (int n = 0; n < notes.Count; n++)
+                            {
+                                FingerPosition bassMidi = new FingerPosition();
+                                bassMidi = notes[n].FingerPosition;
+                                bassMidis.Add(bassMidi);
+                            }
+                            var bassMidisOrdered = bassMidis.OrderBy(x =>x.MidiNum).ToList();
+                            for (int b = 0; b < bassMidis.Count; b++)
+                            {
+                                if (bassMidis[b] == bassMidisOrdered[0])
+                                {
+                                    notes[b].FingerPosition = bassMidisOrdered[0];
+                                    bassNotes.Add(notes[b]);
+                                    break;
+                                }
+                            }
+                            beat.MusicalNotes = bassNotes;
+                        }
+                        else
+                        {
+                            beat.MusicalNotes = notes;                            
+                        }
                         beats.Add(beat);
                     }
                 }
