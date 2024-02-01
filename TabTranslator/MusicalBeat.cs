@@ -8,6 +8,7 @@ namespace TabTranslator
 {
     public class MusicalBeat
     {
+        public int MeasureNum;
         public long Duration16ths;
         public long SongsterrDuration;
         public bool? NullableBool;

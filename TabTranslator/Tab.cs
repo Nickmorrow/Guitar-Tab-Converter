@@ -43,10 +43,10 @@ namespace TabTranslator
                     MeasureDashes += "|";
                     for (int iDashCnt = 0; iDashCnt < TSigNum; iDashCnt++)
                     {
-                        MeasureDashes += "- ";
-                        MeasureDashes += "- ";
-                        MeasureDashes += "- ";
-                        MeasureDashes += "- ";
+                        MeasureDashes += "- _ ";
+                        MeasureDashes += "- _ ";
+                        MeasureDashes += "- _ ";
+                        MeasureDashes += "- _ ";
                     }
                     Measures.Add(MeasureDashes);
                 }
