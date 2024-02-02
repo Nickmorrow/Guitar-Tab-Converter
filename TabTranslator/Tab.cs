@@ -11,6 +11,7 @@ namespace TabTranslator
         public string TitleOfSong;
         public string ArtistName;
         public string Difficulty;
+        public List<long> TimeSigniture;
         public StringInstrument Instrument;
         public string InstrumentString;
         public List<RootNotes> Tuning;
@@ -22,47 +23,64 @@ namespace TabTranslator
 
 
 
-        public List<List<string>> GetTabLines(SongsterrSong Song, StringInstrument instrument)
+        public List<List<string>> GetTabLines(SongsterrSong Song, StringInstrument instrument, bool converted)
         {
 
-            int tSigNum = 0;
+            long tSigNum = 0;
             string tuningString = "";
 
             List<List<string>> TabLines = new List<List<string>>(); //list of guitar strings measurelines
 
             for (int stringIndex = 0; stringIndex < instrument.MusicStrings.Count; stringIndex++)
             {
-                List<string> Measures = new List<string>(); //Measures per guitar string                
-                //tSigNum = Convert.ToInt32(Song.Measures[0].Signature[0]);
-                tuningString = instrument.MusicStrings[stringIndex].Tuning.ToString();
+                List<string> Measures = new List<string>(); //Measures per guitar string
+                if (converted)
+                {
+                    tuningString = instrument.MusicStrings[stringIndex].Tuning.ToString();
+                }
+                else
+                {
+                    tuningString = ConvertMidiNum(Song.Tuning[stringIndex]).ToString();
+                }
                 Measures.Add(tuningString);
 
                 for (int measure = 0; measure < Song.Measures.Count(); measure++)
                 {
-                    List<int> tSigNums = new List<int>();
-                    for (int tSig = 0; tSig < Song.Measures[measure].Signature.Count(); tSig++)
+                    List<long> tSigNums = new List<long>();
+                    if (Song.Measures[measure].Signature != null)
                     {
-                        tSigNum = Convert.ToInt32(Song.Measures[measure].Signature[tSig]); // gets time sigs for each measure
-                        tSigNums.Add(tSig);
+                        for (long tSig = 0; tSig < Song.Measures[measure].Signature.Count(); tSig++)
+                        {
+                            tSigNum = Song.Measures[measure].Signature[tSig]; // gets time sigs for each measure
+                            tSigNums.Add(tSigNum);
+                        }
                     }
+                    else
+                    {
+                        for (long tSig = 0; tSig < Song.Measures[0].Signature.Count(); tSig++)
+                        {
+                            tSigNum = Song.Measures[0].Signature[tSig]; // gets time sigs for each measure
+                            tSigNums.Add(tSigNum);
+                        }
+                    }                   
                     string MeasureDashes = "";
                     MeasureDashes += "|";
-                    for (int counts = 0; counts < tSigNums[0]; counts++) // top sig
+                    for (long counts = 0; counts < tSigNums[0]; counts++) // top sig
                     {
-                        for (int dashes = 0; dashes < tSigNums[1]; dashes++) // bottom sig
-                        {
+                        //for (long dashes = 0; dashes < tSigNums[1]; dashes++) // bottom sig
+                       // {
                             if (tSigNums[1] == 2)
                             {
                                 for (int i = 0; i < 2; i++) // half note
                                 {
-                                    MeasureDashes += "- _ ";
+                                    MeasureDashes += "-___";
                                 }
                             }
                             if (tSigNums[1] == 4)
                             {
                                 for (int i = 0; i < 4; i++) // quarter note
                                 {
-                                    MeasureDashes += "- _ ";
+                                    MeasureDashes += "-___";
                                 }
                             }
                             if (tSigNums[1] == 8)
@@ -78,13 +96,12 @@ namespace TabTranslator
                                 {
                                     MeasureDashes += "-_";
                                 }
-                            }
-                        }
-                        Measures.Add(MeasureDashes);
+                            }                            
+                        //}                      
                     }
-                    TabLines.Add(Measures);
+                    Measures.Add(MeasureDashes);
                 }
-                
+                TabLines.Add(Measures);
             }
             return TabLines;
         }
@@ -335,8 +352,8 @@ namespace TabTranslator
                 }
 
                 Capo = Song.Capo;
-                TabLines = GetTabLines(Song, Instrument);
-                FillTablines(TabLines, songBeats, Song);
+                TabLines = GetTabLines(Song, Instrument, converted);
+                //FillTablines(TabLines, songBeats, Song);
             }
         }
     }
