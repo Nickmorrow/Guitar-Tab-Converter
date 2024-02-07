@@ -18,22 +18,23 @@ namespace TabTranslator
         public long Capo;
         public string Description;
         public string Lyrics;
-        public List<List<string>> TabLines;
+        public List<List<List<string>>> TabLines;
 
 
 
 
-        public List<List<string>> GetTabLines(SongsterrSong Song, StringInstrument instrument, bool converted)
+        public List<List<List<string>>> GetTabLines(SongsterrSong Song, StringInstrument instrument, bool converted)
         {
 
-            long tSigNum = 0;
+            long? tSigNum = 0;
             string tuningString = "";
-
-            List<List<string>> TabLines = new List<List<string>>(); //list of guitar strings measurelines
+            List<long?> tSigNums = new List<long?>();
+            List<List<List<string>>> TabLines = new List<List<List<string>>>(); //list of guitar strings measurelines
 
             for (int stringIndex = 0; stringIndex < instrument.MusicStrings.Count; stringIndex++)
             {
-                List<string> Measures = new List<string>(); //Measures per guitar string
+                List<List<string>> Measures = new List<List<string>>(); //Measures per guitar string
+                List<string> D16ths = new List<string>();
                 if (converted)
                 {
                     tuningString = instrument.MusicStrings[stringIndex].Tuning.ToString();
@@ -42,64 +43,49 @@ namespace TabTranslator
                 {
                     tuningString = ConvertMidiNum(Song.Tuning[stringIndex]).ToString();
                 }
-                Measures.Add(tuningString);
+                D16ths.Add(tuningString);
+                Measures.Add(D16ths);
 
                 for (int measure = 0; measure < Song.Measures.Count(); measure++)
                 {
-                    List<long> tSigNums = new List<long>();
+                    
                     if (Song.Measures[measure].Signature != null)
                     {
+                        tSigNums = new List<long?>();
                         for (long tSig = 0; tSig < Song.Measures[measure].Signature.Count(); tSig++)
-                        {
+                        {                                    
                             tSigNum = Song.Measures[measure].Signature[tSig]; // gets time sigs for each measure
                             tSigNums.Add(tSigNum);
                         }
                     }
                     else
                     {
-                        for (long tSig = 0; tSig < Song.Measures[0].Signature.Count(); tSig++)
+                        for (long tSig = 0; tSig < tSigNums.Count; tSig++)
                         {
-                            tSigNum = Song.Measures[0].Signature[tSig]; // gets time sigs for each measure
-                            tSigNums.Add(tSigNum);
+
+                            tSigNums = tSigNums;
                         }
-                    }                   
-                    string MeasureDashes = "";
-                    MeasureDashes += "|";
-                    for (long counts = 0; counts < tSigNums[0]; counts++) // top sig
-                    {
-                        //for (long dashes = 0; dashes < tSigNums[1]; dashes++) // bottom sig
-                       // {
-                            if (tSigNums[1] == 2)
-                            {
-                                for (int i = 0; i < 2; i++) // half note
-                                {
-                                    MeasureDashes += "-___";
-                                }
-                            }
-                            if (tSigNums[1] == 4)
-                            {
-                                for (int i = 0; i < 4; i++) // quarter note
-                                {
-                                    MeasureDashes += "-___";
-                                }
-                            }
-                            if (tSigNums[1] == 8)
-                            {
-                                for (int i = 0; i < 8; i++) // 8th note
-                                {
-                                    MeasureDashes += "-_";
-                                }
-                            }
-                            if (tSigNums[1] == 16)
-                            {
-                                for (int i = 0; i < 16; i++) // 16th note
-                                {
-                                    MeasureDashes += "-_";
-                                }
-                            }                            
-                        //}                      
                     }
-                    Measures.Add(MeasureDashes);
+                    long? counts = tSigNums[0];
+                    long? beats = tSigNums[1];
+                    long? D16thsNum = counts * beats;
+                    string D16th = "";
+                    D16th += "|";
+                    D16ths.Add(D16th);
+                    for (long D = 0; D < D16thsNum; D++)
+                    {
+                        if (tSigNums[1] == 2 || tSigNums[1] == 4)
+                        {
+                            D16th = "-___";
+                            D16ths.Add(D16th);
+                        }
+                        if (tSigNums[1] == 8 || tSigNums[1] == 16)
+                        {
+                            D16th = "-_";
+                            D16ths.Add(D16th);
+                        }
+                    }                                                                                                                   
+                    Measures.Add(D16ths);
                 }
                 TabLines.Add(Measures);
             }
@@ -115,51 +101,51 @@ namespace TabTranslator
             /// </summary>
             /// <param name="TabLines"></param>
             /// <param name="Beats"></param>
-            public void FillTablines(List<List<string>> TabLines, List<MusicalBeat> Beats, SongsterrSong Song)
+            public void FillTablines(List<List<List<string>>> TabLines, List<MusicalBeat> Beats, SongsterrSong Song)
             {
-                for (int idxTabLine = 0; idxTabLine < TabLines.Count; idxTabLine++)
+                for (int stringNum = 0; stringNum < TabLines.Count; stringNum++)
                 {
-                    List<string> measures = TabLines[idxTabLine];
+                    List<List<string>> measures = TabLines[stringNum];               
                     int beatCount = 0;
+                    long beatDuration = 1;
                     for (int measureIndex = 1; measureIndex < measures.Count; measureIndex++)  //for each (output) measure
                     {
-                        int dashCount = 1;
-                        while (dashCount < measures[measureIndex].Length)
+                        
+                        List<string> D16ths = measures[measureIndex];
+                        for (int D = 1; D < D16ths.Count; D++)
                         {
-                            // break if current noteCount exceeds actual count -> should not happen
+                            string D16th = D16ths[D];
+
                             var currentBeat = Beats[beatCount];
-                            //if (beatCount >= Beats.Count - 1)
-                            //{
-                            //    break;
-                            //}
-
-                            // replace parts with current FretNr or skip if is rest
-                            //var currentBeat = Beats[beatCount];
-
-                            for (int noteCount = 0; noteCount < currentBeat.MusicalNotes.Count; noteCount++)
+                            if (currentBeat.Duration16ths > 1 && beatDuration < currentBeat.Duration16ths)
                             {
-                                var currentNote = currentBeat.MusicalNotes[noteCount];
-                                if (currentNote.FingerPosition.FretNr != null && currentNote.FingerPosition.StringNum == idxTabLine)
-                                {
-                                    if (currentNote.Dead == true)
+                                beatDuration++;
+                                continue;
+                            }
+                            else
+                            {
+                                for (int noteCount = 0; noteCount < currentBeat.MusicalNotes.Count; noteCount++) // writes in notes
+                                {                                
+                                    var currentNote = currentBeat.MusicalNotes[noteCount];
+                                    if (currentNote.FingerPosition.FretNr != null && currentNote.FingerPosition.StringNum == stringNum)
                                     {
-                                        measures[measureIndex] = measures[measureIndex].Remove(dashCount, 1);
-                                        measures[measureIndex] = measures[measureIndex].Insert(dashCount, "X");
-                                    }
+                                        if (currentNote.Dead == true)
+                                        {
+                                            D16ths[D] = D16ths[D].Replace("-", "X");
+                                        }
+                                    
                                     else
                                     {
-                                        var fretNrLength = 1; // add condition where if fretnumber is over 10 fretnumberlength is 2
-                                                              //if (currentNote.FingerPosition.FretNr > 9)
-                                                              //{
-                                                              //    fretNrLength = 2;
-                                                              //}
-                                        measures[measureIndex] = measures[measureIndex].Remove(dashCount, fretNrLength);
-                                        measures[measureIndex] = measures[measureIndex].Insert(dashCount, currentNote.FingerPosition.FretNr.ToString());
+                                        if (currentNote.FingerPosition.FretNr > 9)
+                                        {
+                                            D16ths[D] = D16ths[D].Replace("-_", currentNote.FingerPosition.FretNr.ToString());
+                                        }
+                                        D16ths[D] = D16ths[D].Replace("-", currentNote.FingerPosition.FretNr.ToString());
                                     }
                                 }
                             }
-                            dashCount += Convert.ToInt32(currentBeat.Duration16ths);
                             beatCount++;
+                        }                            
                         }
                     }
                 }
@@ -353,7 +339,7 @@ namespace TabTranslator
 
                 Capo = Song.Capo;
                 TabLines = GetTabLines(Song, Instrument, converted);
-                //FillTablines(TabLines, songBeats, Song);
+                FillTablines(TabLines, songBeats, Song);
             }
         }
     }
