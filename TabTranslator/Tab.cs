@@ -48,12 +48,12 @@ namespace TabTranslator
 
                 for (int measure = 0; measure < Song.Measures.Count(); measure++)
                 {
-                    
+                    D16ths = new List<string>();
                     if (Song.Measures[measure].Signature != null)
                     {
                         tSigNums = new List<long?>();
                         for (long tSig = 0; tSig < Song.Measures[measure].Signature.Count(); tSig++)
-                        {                                    
+                        {
                             tSigNum = Song.Measures[measure].Signature[tSig]; // gets time sigs for each measure
                             tSigNums.Add(tSigNum);
                         }
@@ -84,56 +84,63 @@ namespace TabTranslator
                             D16th = "-_";
                             D16ths.Add(D16th);
                         }
-                    }                                                                                                                   
+                    }
                     Measures.Add(D16ths);
                 }
                 TabLines.Add(Measures);
             }
             return TabLines;
         }
-            public string GetFretNrString(MusicalNote Note)
+        public string GetFretNrString(MusicalNote Note)
+        {
+            string FretNr = Note.FingerPosition.FretNr.ToString();
+            return FretNr;
+        }
+        /// <summary>
+        /// inserts songnotes fretnumbers into tab structure
+        /// </summary>
+        /// <param name="TabLines"></param>
+        /// <param name="Beats"></param>
+        public void FillTablines(List<List<List<string>>> TabLines, List<MusicalBeat> Beats, SongsterrSong Song)
+        {
+            for (int stringNum = 0; stringNum < TabLines.Count; stringNum++)
             {
-                string FretNr = Note.FingerPosition.FretNr.ToString();
-                return FretNr;
-            }
-            /// <summary>
-            /// inserts songnotes fretnumbers into tab structure
-            /// </summary>
-            /// <param name="TabLines"></param>
-            /// <param name="Beats"></param>
-            public void FillTablines(List<List<List<string>>> TabLines, List<MusicalBeat> Beats, SongsterrSong Song)
-            {
-                for (int stringNum = 0; stringNum < TabLines.Count; stringNum++)
+                List<List<string>> measures = TabLines[stringNum];
+                int beatCount = 0;
+                long beatDuration = 1;
+                for (int measureIndex = 1; measureIndex < measures.Count; measureIndex++)  //for each (output) measure
                 {
-                    List<List<string>> measures = TabLines[stringNum];               
-                    int beatCount = 0;
-                    long beatDuration = 1;
-                    for (int measureIndex = 1; measureIndex < measures.Count; measureIndex++)  //for each (output) measure
-                    {
-                        
-                        List<string> D16ths = measures[measureIndex];
-                        for (int D = 1; D < D16ths.Count; D++)
-                        {
-                            string D16th = D16ths[D];
 
-                            var currentBeat = Beats[beatCount];
-                            if (currentBeat.Duration16ths > 1 && beatDuration < currentBeat.Duration16ths)
+                    List<string> D16ths = measures[measureIndex];
+                    for (int D = 1; D < D16ths.Count; D++)
+                    {
+                        string D16th = D16ths[D];
+                        if (beatCount >= Beats.Count)
+                        {
+                            break;
+                        }
+                        var currentBeat = Beats[beatCount];
+                        if (currentBeat.MeasureNum != measureIndex - 1)
+                        {
+                            break;
+                        }
+                        if (currentBeat.Duration16ths > 1 && beatDuration < currentBeat.Duration16ths)
+                        {
+                            beatDuration++;
+                            continue;
+                        }
+                        else
+                        {
+                            for (int noteCount = 0; noteCount < currentBeat.MusicalNotes.Count; noteCount++) // writes in notes
                             {
-                                beatDuration++;
-                                continue;
-                            }
-                            else
-                            {
-                                for (int noteCount = 0; noteCount < currentBeat.MusicalNotes.Count; noteCount++) // writes in notes
-                                {                                
-                                    var currentNote = currentBeat.MusicalNotes[noteCount];
-                                    if (currentNote.FingerPosition.FretNr != null && currentNote.FingerPosition.StringNum == stringNum)
+                                var currentNote = currentBeat.MusicalNotes[noteCount];
+                                if (currentNote.FingerPosition.FretNr != null && currentNote.FingerPosition.StringNum == stringNum)
+                                {
+                                    if (currentNote.Dead == true)
                                     {
-                                        if (currentNote.Dead == true)
-                                        {
-                                            D16ths[D] = D16ths[D].Replace("-", "X");
-                                        }
-                                    
+                                        D16ths[D] = D16ths[D].Replace("-", "X");
+                                    }
+
                                     else
                                     {
                                         if (currentNote.FingerPosition.FretNr > 9)
@@ -144,203 +151,205 @@ namespace TabTranslator
                                     }
                                 }
                             }
+                            beatDuration = 1;
                             beatCount++;
-                        }                            
                         }
                     }
                 }
             }
-
-            public RootNotes ConvertMidiNum(long midiNum)
-            {
-                int convertedNum = Convert.ToInt32(midiNum);
-
-                List<RootNotes> midiNotes = new List<RootNotes>();
-
-                midiNotes.Add(RootNotes.C);
-                midiNotes.Add(RootNotes.CsDb);
-                midiNotes.Add(RootNotes.D);
-                midiNotes.Add(RootNotes.DsEb);
-                midiNotes.Add(RootNotes.E);
-                midiNotes.Add(RootNotes.F);
-                midiNotes.Add(RootNotes.FsGb);
-                midiNotes.Add(RootNotes.G);
-                midiNotes.Add(RootNotes.GsAb);
-                midiNotes.Add(RootNotes.A);
-                midiNotes.Add(RootNotes.AsBb);
-                midiNotes.Add(RootNotes.B);
-
-                midiNotes.Add(RootNotes.C);
-                midiNotes.Add(RootNotes.CsDb);
-                midiNotes.Add(RootNotes.D);
-                midiNotes.Add(RootNotes.DsEb);
-                midiNotes.Add(RootNotes.E);
-                midiNotes.Add(RootNotes.F);
-                midiNotes.Add(RootNotes.FsGb);
-                midiNotes.Add(RootNotes.G);
-                midiNotes.Add(RootNotes.GsAb);
-                midiNotes.Add(RootNotes.A);
-                midiNotes.Add(RootNotes.AsBb);
-                midiNotes.Add(RootNotes.B);
-
-                midiNotes.Add(RootNotes.C);
-                midiNotes.Add(RootNotes.CsDb);
-                midiNotes.Add(RootNotes.D);
-                midiNotes.Add(RootNotes.DsEb);
-                midiNotes.Add(RootNotes.E);
-                midiNotes.Add(RootNotes.F);
-                midiNotes.Add(RootNotes.FsGb);
-                midiNotes.Add(RootNotes.G);
-                midiNotes.Add(RootNotes.GsAb);
-                midiNotes.Add(RootNotes.A);
-                midiNotes.Add(RootNotes.AsBb);
-                midiNotes.Add(RootNotes.B);
-
-                midiNotes.Add(RootNotes.C);
-                midiNotes.Add(RootNotes.CsDb);
-                midiNotes.Add(RootNotes.D);
-                midiNotes.Add(RootNotes.DsEb);
-                midiNotes.Add(RootNotes.E);
-                midiNotes.Add(RootNotes.F);
-                midiNotes.Add(RootNotes.FsGb);
-                midiNotes.Add(RootNotes.G);
-                midiNotes.Add(RootNotes.GsAb);
-                midiNotes.Add(RootNotes.A);
-                midiNotes.Add(RootNotes.AsBb);
-                midiNotes.Add(RootNotes.B);
-
-                midiNotes.Add(RootNotes.C);
-                midiNotes.Add(RootNotes.CsDb);
-                midiNotes.Add(RootNotes.D);
-                midiNotes.Add(RootNotes.DsEb);
-                midiNotes.Add(RootNotes.E);
-                midiNotes.Add(RootNotes.F);
-                midiNotes.Add(RootNotes.FsGb);
-                midiNotes.Add(RootNotes.G);
-                midiNotes.Add(RootNotes.GsAb);
-                midiNotes.Add(RootNotes.A);
-                midiNotes.Add(RootNotes.AsBb);
-                midiNotes.Add(RootNotes.B);
-
-                midiNotes.Add(RootNotes.C);
-                midiNotes.Add(RootNotes.CsDb);
-                midiNotes.Add(RootNotes.D);
-                midiNotes.Add(RootNotes.DsEb);
-                midiNotes.Add(RootNotes.E);
-                midiNotes.Add(RootNotes.F);
-                midiNotes.Add(RootNotes.FsGb);
-                midiNotes.Add(RootNotes.G);
-                midiNotes.Add(RootNotes.GsAb);
-                midiNotes.Add(RootNotes.A);
-                midiNotes.Add(RootNotes.AsBb);
-                midiNotes.Add(RootNotes.B);
-
-                midiNotes.Add(RootNotes.C);
-                midiNotes.Add(RootNotes.CsDb);
-                midiNotes.Add(RootNotes.D);
-                midiNotes.Add(RootNotes.DsEb);
-                midiNotes.Add(RootNotes.E);
-                midiNotes.Add(RootNotes.F);
-                midiNotes.Add(RootNotes.FsGb);
-                midiNotes.Add(RootNotes.G);
-                midiNotes.Add(RootNotes.GsAb);
-                midiNotes.Add(RootNotes.A);
-                midiNotes.Add(RootNotes.AsBb);
-                midiNotes.Add(RootNotes.B);
-
-                midiNotes.Add(RootNotes.C);
-                midiNotes.Add(RootNotes.CsDb);
-                midiNotes.Add(RootNotes.D);
-                midiNotes.Add(RootNotes.DsEb);
-                midiNotes.Add(RootNotes.E);
-                midiNotes.Add(RootNotes.F);
-                midiNotes.Add(RootNotes.FsGb);
-                midiNotes.Add(RootNotes.G);
-                midiNotes.Add(RootNotes.GsAb);
-                midiNotes.Add(RootNotes.A);
-                midiNotes.Add(RootNotes.AsBb);
-                midiNotes.Add(RootNotes.B);
-
-                midiNotes.Add(RootNotes.C);
-                midiNotes.Add(RootNotes.CsDb);
-                midiNotes.Add(RootNotes.D);
-                midiNotes.Add(RootNotes.DsEb);
-                midiNotes.Add(RootNotes.E);
-                midiNotes.Add(RootNotes.F);
-                midiNotes.Add(RootNotes.FsGb);
-                midiNotes.Add(RootNotes.G);
-                midiNotes.Add(RootNotes.GsAb);
-                midiNotes.Add(RootNotes.A);
-                midiNotes.Add(RootNotes.AsBb);
-                midiNotes.Add(RootNotes.B);
-
-                midiNotes.Add(RootNotes.C);
-                midiNotes.Add(RootNotes.CsDb);
-                midiNotes.Add(RootNotes.D);
-                midiNotes.Add(RootNotes.DsEb);
-                midiNotes.Add(RootNotes.E);
-                midiNotes.Add(RootNotes.F);
-                midiNotes.Add(RootNotes.FsGb);
-                midiNotes.Add(RootNotes.G);
-                midiNotes.Add(RootNotes.GsAb);
-                midiNotes.Add(RootNotes.A);
-                midiNotes.Add(RootNotes.AsBb);
-                midiNotes.Add(RootNotes.B);
-
-                midiNotes.Add(RootNotes.C);
-                midiNotes.Add(RootNotes.CsDb);
-                midiNotes.Add(RootNotes.D);
-                midiNotes.Add(RootNotes.DsEb);
-                midiNotes.Add(RootNotes.E);
-                midiNotes.Add(RootNotes.F);
-                midiNotes.Add(RootNotes.FsGb);
-                midiNotes.Add(RootNotes.G);
-
-                RootNotes midiNote = RootNotes.C;
-
-                for (int i = 0; i < midiNotes.Count; i++)
-                {
-
-                    if (convertedNum == i)
-                    {
-                        midiNote = midiNotes[i];
-                    }
-                }
-
-                return midiNote;
-            }
-
-            public Tab(SongsterrSong Song, StringInstrument Instrument, List<MusicalBeat> songBeats, AppJson appjson, bool converted)
-            {
-                ArtistName = appjson.meta.current.artist;
-                TitleOfSong = appjson.meta.current.title;
-                Instrument = Instrument;
-                InstrumentString = Instrument.Name; //Song.Instrument;
-                List<RootNotes> convertedTunings = new List<RootNotes>();
-
-                if (!converted)
-                {
-                    for (int i = 0; i < Song.Tuning.Count(); i++)
-                    {
-                        RootNotes note = ConvertMidiNum(Song.Tuning[i]);
-                        convertedTunings.Add(note);
-                    }
-                    Tuning = convertedTunings;
-                }
-                else
-                {
-                    for (int i = 0; i < Instrument.MusicStrings.Count; i++)
-                    {
-                        RootNotes note = Instrument.MusicStrings[i].Tuning;
-                        convertedTunings.Add(note);
-                    }
-                    Tuning = convertedTunings;
-                }
-
-                Capo = Song.Capo;
-                TabLines = GetTabLines(Song, Instrument, converted);
-                FillTablines(TabLines, songBeats, Song);
-            }
         }
+
+        public RootNotes ConvertMidiNum(long midiNum)
+        {
+            int convertedNum = Convert.ToInt32(midiNum);
+
+            List<RootNotes> midiNotes = new List<RootNotes>();
+
+            midiNotes.Add(RootNotes.C);
+            midiNotes.Add(RootNotes.CsDb);
+            midiNotes.Add(RootNotes.D);
+            midiNotes.Add(RootNotes.DsEb);
+            midiNotes.Add(RootNotes.E);
+            midiNotes.Add(RootNotes.F);
+            midiNotes.Add(RootNotes.FsGb);
+            midiNotes.Add(RootNotes.G);
+            midiNotes.Add(RootNotes.GsAb);
+            midiNotes.Add(RootNotes.A);
+            midiNotes.Add(RootNotes.AsBb);
+            midiNotes.Add(RootNotes.B);
+
+            midiNotes.Add(RootNotes.C);
+            midiNotes.Add(RootNotes.CsDb);
+            midiNotes.Add(RootNotes.D);
+            midiNotes.Add(RootNotes.DsEb);
+            midiNotes.Add(RootNotes.E);
+            midiNotes.Add(RootNotes.F);
+            midiNotes.Add(RootNotes.FsGb);
+            midiNotes.Add(RootNotes.G);
+            midiNotes.Add(RootNotes.GsAb);
+            midiNotes.Add(RootNotes.A);
+            midiNotes.Add(RootNotes.AsBb);
+            midiNotes.Add(RootNotes.B);
+
+            midiNotes.Add(RootNotes.C);
+            midiNotes.Add(RootNotes.CsDb);
+            midiNotes.Add(RootNotes.D);
+            midiNotes.Add(RootNotes.DsEb);
+            midiNotes.Add(RootNotes.E);
+            midiNotes.Add(RootNotes.F);
+            midiNotes.Add(RootNotes.FsGb);
+            midiNotes.Add(RootNotes.G);
+            midiNotes.Add(RootNotes.GsAb);
+            midiNotes.Add(RootNotes.A);
+            midiNotes.Add(RootNotes.AsBb);
+            midiNotes.Add(RootNotes.B);
+
+            midiNotes.Add(RootNotes.C);
+            midiNotes.Add(RootNotes.CsDb);
+            midiNotes.Add(RootNotes.D);
+            midiNotes.Add(RootNotes.DsEb);
+            midiNotes.Add(RootNotes.E);
+            midiNotes.Add(RootNotes.F);
+            midiNotes.Add(RootNotes.FsGb);
+            midiNotes.Add(RootNotes.G);
+            midiNotes.Add(RootNotes.GsAb);
+            midiNotes.Add(RootNotes.A);
+            midiNotes.Add(RootNotes.AsBb);
+            midiNotes.Add(RootNotes.B);
+
+            midiNotes.Add(RootNotes.C);
+            midiNotes.Add(RootNotes.CsDb);
+            midiNotes.Add(RootNotes.D);
+            midiNotes.Add(RootNotes.DsEb);
+            midiNotes.Add(RootNotes.E);
+            midiNotes.Add(RootNotes.F);
+            midiNotes.Add(RootNotes.FsGb);
+            midiNotes.Add(RootNotes.G);
+            midiNotes.Add(RootNotes.GsAb);
+            midiNotes.Add(RootNotes.A);
+            midiNotes.Add(RootNotes.AsBb);
+            midiNotes.Add(RootNotes.B);
+
+            midiNotes.Add(RootNotes.C);
+            midiNotes.Add(RootNotes.CsDb);
+            midiNotes.Add(RootNotes.D);
+            midiNotes.Add(RootNotes.DsEb);
+            midiNotes.Add(RootNotes.E);
+            midiNotes.Add(RootNotes.F);
+            midiNotes.Add(RootNotes.FsGb);
+            midiNotes.Add(RootNotes.G);
+            midiNotes.Add(RootNotes.GsAb);
+            midiNotes.Add(RootNotes.A);
+            midiNotes.Add(RootNotes.AsBb);
+            midiNotes.Add(RootNotes.B);
+
+            midiNotes.Add(RootNotes.C);
+            midiNotes.Add(RootNotes.CsDb);
+            midiNotes.Add(RootNotes.D);
+            midiNotes.Add(RootNotes.DsEb);
+            midiNotes.Add(RootNotes.E);
+            midiNotes.Add(RootNotes.F);
+            midiNotes.Add(RootNotes.FsGb);
+            midiNotes.Add(RootNotes.G);
+            midiNotes.Add(RootNotes.GsAb);
+            midiNotes.Add(RootNotes.A);
+            midiNotes.Add(RootNotes.AsBb);
+            midiNotes.Add(RootNotes.B);
+
+            midiNotes.Add(RootNotes.C);
+            midiNotes.Add(RootNotes.CsDb);
+            midiNotes.Add(RootNotes.D);
+            midiNotes.Add(RootNotes.DsEb);
+            midiNotes.Add(RootNotes.E);
+            midiNotes.Add(RootNotes.F);
+            midiNotes.Add(RootNotes.FsGb);
+            midiNotes.Add(RootNotes.G);
+            midiNotes.Add(RootNotes.GsAb);
+            midiNotes.Add(RootNotes.A);
+            midiNotes.Add(RootNotes.AsBb);
+            midiNotes.Add(RootNotes.B);
+
+            midiNotes.Add(RootNotes.C);
+            midiNotes.Add(RootNotes.CsDb);
+            midiNotes.Add(RootNotes.D);
+            midiNotes.Add(RootNotes.DsEb);
+            midiNotes.Add(RootNotes.E);
+            midiNotes.Add(RootNotes.F);
+            midiNotes.Add(RootNotes.FsGb);
+            midiNotes.Add(RootNotes.G);
+            midiNotes.Add(RootNotes.GsAb);
+            midiNotes.Add(RootNotes.A);
+            midiNotes.Add(RootNotes.AsBb);
+            midiNotes.Add(RootNotes.B);
+
+            midiNotes.Add(RootNotes.C);
+            midiNotes.Add(RootNotes.CsDb);
+            midiNotes.Add(RootNotes.D);
+            midiNotes.Add(RootNotes.DsEb);
+            midiNotes.Add(RootNotes.E);
+            midiNotes.Add(RootNotes.F);
+            midiNotes.Add(RootNotes.FsGb);
+            midiNotes.Add(RootNotes.G);
+            midiNotes.Add(RootNotes.GsAb);
+            midiNotes.Add(RootNotes.A);
+            midiNotes.Add(RootNotes.AsBb);
+            midiNotes.Add(RootNotes.B);
+
+            midiNotes.Add(RootNotes.C);
+            midiNotes.Add(RootNotes.CsDb);
+            midiNotes.Add(RootNotes.D);
+            midiNotes.Add(RootNotes.DsEb);
+            midiNotes.Add(RootNotes.E);
+            midiNotes.Add(RootNotes.F);
+            midiNotes.Add(RootNotes.FsGb);
+            midiNotes.Add(RootNotes.G);
+
+            RootNotes midiNote = RootNotes.C;
+
+            for (int i = 0; i < midiNotes.Count; i++)
+            {
+
+                if (convertedNum == i)
+                {
+                    midiNote = midiNotes[i];
+                }
+            }
+
+            return midiNote;
+        }
+
+        public Tab(SongsterrSong Song, StringInstrument Instrument, List<MusicalBeat> songBeats, AppJson appjson, bool converted)
+        {
+            ArtistName = appjson.meta.current.artist;
+            TitleOfSong = appjson.meta.current.title;
+            Instrument = Instrument;
+            InstrumentString = Instrument.Name; //Song.Instrument;
+            List<RootNotes> convertedTunings = new List<RootNotes>();
+
+            if (!converted)
+            {
+                for (int i = 0; i < Song.Tuning.Count(); i++)
+                {
+                    RootNotes note = ConvertMidiNum(Song.Tuning[i]);
+                    convertedTunings.Add(note);
+                }
+                Tuning = convertedTunings;
+            }
+            else
+            {
+                for (int i = 0; i < Instrument.MusicStrings.Count; i++)
+                {
+                    RootNotes note = Instrument.MusicStrings[i].Tuning;
+                    convertedTunings.Add(note);
+                }
+                Tuning = convertedTunings;
+            }
+
+            Capo = Song.Capo;
+            TabLines = GetTabLines(Song, Instrument, converted);
+            FillTablines(TabLines, songBeats, Song);
+        }
+
     }
+}
 
