@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Collections.Specialized;
 
-namespace TabTranslator
+namespace GuitarTabConverter
 {
     public class UIMethods
     {
@@ -98,7 +98,7 @@ namespace TabTranslator
             foreach (Track T in appJson.meta.current.tracks)
             {
                 counter++;
-                if (T.isBassGuitar || T.isGuitar)
+                if (/*T.isBassGuitar || */T.isGuitar)
                 {
                     Console.WriteLine($"{counter}. {T.instrument}-{T.name}");
                 }

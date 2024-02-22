@@ -14,7 +14,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Specialized;
 
 
-namespace TabTranslator
+namespace GuitarTabConverter
 {
     internal class Program
     {
@@ -103,63 +103,6 @@ namespace TabTranslator
 
                 WriteTab(tab, tabTextPath);
 
-                //List<List<string>> tabOne = tab.TabLines[0];
-                //int tabLength = tabOne.Count;
-                //int measuresPerLine = 5;
-                //int tabLineStartPoint = 0;
-                //int tabLineEndPoint = measuresPerLine;
-
-                ////Console.WriteLine($"{tab.TitleOfSong}\n{tab.InstrumentString}");
-                //File.WriteAllText(tabTextPath, $"{tab.ArtistName}\n{tab.TitleOfSong}\n{tab.InstrumentString}\n");
-
-                //foreach (RootNotes tuning in tab.Tuning.Reverse<RootNotes>())
-                //{
-                //    //Console.Write(tuning.ToString());
-                //    File.AppendAllText(tabTextPath, $"{tuning.ToString()}");
-                //}
-                //if (tab.Capo == 0)
-                //{
-                //    //Console.WriteLine("\nNo Capo\n");
-                //    File.AppendAllText(tabTextPath, "\nNo Capo\n");
-                //}
-                //else
-                //{
-                //    //Console.WriteLine($"\nCapo on Fret {tab.Capo.ToString()}\n");
-                //    File.AppendAllText(tabTextPath, $"\nCapo on Fret {tab.Capo.ToString()}\n");
-                //}
-
-                //while (tabLineStartPoint < tabLength)
-                //{
-                //    int remainingMeasures = tabLength - tabLineEndPoint;
-                //    for (int i = 0; i < tab.TabLines.Count; i++)
-                //    {
-                //        List<string> tabLine = tab.TabLines[i];
-                //        for (int h = tabLineStartPoint; h < tabLineEndPoint; h++)
-                //        {
-                //            string measure = tabLine[h];
-                //            int dashCount = measure.Length;
-
-                //            for (int k = 0; k < dashCount; k++)
-                //            {
-                //                //Console.Write(measure[k]);
-                //                File.AppendAllText(tabTextPath, $"{measure[k]}");
-                //            }
-                //        }
-                //        //Console.Write($"\n");
-                //        File.AppendAllText(tabTextPath, $"\n");
-                //    }
-                //    tabLineStartPoint += 10;
-                //    if (remainingMeasures >= 10)
-                //    {
-                //        tabLineEndPoint += 10;
-                //    }
-                //    else
-                //    {
-                //        tabLineEndPoint = tabLength;
-                //    }
-                //    //Console.Write($"\n");
-                //    File.AppendAllText(tabTextPath, $"\n");
-                //}
                 UIMethods.ContinueOrExit(isOpen);
             }
         }

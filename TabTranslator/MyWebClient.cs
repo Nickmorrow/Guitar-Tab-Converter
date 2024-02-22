@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 
-namespace TabTranslator
+namespace GuitarTabConverter
 {
     class MyWebClient : WebClient
     {

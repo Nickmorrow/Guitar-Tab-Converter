@@ -7,7 +7,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace TabTranslator
+namespace GuitarTabConverter
 {
     // is missing certain parameters, check json data for other songs
     public partial class SongsterrSong
@@ -225,12 +225,12 @@ namespace TabTranslator
 
     public partial class SongsterrSong
     {
-        public static SongsterrSong FromJson(string json) => JsonConvert.DeserializeObject<SongsterrSong>(json, TabTranslator.Converter.Settings);
+        public static SongsterrSong FromJson(string json) => JsonConvert.DeserializeObject<SongsterrSong>(json, GuitarTabConverter.Converter.Settings);
     }
 
     public static class Serialize
     {
-        public static string ToJson(this SongsterrSong self) => JsonConvert.SerializeObject(self, TabTranslator.Converter.Settings);
+        public static string ToJson(this SongsterrSong self) => JsonConvert.SerializeObject(self, GuitarTabConverter.Converter.Settings);
     }
 
     internal static class Converter

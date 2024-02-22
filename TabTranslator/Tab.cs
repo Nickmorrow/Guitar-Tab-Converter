@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TabTranslator
+namespace GuitarTabConverter
 {
     public class Tab
     {
@@ -20,12 +20,8 @@ namespace TabTranslator
         public string Lyrics;
         public List<List<List<string>>> TabLines;
 
-
-
-
         public List<List<List<string>>> GetTabLines(SongsterrSong Song, StringInstrument instrument, bool converted)
         {
-
             long? tSigNum = 0;
             string tuningString = "";
             List<long?> tSigNums = new List<long?>();
