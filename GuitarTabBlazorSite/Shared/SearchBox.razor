@@ -1,0 +1,23 @@
+﻿@using GuitarTabConverter 
+
+<input class= "form-control" style= "max-width:600px"placeholder="Search..."
+    @bind="_searchItem" />
+
+<button class="form-control" style="max-width 300px"
+    @onclick=OnSearchedClicked>Search</button>
+
+@code {
+    //[Parameter]
+    //public List<TEnitity> Items { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnSearch { get; set; }
+
+    private string _searchItem{ get; set; }
+
+    private async Task OnSearchedClicked()
+    {
+        await OnSearch.InvokeAsync(_searchItem);
+    }
+
+}

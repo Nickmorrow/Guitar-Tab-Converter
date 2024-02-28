@@ -1,0 +1,13 @@
+﻿@using GuitarTabConverter
+<h3>Beat</h3>
+
+@foreach(var note in BeatInput.MusicalNotes)
+{
+    <div>@note.FingerPosition</div>
+}
+
+
+@code {
+    [Parameter]
+    public MusicalBeat BeatInput{ get; set; }
+}

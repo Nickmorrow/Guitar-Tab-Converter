@@ -1,9 +1,41 @@
 ﻿@page "/"
+@using GuitarTabBlazorSite.Data
+@using GuitarTabConverter
+ 
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Guitar Tab Converter</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Welcome to Guitar Tab Converter</h1>
 
-Welcome to your new app.
+Search over 800,000 Guitar tabs!
+
+<input class= "form-control" style= "max-width:600px"placeholder="Search..."
+    @bind="_searchItem" />
+
+<button class="form-control" style="max-width 300px"
+    @onclick=OnSearchedClicked>Search</button>
+
+
 
 <SurveyPrompt Title="How is Blazor working for you?" />
+
+@code 
+{
+    public static string _searchItem { get; set; }
+
+    private static string _searchUrl = $"/?pattern={_searchItem}";
+
+    private static string _userSearchedHTML = HttpGet($"https://www.songsterr.com{_searchUrl}");
+
+    private static string HttpGet(string url)
+        {
+            string content = null;
+            var wc = new MyWebClient();
+            content = wc.DownloadString(url);
+            return content;
+        }
+
+
+}
+
+
