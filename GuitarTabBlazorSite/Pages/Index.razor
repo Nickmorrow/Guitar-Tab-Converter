@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using GuitarTabBlazorSite.Data
 @using GuitarTabConverter
+@inject GTCData Data
  
 
 <PageTitle>Guitar Tab Converter</PageTitle>
@@ -13,22 +14,57 @@ Search over 800,000 Guitar tabs!
     @bind="_searchItem" />
 
 <button class="form-control" style="max-width 300px"
-    @onclick=OnSearchedClicked>Search</button>
+    @onclick="_Clicked">Search</button>
 
+@if (_clicked)
+{
+    <table class="table">       
+        <tbody>
+            @for (int i = 0;i<UserSearchedJson.Count;i++)
+            {
+                <tr>
+                    <td>@UserSearchedJson[i].meta.current.artist-UserSearchedJson.meta.current.title</td>                   
+                </tr>
+            }
+        </tbody>
+    </table>                                                          
+                                    
+}
 
-
-<SurveyPrompt Title="How is Blazor working for you?" />
 
 @code 
 {
-    public static string _searchItem { get; set; }
+    private bool _clicked;
+
+    private void _Clicked()
+    {
+        _clicked = true;
+        UserSearchedJson = Data.SearchByTitle(_searchItem);
+    }
+
+    private static string _searchItem { get; set; }
 
     private static string _searchUrl = $"/?pattern={_searchItem}";
 
     private static string _userSearchedHTML = HttpGet($"https://www.songsterr.com{_searchUrl}");
 
+    public static List<string> SongUrls = GTCData.GetSongUrls(_userSearchedHTML);
+
+    public static List<AppJson> UserSearchedJson = GTCData.GetSearchedSongs(SongUrls);
+
     private static string HttpGet(string url)
+    {
+        //TODO just an example here
+        if(UserSearchedJson.FirstOrDefault(s => s.meta.current.title == "title") != null)
         {
+
+        }
+        else
+        {
+            //do api fetch
+            //add to the list
+        }
+
             string content = null;
             var wc = new MyWebClient();
             content = wc.DownloadString(url);
