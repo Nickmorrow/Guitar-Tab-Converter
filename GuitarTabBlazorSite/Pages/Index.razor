@@ -11,7 +11,7 @@
 Search over 800,000 Guitar tabs!
 
 <input class= "form-control" style= "max-width:600px"placeholder="Search..."
-    @bind="_searchItem" />
+    @bind="Data.searchItem" />
 
 <button class="form-control" style="max-width 300px"
     @onclick="_Clicked">Search</button>
@@ -20,10 +20,10 @@ Search over 800,000 Guitar tabs!
 {
     <table class="table">       
         <tbody>
-            @for (int i = 0;i<UserSearchedJson.Count;i++)
+            @for (int i = 0;i<Data.SongUrls.Count;i++)
             {
                 <tr>
-                    <td>@UserSearchedJson[i].meta.current.artist-UserSearchedJson.meta.current.title</td>                   
+                    <td>@Data.SongUrls[i]</td>                   
                 </tr>
             }
         </tbody>
@@ -39,37 +39,10 @@ Search over 800,000 Guitar tabs!
     private void _Clicked()
     {
         _clicked = true;
-        UserSearchedJson = Data.SearchByTitle(_searchItem);
+        Data.userSearchedHTML = Data.GetUserSearchedHTML(Data.searchItem);
+        Data.SongUrls = Data.GetSongUrls(Data.userSearchedHTML);
     }
 
-    private static string _searchItem { get; set; }
-
-    private static string _searchUrl = $"/?pattern={_searchItem}";
-
-    private static string _userSearchedHTML = HttpGet($"https://www.songsterr.com{_searchUrl}");
-
-    public static List<string> SongUrls = GTCData.GetSongUrls(_userSearchedHTML);
-
-    public static List<AppJson> UserSearchedJson = GTCData.GetSearchedSongs(SongUrls);
-
-    private static string HttpGet(string url)
-    {
-        //TODO just an example here
-        if(UserSearchedJson.FirstOrDefault(s => s.meta.current.title == "title") != null)
-        {
-
-        }
-        else
-        {
-            //do api fetch
-            //add to the list
-        }
-
-            string content = null;
-            var wc = new MyWebClient();
-            content = wc.DownloadString(url);
-            return content;
-        }
 
 
 }

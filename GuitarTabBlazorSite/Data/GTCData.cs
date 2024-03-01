@@ -8,18 +8,33 @@ namespace GuitarTabBlazorSite.Data
 {
     public class GTCData
     {
-        //private List<SongObject> _songs = new();
+        
+        public string searchItem { get; set; }
 
-        //public List<SongObject>SearchByTitle(string title)
-        //{
-        //    //check if htere
-        //    //if not => get from api / return results
-           
-        //}
-
-
-        private  string HttpGet(string url)
+        public string userSearchedHTML;
+        public string GetUserSearchedHTML(string searchItem)
         {
+            string userSearchedHTML = $"/?pattern={searchItem}";
+            this.userSearchedHTML = HttpGet($"https://www.songsterr.com{userSearchedHTML}");
+            return this.userSearchedHTML;
+        }
+
+        public List<string> SongUrls;
+
+        public List<AppJson> UserSearchedJson;
+
+        private string HttpGet(string url)
+        {
+            //TODO just an example here
+            //if(UserSearchedJson.FirstOrDefault(s => s.meta.current.title == "title") != null)
+            //{
+
+            //}
+            //else
+            //{
+            //    //do api fetch
+            //    //add to the list
+            //}
             string content = null;
             var wc = new MyWebClient();
             content = wc.DownloadString(url);
@@ -47,7 +62,7 @@ namespace GuitarTabBlazorSite.Data
             return resultList;
         }
 
-        public  AppJson GetJsonSongInfo(string songUrl)
+        public AppJson GetJsonSongInfo(string songUrl)
         {
             List<string> resultList = new List<string>();
             try
@@ -68,28 +83,36 @@ namespace GuitarTabBlazorSite.Data
             return result;
         }
 
-        public List<AppJson> GetSearchedSongs(List<string> searchedSongs) //needs cache system
+        private List<AppJson> _songs = new();
+
+        //public List<AppJson> SearchByTitle(string title)
+        //{
+        //    //check if htere
+        //    //if not => get from api / return results
+
+        //}
+
+        public List<AppJson> GetSearchedSongs(List<string> songUrls, List<AppJson> UserSearchedJson) //needs cache system
         {
 
-            List<AppJson> SongJson = new List<AppJson>();
+            //List<AppJson> SongJson = new List<AppJson>();
             AppJson Song = new AppJson();
             string songSourceHTML;
-            int counter = 0;
 
-            foreach (String s in searchedSongs)
+            for (int urlNum = 0; urlNum< songUrls.Count;urlNum++)
             {
-                if (s.Contains("chord"))
+                if (songUrls[urlNum].Contains("chord")) //chord means that url is for chords - use later for diplaying chords
                     continue;
-                //Console.WriteLine(s);
-                songSourceHTML = HttpGet($"https://www.songsterr.com{s}");
+
+                songSourceHTML = HttpGet($"https://www.songsterr.com{songUrls[urlNum]}");
                 Song = GetJsonSongInfo(songSourceHTML);
-                SongJson.Add(Song);
+                UserSearchedJson.Add(Song);
                 //Console.WriteLine($"{counter + 1}. {SongJson[counter].meta.current.artist}-{SongJson[counter].meta.current.title}");
-                //counter++;
+
                 //Thread.Sleep(1000);
-                //Console.Clear();
+
             }
-            return SongJson;
+            return UserSearchedJson;
         }
     }
 }
