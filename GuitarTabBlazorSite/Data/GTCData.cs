@@ -23,6 +23,9 @@ namespace GuitarTabBlazorSite.Data
 
         public List<AppJson> UserSearchedJson;
 
+        public List<AppJson> FilteredListJson;
+        
+
         private string HttpGet(string url)
         {
             //TODO just an example here
@@ -83,36 +86,74 @@ namespace GuitarTabBlazorSite.Data
             return result;
         }
 
-        private List<AppJson> _songs = new();
+        //private List<AppJson> _songs = new();
 
-        //public List<AppJson> SearchByTitle(string title)
-        //{
-        //    //check if htere
-        //    //if not => get from api / return results
-
-        //}
-
-        public List<AppJson> GetSearchedSongs(List<string> songUrls, List<AppJson> UserSearchedJson) //needs cache system
+        public List<AppJson> SearchJson(string searchItem, List<AppJson> UserSearchedJson, List<string> songUrls)
         {
+            bool containsSearchItem = false;
 
-            //List<AppJson> SongJson = new List<AppJson>();
-            AppJson Song = new AppJson();
-            string songSourceHTML;
-
-            for (int urlNum = 0; urlNum< songUrls.Count;urlNum++)
+            if (UserSearchedJson != null)
             {
-                if (songUrls[urlNum].Contains("chord")) //chord means that url is for chords - use later for diplaying chords
-                    continue;
+                for (int i = 0; i < UserSearchedJson.Count; i++)
+                {
+                    if (UserSearchedJson[i].meta.current.artist.Contains(searchItem) || UserSearchedJson[i].meta.current.title.Contains(searchItem))
+                    {
+                        containsSearchItem = true;
+                        break;
+                    }
+                }
+            }            
+            if (containsSearchItem == false )
+            {   
+                if (UserSearchedJson == null)
+                {
+                    UserSearchedJson = new List<AppJson>();
+                }
+                AppJson Song = new AppJson();
+                string songSourceHTML;
 
-                songSourceHTML = HttpGet($"https://www.songsterr.com{songUrls[urlNum]}");
-                Song = GetJsonSongInfo(songSourceHTML);
-                UserSearchedJson.Add(Song);
-                //Console.WriteLine($"{counter + 1}. {SongJson[counter].meta.current.artist}-{SongJson[counter].meta.current.title}");
+                for (int urlNum = 0; urlNum < songUrls.Count; urlNum++)
+                {
+                    if (songUrls[urlNum].Contains("chord")) //chord means that url is for chords - use later for diplaying chords
+                        continue;
 
-                //Thread.Sleep(1000);
-
+                    songSourceHTML = HttpGet($"https://www.songsterr.com{songUrls[urlNum]}");
+                    Song = GetJsonSongInfo(songSourceHTML);
+                    UserSearchedJson.Add(Song);
+                    //Console.WriteLine($"{counter + 1}. {SongJson[counter].meta.current.artist}-{SongJson[counter].meta.current.title}");
+                    Thread.Sleep(1000);
+                }
             }
             return UserSearchedJson;
         }
+
+        public List<AppJson> GetFilteredListJson(List<AppJson> UserSearchJson, List<AppJson> FilterListJson)
+        {
+            FilterListJson = UserSearchedJson.Where(u => u.meta.current.artist.Contains(searchItem) || u.meta.current.title.Contains(searchItem)).ToList();
+            return FilterListJson;
+        }
+
+        //public List<AppJson> GetSearchedSongs(List<string> songUrls, List<AppJson> UserSearchedJson) // for name and title display / needs cache system
+        //{
+
+        //    //List<AppJson> SongJson = new List<AppJson>();
+        //    AppJson Song = new AppJson();
+        //    string songSourceHTML;
+
+        //    for (int urlNum = 0; urlNum< songUrls.Count;urlNum++)
+        //    {
+        //        if (songUrls[urlNum].Contains("chord")) //chord means that url is for chords - use later for diplaying chords
+        //            continue;
+
+        //        songSourceHTML = HttpGet($"https://www.songsterr.com{songUrls[urlNum]}");
+        //        Song = GetJsonSongInfo(songSourceHTML);
+        //        UserSearchedJson.Add(Song);
+        //        //Console.WriteLine($"{counter + 1}. {SongJson[counter].meta.current.artist}-{SongJson[counter].meta.current.title}");
+
+        //        Thread.Sleep(1000);
+
+        //    }
+        //    return UserSearchedJson;
+        //}
     }
 }

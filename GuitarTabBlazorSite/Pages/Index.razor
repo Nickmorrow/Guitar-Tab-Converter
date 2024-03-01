@@ -18,16 +18,21 @@ Search over 800,000 Guitar tabs!
 
 @if (_clicked)
 {
+    @*@if (Data.FilteredListJson == null)
+    {
+        <p><em>Loading...</em></p>
+    }*@
     <table class="table">       
         <tbody>
-            @for (int i = 0;i<Data.SongUrls.Count;i++)
+            @for (int i = 0;i<Data.FilteredListJson.Count;i++)
             {
                 <tr>
-                    <td>@Data.SongUrls[i]</td>                   
+                    <td>@Data.FilteredListJson[i].meta.current.artist </td>                   
                 </tr>
             }
         </tbody>
-    </table>                                                          
+    </table> 
+                                                              
                                     
 }
 
@@ -41,6 +46,8 @@ Search over 800,000 Guitar tabs!
         _clicked = true;
         Data.userSearchedHTML = Data.GetUserSearchedHTML(Data.searchItem);
         Data.SongUrls = Data.GetSongUrls(Data.userSearchedHTML);
+        Data.UserSearchedJson = Data.SearchJson(Data.searchItem, Data.UserSearchedJson, Data.SongUrls);
+        Data.FilteredListJson = Data.GetFilteredListJson(Data.UserSearchedJson, Data.FilteredListJson);
     }
 
 
