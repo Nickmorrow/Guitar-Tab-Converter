@@ -9,6 +9,8 @@ namespace GuitarTabBlazorSite.Data
 {
     public class GTCData
     {
+        public Track selectedTrack;
+
         public bool IsRowExpanded { get; set; } = false;
 
         public string ExpandableContent { get; set; }

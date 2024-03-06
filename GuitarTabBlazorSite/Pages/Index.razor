@@ -2,6 +2,7 @@
 @using GuitarTabBlazorSite.Data
 @using GuitarTabConverter
 @inject GTCData Data
+@inject NavigationManager NavManager
  
 
 <PageTitle>Guitar Tab Converter</PageTitle>
@@ -43,11 +44,10 @@ Search over 800,000 Guitar tabs!
                         {
                             if (T.isGuitar)
                                 {
-                                    <tr>
+                                    <tr @onclick= "() => _TrackClicked(T)">
                                          <td>@T.instrument, @T.name</td>
                                     </tr>
-                                }
-                            
+                                }                           
                         }                       
                     }
                 }
@@ -70,12 +70,15 @@ Search over 800,000 Guitar tabs!
         Data.FilteredListJson = Data.UserSearchedJson.Where(s => s.meta.current.title.ToLower() == Data.searchItem.ToLower() | s.meta.current.artist.ToLower() == Data.searchItem.ToLower()).ToList();
     }
 
-    //private bool _songClicked;
+    private bool _trackClicked;
 
-    //private void _SongClicked()
-    //{
-    //    _songClicked = true;
-    //}
+    private void _TrackClicked(Track T)
+    {
+        _trackClicked = true;
+        Data.selectedTrack = T;
+        NavManager.NavigateTo("/Tab");
+
+    }
 
 }
 
