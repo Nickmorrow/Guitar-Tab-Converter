@@ -18,24 +18,25 @@ Search over 800,000 Guitar tabs!
 
 @if (_clicked)
 {
-    @*@if (Data.FilteredListJson == null)
+    @if (Data.FilteredListJson.Count() == 0)
     {
-        <p><em>Loading...</em></p>
-    }*@
-    <table class="table">       
-        <tbody>
-            @for (int i = 0;i<Data.FilteredListJson.Count;i++)
-            {
-                <tr>
-                    <td>@Data.FilteredListJson[i].meta.current.artist </td>                   
-                </tr>
-            }
-        </tbody>
-    </table> 
-                                                              
-                                    
+        <p><em>No Results</em></p> 
+    }
+    else
+    {
+        <table class="table">       
+            <tbody>
+                @for (int i = 0;i<Data.FilteredListJson.Count();i++)
+                {
+                    <tr>
+                        <td>@Data.FilteredListJson[i].meta.current.artist, @Data.FilteredListJson[i].meta.current.title </td>                   
+                    </tr>
+                }
+            </tbody>
+        </table> 
+    }
+                                        
 }
-
 
 @code 
 {
@@ -47,7 +48,7 @@ Search over 800,000 Guitar tabs!
         Data.userSearchedHTML = Data.GetUserSearchedHTML(Data.searchItem);
         Data.SongUrls = Data.GetSongUrls(Data.userSearchedHTML);
         Data.UserSearchedJson = Data.SearchJson(Data.searchItem, Data.UserSearchedJson, Data.SongUrls);
-        Data.FilteredListJson = Data.GetFilteredListJson(Data.UserSearchedJson, Data.FilteredListJson);
+        Data.FilteredListJson = Data.UserSearchedJson.Where(s => s.meta.current.title.ToLower() == Data.searchItem.ToLower() | s.meta.current.artist.ToLower() == Data.searchItem.ToLower()).ToList();
     }
 
 

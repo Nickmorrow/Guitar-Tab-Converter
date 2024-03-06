@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Text.Json;
+using System.Linq;
 
 namespace GuitarTabBlazorSite.Data
 {
@@ -24,7 +25,14 @@ namespace GuitarTabBlazorSite.Data
         public List<AppJson> UserSearchedJson;
 
         public List<AppJson> FilteredListJson;
-        
+
+        //public List<AppJson> GetFilteredListJson(List<AppJson> FilterListJson)
+        //{
+        //    FilteredListJson = new List<AppJson>();
+        //    FilteredListJson = UserSearchedJson.Where(s => s.meta.current.title.ToLower() == searchItem.ToLower() | s.meta.current.artist.ToLower() == searchItem.ToLower()).ToList();
+        //    return FilterListJson;
+        //}
+
 
         private string HttpGet(string url)
         {
@@ -94,17 +102,21 @@ namespace GuitarTabBlazorSite.Data
 
             if (UserSearchedJson != null)
             {
-                for (int i = 0; i < UserSearchedJson.Count; i++)
+                if (UserSearchedJson.FirstOrDefault(s => s.meta.current.title.ToLower() == searchItem.ToLower() | s.meta.current.artist.ToLower() == searchItem.ToLower()) != null)
                 {
-                    if (UserSearchedJson[i].meta.current.artist.Contains(searchItem) || UserSearchedJson[i].meta.current.title.Contains(searchItem))
-                    {
-                        containsSearchItem = true;
-                        break;
-                    }
+                    containsSearchItem = true;
                 }
+                //foreach (AppJson S in UserSearchedJson)
+                //{
+                //    if (S.meta.current.artist.Contains(searchItem) | S.meta.current.title.Contains(searchItem))
+                //    {
+                //        containsSearchItem = true;
+                //        break;
+                //    }
+                //}
             }            
             if (containsSearchItem == false )
-            {   
+            {
                 if (UserSearchedJson == null)
                 {
                     UserSearchedJson = new List<AppJson>();
@@ -114,24 +126,21 @@ namespace GuitarTabBlazorSite.Data
 
                 for (int urlNum = 0; urlNum < songUrls.Count; urlNum++)
                 {
-                    if (songUrls[urlNum].Contains("chord")) //chord means that url is for chords - use later for diplaying chords
+                    if (songUrls[urlNum].Contains("chord")) //chord means that url is for chords - use later for diplaying chords                   
                         continue;
-
                     songSourceHTML = HttpGet($"https://www.songsterr.com{songUrls[urlNum]}");
                     Song = GetJsonSongInfo(songSourceHTML);
                     UserSearchedJson.Add(Song);
-                    //Console.WriteLine($"{counter + 1}. {SongJson[counter].meta.current.artist}-{SongJson[counter].meta.current.title}");
-                    Thread.Sleep(1000);
-                }
+                    //Thread.Sleep(1000);
+                }               
             }
+
             return UserSearchedJson;
         }
 
-        public List<AppJson> GetFilteredListJson(List<AppJson> UserSearchJson, List<AppJson> FilterListJson)
-        {
-            FilterListJson = UserSearchedJson.Where(u => u.meta.current.artist.Contains(searchItem) || u.meta.current.title.Contains(searchItem)).ToList();
-            return FilterListJson;
-        }
+        
+
+
 
         //public List<AppJson> GetSearchedSongs(List<string> songUrls, List<AppJson> UserSearchedJson) // for name and title display / needs cache system
         //{
