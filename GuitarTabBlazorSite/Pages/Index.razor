@@ -14,10 +14,14 @@ Search over 800,000 Guitar tabs!
     @bind="Data.searchItem" />
 
 <button class="form-control" style="max-width 300px"
-    @onclick="_Clicked">Search</button>
+    @onclick="_SearchClicked">Search</button>
 
-@if (_clicked)
+@if (_searchClicked)
 {
+    @if (Data.FilteredListJson == null)
+    {
+        <p><em>Loading...</em></p> 
+    }
     @if (Data.FilteredListJson.Count() == 0)
     {
         <p><em>No Results</em></p> 
@@ -28,9 +32,24 @@ Search over 800,000 Guitar tabs!
             <tbody>
                 @for (int i = 0;i<Data.FilteredListJson.Count();i++)
                 {
-                    <tr>
-                        <td>@Data.FilteredListJson[i].meta.current.artist, @Data.FilteredListJson[i].meta.current.title </td>                   
+                    <tr @onclick="() => Data.IsRowExpanded = !Data.IsRowExpanded">
+                        <td> 
+                               @Data.FilteredListJson[i].meta.current.artist, @Data.FilteredListJson[i].meta.current.title  
+                        </td>                   
                     </tr>
+                    if (Data.IsRowExpanded)
+                    {
+                        foreach (Track T in Data.FilteredListJson[i].meta.current.tracks)
+                        {
+                            if (T.isGuitar)
+                                {
+                                    <tr>
+                                         <td>@T.instrument, @T.name</td>
+                                    </tr>
+                                }
+                            
+                        }                       
+                    }
                 }
             </tbody>
         </table> 
@@ -40,18 +59,23 @@ Search over 800,000 Guitar tabs!
 
 @code 
 {
-    private bool _clicked;
+    private bool _searchClicked;
 
-    private void _Clicked()
+    private void _SearchClicked()
     {
-        _clicked = true;
+        _searchClicked = true;
         Data.userSearchedHTML = Data.GetUserSearchedHTML(Data.searchItem);
         Data.SongUrls = Data.GetSongUrls(Data.userSearchedHTML);
         Data.UserSearchedJson = Data.SearchJson(Data.searchItem, Data.UserSearchedJson, Data.SongUrls);
         Data.FilteredListJson = Data.UserSearchedJson.Where(s => s.meta.current.title.ToLower() == Data.searchItem.ToLower() | s.meta.current.artist.ToLower() == Data.searchItem.ToLower()).ToList();
     }
 
+    //private bool _songClicked;
 
+    //private void _SongClicked()
+    //{
+    //    _songClicked = true;
+    //}
 
 }
 

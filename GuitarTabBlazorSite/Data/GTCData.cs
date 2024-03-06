@@ -9,7 +9,9 @@ namespace GuitarTabBlazorSite.Data
 {
     public class GTCData
     {
-        
+        public bool IsRowExpanded { get; set; } = false;
+
+        public string ExpandableContent { get; set; }
         public string searchItem { get; set; }
 
         public string userSearchedHTML;
@@ -25,27 +27,8 @@ namespace GuitarTabBlazorSite.Data
         public List<AppJson> UserSearchedJson;
 
         public List<AppJson> FilteredListJson;
-
-        //public List<AppJson> GetFilteredListJson(List<AppJson> FilterListJson)
-        //{
-        //    FilteredListJson = new List<AppJson>();
-        //    FilteredListJson = UserSearchedJson.Where(s => s.meta.current.title.ToLower() == searchItem.ToLower() | s.meta.current.artist.ToLower() == searchItem.ToLower()).ToList();
-        //    return FilterListJson;
-        //}
-
-
         private string HttpGet(string url)
         {
-            //TODO just an example here
-            //if(UserSearchedJson.FirstOrDefault(s => s.meta.current.title == "title") != null)
-            //{
-
-            //}
-            //else
-            //{
-            //    //do api fetch
-            //    //add to the list
-            //}
             string content = null;
             var wc = new MyWebClient();
             content = wc.DownloadString(url);
@@ -94,8 +77,6 @@ namespace GuitarTabBlazorSite.Data
             return result;
         }
 
-        //private List<AppJson> _songs = new();
-
         public List<AppJson> SearchJson(string searchItem, List<AppJson> UserSearchedJson, List<string> songUrls)
         {
             bool containsSearchItem = false;
@@ -106,14 +87,6 @@ namespace GuitarTabBlazorSite.Data
                 {
                     containsSearchItem = true;
                 }
-                //foreach (AppJson S in UserSearchedJson)
-                //{
-                //    if (S.meta.current.artist.Contains(searchItem) | S.meta.current.title.Contains(searchItem))
-                //    {
-                //        containsSearchItem = true;
-                //        break;
-                //    }
-                //}
             }            
             if (containsSearchItem == false )
             {
@@ -131,10 +104,9 @@ namespace GuitarTabBlazorSite.Data
                     songSourceHTML = HttpGet($"https://www.songsterr.com{songUrls[urlNum]}");
                     Song = GetJsonSongInfo(songSourceHTML);
                     UserSearchedJson.Add(Song);
-                    //Thread.Sleep(1000);
+                    Thread.Sleep(100);
                 }               
             }
-
             return UserSearchedJson;
         }
 
