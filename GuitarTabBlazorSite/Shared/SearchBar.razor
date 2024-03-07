@@ -1,0 +1,146 @@
+﻿@using GuitarTabBlazorSite.Data
+@using GuitarTabConverter
+@inject GTCData Data
+
+
+<h1>Welcome to Guitar Tab Converter</h1>
+
+Search over 800,000 Guitar tabs!
+
+<input class= "form-control" style= "max-width:600px"placeholder="Search..."
+    @bind="searchItem" />
+
+<button class="form-control" style="max-width 300px"
+    @onclick="SearchClicked">Search</button>
+
+@if (searchClicked)
+{
+    @if (FilteredListJson == null)
+    {
+        <p><em>Loading...</em></p> 
+    }
+    @if (FilteredListJson.Count() == 0)
+    {
+        <p><em>No Results</em></p> 
+    }
+    else
+    {
+        <table class="table">       
+            <tbody>
+                @foreach (AppJson Json in FilteredListJson)
+                {
+                    <tr @onclick="() => IsRowExpanded = !IsRowExpanded">
+                        
+                        <td> 
+                               @Json.meta.current.artist, @Json.meta.current.title  
+                        </td>                   
+                    </tr>
+                    if (IsRowExpanded)
+                    {
+                        GuitarOnly(Json);
+                        foreach (Track guitarTrack in guitarOnly)
+                        {
+                            <tr @onclick= "() => TrackClicked(Json, guitarTrack)">                                
+                                <td>@guitarTrack.instrument, @guitarTrack.name</td> 
+                           </tr>   
+                        }                     
+                    }
+                }
+            </tbody>
+        </table> 
+    }
+                             
+}
+
+
+@code {
+    [Parameter]
+    public string searchItem { get; set; }  
+
+    [Parameter]
+    public bool IsRowExpanded { get; set; } = false;
+
+    [Parameter]
+    public string userSearchedHTML { get; set; }
+
+    public string GetUserSearchedHTML(string searchItem)
+    {
+        string userSearchedHTML = $"/?pattern={searchItem}";
+        this.userSearchedHTML = Data.HttpGet($"https://www.songsterr.com{userSearchedHTML}");
+        return this.userSearchedHTML;
+    }
+
+    [Parameter]
+    public List<string> SongUrls { get; set; }
+
+    [Parameter]
+    public List<AppJson> UserSearchedJson { get; set; }
+
+    [Parameter]
+    public List<AppJson> FilteredListJson { get; set; }   
+
+    [Parameter]
+    public Track[] SongTracks { get; set; }
+
+    [Parameter]
+    public List<Track> guitarOnly { get; set; }
+
+    [Parameter]
+    public AppJson songJson { get; set; }
+
+    [Parameter]
+    public bool searchClicked { get; set; }
+
+    [Parameter]
+    public int trackIndex { get; set; }
+
+    public int GetTrackIndex(Track guitarTrack, int trackIndex)
+    {
+        for (int i= 0;i< SongTracks.Count();i++)
+        {
+            if (guitarTrack == SongTracks[i])
+            {
+                trackIndex = i;  
+            }
+        }
+        return trackIndex;
+    }
+
+    [Parameter]
+    public string trackUrl { get; set; }
+
+    [Parameter]
+    public string trackHTML { get; set; }
+
+    [Parameter]
+    public SongsterrSong selectedSong { get; set; }
+
+    public void SearchClicked()
+    {
+        searchClicked = true;
+        userSearchedHTML = GetUserSearchedHTML(searchItem);
+        SongUrls = Data.GetSongUrls(userSearchedHTML);
+        UserSearchedJson = Data.SearchJson(searchItem, UserSearchedJson, SongUrls);
+        FilteredListJson = UserSearchedJson.Where(s => s.meta.current.title.ToLower() == searchItem.ToLower() | s.meta.current.artist.ToLower() == searchItem.ToLower()).ToList();
+    }
+
+    public void GuitarOnly(AppJson Json)
+    {
+        SongTracks = Json.meta.current.tracks;
+        guitarOnly = SongTracks.Where(x => x.isGuitar).ToList();    
+    }
+
+    [Parameter]
+    public bool trackClicked { get; set; }   
+
+    public void TrackClicked(AppJson Json, Track guitarTrack)
+    {
+        trackClicked = true;
+        songJson = Json;
+        trackIndex = GetTrackIndex(guitarTrack, trackIndex);
+        trackUrl = Data.GetUrl(userSearchedHTML,songJson, trackIndex);
+        trackHTML = Data.TrackHTML(trackUrl);
+        selectedSong = Data.GetSong(trackHTML, selectedSong);
+    }
+
+}

@@ -2,10 +2,11 @@
 @using GuitarTabBlazorSite.Data
 @using GuitarTabConverter
 @inject GTCData Data
-@inject NavigationManager NavManager
- 
-
 <PageTitle>Guitar Tab Converter</PageTitle>
+
+<SearchBar></SearchBar> 
+
+@*<PageTitle>Guitar Tab Converter</PageTitle>
 
 <h1>Welcome to Guitar Tab Converter</h1>
 
@@ -34,55 +35,38 @@ Search over 800,000 Guitar tabs!
                 @for (int F = 0;F<Data.FilteredListJson.Count();F++)
                 {
                     <tr @onclick="() => Data.IsRowExpanded = !Data.IsRowExpanded">
+                        
                         <td> 
                                @Data.FilteredListJson[F].meta.current.artist, @Data.FilteredListJson[F].meta.current.title  
                         </td>                   
                     </tr>
                     if (Data.IsRowExpanded)
                     {
-                        for (int T = 0; T< Data.FilteredListJson[F].meta.current.tracks.Count(); T++)
+                        _GuitarOnly(F);
+                        for (int T = 0; T < Data.guitarOnly.Count(); T++)
                         {
-                            if (Data.FilteredListJson[F].meta.current.tracks[T].isGuitar)
-                                {
-                                    <tr @onclick= "() => _TrackClicked(Data.FilteredListJson[F].meta.current.tracks[T],T,Data.FilteredListJson[F])">
-                                         <td>@Data.FilteredListJson[F].meta.current.tracks[T].instrument, @Data.FilteredListJson[F].meta.current.tracks[T].name</td>
-                                    </tr>
-                                }                           
-                        }                       
+                            <tr @onclick= "() => _TrackClicked(T,F)">
+                                <td>@Data.guitarOnly[T].instrument, @Data.guitarOnly[T].name</td>
+                           </tr>   
+                        }                     
                     }
                 }
             </tbody>
         </table> 
     }
-                                        
-}
+                             
+}*@
 
 @code 
 {
+
     private bool _searchClicked;
 
     private void _SearchClicked()
     {
         _searchClicked = true;
-        Data.userSearchedHTML = Data.GetUserSearchedHTML(Data.searchItem);
-        Data.SongUrls = Data.GetSongUrls(Data.userSearchedHTML);
-        Data.UserSearchedJson = Data.SearchJson(Data.searchItem, Data.UserSearchedJson, Data.SongUrls);
-        Data.FilteredListJson = Data.UserSearchedJson.Where(s => s.meta.current.title.ToLower() == Data.searchItem.ToLower() | s.meta.current.artist.ToLower() == Data.searchItem.ToLower()).ToList();
     }
 
-    private bool _trackClicked;
-
-    private void _TrackClicked(Track T,int index, AppJson F)
-    {
-        _trackClicked = true;
-        Data.songJson = F;
-        Data.trackIndex = index;
-        Data.selectedTrack = T;
-        Data.trackUrl = Data.GetUrl(Data.userSearchedHTML,F, index);
-        Data.trackHTML = Data.TrackHTML(Data.trackUrl);
-        Data.selectedSong = Data.GetSong(Data.trackHTML, Data.selectedSong);
-        NavManager.NavigateTo("/Song");
-    }
 
 }
 

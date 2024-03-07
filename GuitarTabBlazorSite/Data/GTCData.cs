@@ -9,9 +9,13 @@ namespace GuitarTabBlazorSite.Data
 {
     public class GTCData
     {
+        //public List<Track> guitarOnly;
+
+        //public Track[] songTracks;
+
         public bool converted;
 
-        public int trackIndex;
+        //public int trackIndex;
 
         public string trackUrl;
 
@@ -52,10 +56,16 @@ namespace GuitarTabBlazorSite.Data
 
         public AppJson songJson;
 
+        public AppJson SongJson(AppJson song)
+        {
+            song = song;
+            return song;
+        }
+
         public List<AppJson> UserSearchedJson;
 
         public List<AppJson> FilteredListJson;
-        private string HttpGet(string url)
+        public string HttpGet(string url)
         {
             string content = null;
             var wc = new MyWebClient();
