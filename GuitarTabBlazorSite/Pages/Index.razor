@@ -31,21 +31,21 @@ Search over 800,000 Guitar tabs!
     {
         <table class="table">       
             <tbody>
-                @for (int i = 0;i<Data.FilteredListJson.Count();i++)
+                @for (int F = 0;F<Data.FilteredListJson.Count();F++)
                 {
                     <tr @onclick="() => Data.IsRowExpanded = !Data.IsRowExpanded">
                         <td> 
-                               @Data.FilteredListJson[i].meta.current.artist, @Data.FilteredListJson[i].meta.current.title  
+                               @Data.FilteredListJson[F].meta.current.artist, @Data.FilteredListJson[F].meta.current.title  
                         </td>                   
                     </tr>
                     if (Data.IsRowExpanded)
                     {
-                        foreach (Track T in Data.FilteredListJson[i].meta.current.tracks)
+                        for (int T = 0; T< Data.FilteredListJson[F].meta.current.tracks.Count(); T++)
                         {
-                            if (T.isGuitar)
+                            if (Data.FilteredListJson[F].meta.current.tracks[T].isGuitar)
                                 {
-                                    <tr @onclick= "() => _TrackClicked(T)">
-                                         <td>@T.instrument, @T.name</td>
+                                    <tr @onclick= "() => _TrackClicked(Data.FilteredListJson[F].meta.current.tracks[T],T,Data.FilteredListJson[F])">
+                                         <td>@Data.FilteredListJson[F].meta.current.tracks[T].instrument, @Data.FilteredListJson[F].meta.current.tracks[T].name</td>
                                     </tr>
                                 }                           
                         }                       
@@ -72,12 +72,16 @@ Search over 800,000 Guitar tabs!
 
     private bool _trackClicked;
 
-    private void _TrackClicked(Track T)
+    private void _TrackClicked(Track T,int index, AppJson F)
     {
         _trackClicked = true;
+        Data.songJson = F;
+        Data.trackIndex = index;
         Data.selectedTrack = T;
-        NavManager.NavigateTo("/Tab");
-
+        Data.trackUrl = Data.GetUrl(Data.userSearchedHTML,F, index);
+        Data.trackHTML = Data.TrackHTML(Data.trackUrl);
+        Data.selectedSong = Data.GetSong(Data.trackHTML, Data.selectedSong);
+        NavManager.NavigateTo("/Song");
     }
 
 }

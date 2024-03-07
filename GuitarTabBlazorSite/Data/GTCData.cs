@@ -9,6 +9,30 @@ namespace GuitarTabBlazorSite.Data
 {
     public class GTCData
     {
+        public bool converted;
+
+        public int trackIndex;
+
+        public string trackUrl;
+
+        public string trackHTML;
+
+        public string TrackHTML(string trackUrl)
+        {
+            trackHTML = HttpGet(trackUrl);
+            return trackHTML;
+        }
+
+        public Tab tab;
+
+        public SongsterrSong selectedSong;
+        
+        public StringInstrument selectedInstrument;
+
+        public List<StringInstrument> InstrumentList = InstObjects.DefStrInstruments();
+
+        public List<MusicalBeat> songBeats;
+
         public Track selectedTrack;
 
         public bool IsRowExpanded { get; set; } = false;
@@ -25,6 +49,8 @@ namespace GuitarTabBlazorSite.Data
         }
 
         public List<string> SongUrls;
+
+        public AppJson songJson;
 
         public List<AppJson> UserSearchedJson;
 
@@ -112,31 +138,141 @@ namespace GuitarTabBlazorSite.Data
             return UserSearchedJson;
         }
 
-        
+        public string GetUrl(string url, AppJson appJson, int trackIndex)
+        {
+            List<string> resultList = new List<string>();
+
+            // first part of url (cloudfrontserver)
+            try
+            {
+                Regex regexObj = new Regex(@"//.+\.cloudfront\.net/");
+                Match matchResult = regexObj.Match(url);
+                while (matchResult.Success)
+                {
+                    resultList.Add(matchResult.Value);
+                    matchResult = matchResult.NextMatch();
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                // Syntax error in the regular expression
+            }
+            string cloudFrontServer = resultList[0];    //changed from [3]
+
+            // second part of url (songid)
+            string songId = appJson.meta.songId.ToString();
+
+            // third part url (revisionId)
+            string revisionId = appJson.meta.current.revisionId.ToString();
+
+            // fourth part url (image)
+            string imageName = appJson.meta.current.image;
+
+            // fifth part json file          
+            trackIndex--;
+            string trackNum = trackIndex.ToString();
+            string jsonFile = $"{trackNum}.json";
+            string finalUrl = $"https:{cloudFrontServer}{songId}/{revisionId}/{imageName}/{jsonFile}";
+
+            return finalUrl;
+        }
+
+        public SongsterrSong GetSong(string trackHTML, SongsterrSong selectedSong)
+        {
+
+            SongsterrSong song = JsonConvert.DeserializeObject<SongsterrSong>(trackHTML);
+            return selectedSong;
+        }
+
+        public List<MusicalBeat> GetSongBeats(SongsterrSong song, StringInstrument stringInstrument, List<StringInstrument> stringInstruments)
+        {
+            List<MusicalBeat> beats = new List<MusicalBeat>();
+            for (int measureNum = 0; measureNum < song.Measures.Count(); measureNum++)
+            {
+                for (int voiceNum = 0; voiceNum < song.Measures[measureNum].Voices.Count(); voiceNum++)
+                {
+                    for (int beatNum = 0; beatNum < song.Measures[measureNum].Voices[voiceNum].Beats.Count(); beatNum++)
+                    {
+                        MusicalBeat beat = new MusicalBeat();
+                        List<MusicalNote> notes = new List<MusicalNote>();
+                        List<MusicalNote> bassNotes = new List<MusicalNote>();
+                        List<long?> bassMidiNums = new List<long?>();
+                        beat.MeasureNum = measureNum;
+                        beat.SongsterrDuration = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Duration[1];
+                        beat.Duration16ths = beat.Get16ths(beat.SongsterrDuration);
+                        beat.NullableBool = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Rest;
+                        beat.IsRest = beat.GetRestBeat(beat.NullableBool);
+                        for (int noteNum = 0; noteNum < song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes.Count(); noteNum++)
+                        {
+                            MusicalNote note = new MusicalNote();
+                            long ogStringNum = Convert.ToInt64(song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String);
+                            long ogFretNum = Convert.ToInt64(song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret);
+                            if (stringInstrument != stringInstruments[0])
+                            {
+                                note.FingerPositions = note.GetFingerPositions(song, stringInstrument.MusicStrings, ogStringNum, ogFretNum); // list of all possible fingerings for note, starts at the lowest fret
+                                if (note.FingerPositions.Count == 0)
+                                {
+                                    continue;
+                                }
+                                else
+                                {
+                                    note.FingerPosition = note.FingerPositions[0];
+                                    note.RootNote = note.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
+                                    note.Octave = note.GetOctave(note.FingerPosition);
+                                }
+                                note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
+                                note.IsRest = note.GetRestNote(note.NullableBoolRest);
+                                note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
+                                note.Dead = note.GetDeadNote(note.NullableBoolDead);
+                            }
+                            else
+                            {
+                                note.FingerPosition.StringNum = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].String;
+                                note.FingerPosition.FretNr = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Fret;
+                                note.RootNote = note.GetRootNote(note.FingerPosition, stringInstrument.MusicStrings[Convert.ToInt32(note.FingerPosition.StringNum)]);
+                                note.Octave = note.GetOctave(note.FingerPosition);
+                                note.NullableBoolRest = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Rest;
+                                note.IsRest = note.GetRestNote(note.NullableBoolRest);
+                                note.NullableBoolDead = song.Measures[measureNum].Voices[voiceNum].Beats[beatNum].Notes[noteNum].Dead;
+                                note.Dead = note.GetDeadNote(note.NullableBoolDead);
+                            }
+                            notes.Add(note);
+                        }
+                        if (stringInstrument.Name == "BassGuitar")
+                        {
+                            List<FingerPosition> bassMidis = new List<FingerPosition>();
+                            for (int n = 0; n < notes.Count; n++)
+                            {
+                                FingerPosition bassMidi = new FingerPosition();
+                                bassMidi = notes[n].FingerPosition;
+                                bassMidis.Add(bassMidi);
+                            }
+                            var bassMidisOrdered = bassMidis.OrderBy(x => x.MidiNum).ToList();
+                            for (int b = 0; b < bassMidis.Count; b++)
+                            {
+                                if (bassMidis[b] == bassMidisOrdered[0])
+                                {
+                                    notes[b].FingerPosition = bassMidisOrdered[0];
+                                    bassNotes.Add(notes[b]);
+                                    break;
+                                }
+                            }
+                            beat.MusicalNotes = bassNotes;
+                        }
+                        else
+                        {
+                            beat.MusicalNotes = notes;
+                        }
+                        beats.Add(beat);
+                    }
+                }
+            }
+            return beats;
+        }
 
 
 
-        //public List<AppJson> GetSearchedSongs(List<string> songUrls, List<AppJson> UserSearchedJson) // for name and title display / needs cache system
-        //{
-
-        //    //List<AppJson> SongJson = new List<AppJson>();
-        //    AppJson Song = new AppJson();
-        //    string songSourceHTML;
-
-        //    for (int urlNum = 0; urlNum< songUrls.Count;urlNum++)
-        //    {
-        //        if (songUrls[urlNum].Contains("chord")) //chord means that url is for chords - use later for diplaying chords
-        //            continue;
-
-        //        songSourceHTML = HttpGet($"https://www.songsterr.com{songUrls[urlNum]}");
-        //        Song = GetJsonSongInfo(songSourceHTML);
-        //        UserSearchedJson.Add(Song);
-        //        //Console.WriteLine($"{counter + 1}. {SongJson[counter].meta.current.artist}-{SongJson[counter].meta.current.title}");
-
-        //        Thread.Sleep(1000);
-
-        //    }
-        //    return UserSearchedJson;
-        //}
     }
+
+    
 }
