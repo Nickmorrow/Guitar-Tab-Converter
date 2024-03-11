@@ -41,7 +41,7 @@ Search over 800,000 Guitar tabs!
                         GuitarOnly(Json);
                         foreach (Track guitarTrack in _guitarOnly)
                         {
-                            <tr @onclick="@(() => {TrackClicked(Json, guitarTrack); trackLinkClicked.InvokeAsync(true); sendSelectedSong.InvokeAsync(_selectedSong); sendSongJson.InvokeAsync(_songJson);})">                                
+                            <tr @onclick="@( () => { TrackClicked(Json, guitarTrack); trackLinkClicked.InvokeAsync(true); sendSelectedSong.InvokeAsync(_selectedSong); sendSongJson.InvokeAsync(_songJson);})">                                
                                 <td>@guitarTrack.instrument, @guitarTrack.name</td> 
                             </tr>   
                         }                     
@@ -117,7 +117,6 @@ Search over 800,000 Guitar tabs!
         return trackIndex;
     }
 
-
     private string _trackUrl { get; set; }
 
     private string _trackHTML { get; set; }
@@ -129,7 +128,7 @@ Search over 800,000 Guitar tabs!
 
     private Track _selectedTrack { get; set; }   
 
-    private CancellationTokenSource _cancellationTokenSource;
+    //private CancellationTokenSource _cancellationTokenSource;
 
     private System.Threading.Timer _loadingTimer;
 
@@ -146,9 +145,7 @@ Search over 800,000 Guitar tabs!
         _loadingTimer = new System.Threading.Timer(_ => UpdateLoadingDots(), null, 0, 500);
 
         _UserSearchedJson = await Data.SearchJsonAsync(_searchItem, _UserSearchedJson, _SongUrls);
-        _FilteredListJson = _UserSearchedJson
-            .Where(s => s.meta.current.title.ToLower() == _searchItem.ToLower() || s.meta.current.artist.ToLower() == _searchItem.ToLower())
-            .ToList();
+        _FilteredListJson = _UserSearchedJson.Where(s => s.meta.current.title.ToLower() == _searchItem.ToLower() || s.meta.current.artist.ToLower() == _searchItem.ToLower()).ToList();
 
         _loadingTimer.Change(Timeout.Infinite, Timeout.Infinite); // Stop the timer when loading is complete
         _loadingDots = ""; // Clear loading dots after processing
@@ -161,7 +158,7 @@ Search over 800,000 Guitar tabs!
         {
             _loadingDots = _loadingDots.Length < 3 ? _loadingDots + "." : ".";
             StateHasChanged(); // Notify Blazor to re-render
-        });
+    });
     }
 
     public void GuitarOnly(AppJson Json)
@@ -175,6 +172,7 @@ Search over 800,000 Guitar tabs!
 
     public async void TrackClicked(AppJson Json, Track guitarTrack)
     {
+        if (!_trackClicked) return;
         _trackClicked = true;
         _songJson = Json;
         _trackIndex = _GetTrackIndex(guitarTrack, _trackIndex);
@@ -182,7 +180,12 @@ Search over 800,000 Guitar tabs!
         _trackHTML = Data.HttpGet(_trackUrl);//Data.TrackHTML(_trackUrl);
         _selectedSong = Data.GetSong(_trackHTML, _selectedSong);
         _selectedTrack = _SongTracks[_trackIndex];
+        _loadingTimer.Dispose();
     }
+
+    
+
+    
 
 
 

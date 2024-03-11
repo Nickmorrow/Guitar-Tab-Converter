@@ -14,31 +14,31 @@ namespace GuitarTabBlazorSite.Data
 
         //public Track[] songTracks;
 
-        public bool converted;
+        //public bool converted;
 
         //public int trackIndex;
 
-        public string trackUrl;
+        //public string trackUrl;
 
-        public string trackHTML;
+        //public string trackHTML;
 
-        public string TrackHTML(string trackUrl)
-        {
-            trackHTML = HttpGet(trackUrl);
-            return trackHTML;
-        }
+        //public string TrackHTML(string trackUrl)
+        //{
+        //    trackHTML = HttpGet(trackUrl);
+        //    return trackHTML;
+        //}
 
         public Tab tab;
 
-        public SongsterrSong selectedSong;
+        //public SongsterrSong selectedSong;
         
-        public StringInstrument selectedInstrument;
+        //public StringInstrument selectedInstrument;
 
         public List<StringInstrument> InstrumentList = InstObjects.DefStrInstruments();
 
-        public List<MusicalBeat> songBeats;
+        //public List<MusicalBeat> songBeats;
 
-        public Track selectedTrack;
+        //public Track selectedTrack;
 
         //public bool IsRowExpanded { get; set; } = false;
 

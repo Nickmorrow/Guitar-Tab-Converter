@@ -11,7 +11,11 @@
      <button @onclick="@(() => {IsUkelele(); _InstClicked();})">Ukelele</button>
      <button @onclick="@(() => {IsBanjo(); _InstClicked();})">Banjo</button>
  </div>
- <TabComponent instNum="@_instNum" converted="@_converted" ></TabComponent>  
+ @if(_instClicked)
+{
+    <TabComponent instNum="@_instNum" converted="@_converted" ></TabComponent>    
+}
+ 
 
 
 
