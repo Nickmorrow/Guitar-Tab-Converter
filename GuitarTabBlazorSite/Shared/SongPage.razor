@@ -5,17 +5,29 @@
 
 
  <h3>Choose Instrument</h3>
- <div> 
-     <button @onclick="@(() => {IsGuitar(); _InstClicked();})">Guitar</button>
-     <button @onclick="@(() => {IsBassGuitar(); _InstClicked();})">Bass Guitar</button>
-     <button @onclick="@(() => {IsUkelele(); _InstClicked();})">Ukelele</button>
-     <button @onclick="@(() => {IsBanjo(); _InstClicked();})">Banjo</button>
+ <div>
+     <button @onclick="_IsGuitar">Guitar</button>
+     <button @onclick="_IsBassGuitar">Bass Guitar</button>
+     <button @onclick="_IsUkelele">Ukelele</button>
+     <button @onclick="_IsBanjo">Banjo</button>
  </div>
- @if(_instClicked)
+ @if(_isGuitar)
 {
     <TabComponent Tab="_tab" ></TabComponent>    
 }
- 
+@if(_isBassGuitar)
+{
+    <TabComponent Tab="_tab" ></TabComponent>    
+}
+@if(_isUkelele)
+{
+    <TabComponent Tab="_tab" ></TabComponent>    
+}
+@if(_isBanjo)
+{
+    <TabComponent Tab="_tab" ></TabComponent>    
+}
+
 
 
 
@@ -28,46 +40,70 @@
     [Parameter]
     public AppJson songJson { get; set; }
 
-    private bool _instClicked { get; set; }
-
-    private bool _converted  { get; set; } 
-
-    private int _instNum { get; set; }
-
     private StringInstrument _selectedInstrument { get; set; }
 
     private List<MusicalBeat> _songBeats { get; set; }
 
     private Tab _tab { get; set; }
 
-    private void _InstClicked()
+    private bool _converted  { get; set; } 
+    private int _instNum { get; set; }
+
+    private bool _isGuitar { get; set; }
+    private bool _isBassGuitar { get; set; }
+    private bool _isUkelele { get; set; }
+    private bool _isBanjo { get; set; }
+
+    private void _IsGuitar()
     {
-        _instClicked = true;
+        _isGuitar = true;
+        _isBassGuitar = false;
+        _isUkelele = false;
+        _isBanjo = false;
+        _converted = false;
+        _instNum = 0;
         _selectedInstrument = Data.InstrumentList[_instNum];
         _songBeats = Data.GetSongBeats(selectedSong, _selectedInstrument, Data.InstrumentList);
         _tab = new Tab(selectedSong, _selectedInstrument, _songBeats, songJson, _converted);
-        
     }
-
-    private void IsGuitar()
+    private void _IsBassGuitar()
     {
-        _converted = false;
-        _instNum = 0;
-    }
-    private void IsBassGuitar()
-    {
+        _isGuitar = false;
+        _isBassGuitar = true;
+        _isUkelele = false;
+        _isBanjo = false;
         _converted = true;
         _instNum = 1;
+        _selectedInstrument = Data.InstrumentList[_instNum];
+        _songBeats = Data.GetSongBeats(selectedSong, _selectedInstrument, Data.InstrumentList);
+        _tab = new Tab(selectedSong, _selectedInstrument, _songBeats, songJson, _converted);
     }
-    private void IsUkelele()
+    private void _IsUkelele()
     {
+        _isGuitar = false;
+        _isBassGuitar = false;
+        _isUkelele = true;
+        _isBanjo = false;
         _converted = true;
         _instNum = 2;
+        _selectedInstrument = Data.InstrumentList[_instNum];
+        _songBeats = Data.GetSongBeats(selectedSong, _selectedInstrument, Data.InstrumentList);
+        _tab = new Tab(selectedSong, _selectedInstrument, _songBeats, songJson, _converted);
     }
-    private void IsBanjo()
+    private void _IsBanjo()
     {
+        _isGuitar = false;
+        _isBassGuitar = false;
+        _isUkelele = false;
+        _isBanjo = true;
         _converted = true;
         _instNum = 3;
+        _selectedInstrument = Data.InstrumentList[_instNum];
+        _songBeats = Data.GetSongBeats(selectedSong, _selectedInstrument, Data.InstrumentList);
+        _tab = new Tab(selectedSong, _selectedInstrument, _songBeats, songJson, _converted);
     }
+
+
+    
 
 }

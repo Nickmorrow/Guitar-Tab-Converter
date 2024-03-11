@@ -9,11 +9,23 @@
         <div>@Tab.TitleOfSong</div>
         <div>@Tab.InstrumentString</div>
 
+            <style>
+                .horizontal-container {
+                    display: flex;
+                }
+
+                .horizontal-container > div {
+                    margin-right: 10px; 
+                }
+            </style>
+
+        <div class="horizontal-container">
             @foreach (RootNotes tuning in Tab.Tuning.Reverse<RootNotes>())
             {
                 <div>@tuning.ToString()</div>
             }
-            if (Tab.Capo == 0)
+        </div>
+            @if (Tab.Capo == 0)
             {
                 <div>No Capo</div>
             }
@@ -21,6 +33,43 @@
             {
                 <div>Capo on Fret @Tab.Capo.ToString()</div>
             }
+    </div>
+    <div>
+        @while (tabLineStartPoint < tabLength)
+            {
+                int remainingMeasures = tabLength - tabLineEndPoint;
+                for (int i = 0; i < Tab.TabLines.Count; i++)
+                {
+                    List<List<string>> tabLine = Tab.TabLines[i];
+                    for (int h = tabLineStartPoint; h < tabLineEndPoint; h++)
+                    {
+                        List<string> measure = tabLine[h];
+                        int dashCount = measure.Count;
+                       
+                        for (int k = 0; k < dashCount; k++)
+                        {
+                                <div class="horizontal-container"><p>@measure[k]</p></div>
+                        }
+                    }
+
+                    //File.AppendAllText(tabTextPath, $"\n");
+                }
+                tabLineStartPoint += 10;
+                if (remainingMeasures >= 10)
+                {
+                    tabLineEndPoint += 10;
+                }
+                else
+                {
+                    tabLineEndPoint = tabLength;
+                }
+
+                //File.AppendAllText(tabTextPath, $"\n");
+            }
+
+        }
+        
+
     </div>
 
 
@@ -32,7 +81,24 @@
     [Parameter]
     public Tab Tab { get; set; }
 
+    private List<List<string>> tabOne;
+    private int tabLength;
+    private int measuresPerLine = 5;
+    private int tabLineStartPoint = 0;
+    private int tabLineEndPoint;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        // Initialize fields here
+        tabOne = Tab.TabLines[0];
+        tabLength = tabOne.Count;
+        tabLineEndPoint = measuresPerLine;
+    }
+
   
 
 
 }
+

@@ -16,56 +16,7 @@ else
 
 
 
-@*<PageTitle>Guitar Tab Converter</PageTitle>
 
-<h1>Welcome to Guitar Tab Converter</h1>
-
-Search over 800,000 Guitar tabs!
-
-<input class= "form-control" style= "max-width:600px"placeholder="Search..."
-    @bind="Data.searchItem" />
-
-<button class="form-control" style="max-width 300px"
-    @onclick="_SearchClicked">Search</button>
-
-@if (_searchClicked)
-{
-    @if (Data.FilteredListJson == null)
-    {
-        <p><em>Loading...</em></p> 
-    }
-    @if (Data.FilteredListJson.Count() == 0)
-    {
-        <p><em>No Results</em></p> 
-    }
-    else
-    {
-        <table class="table">       
-            <tbody>
-                @for (int F = 0;F<Data.FilteredListJson.Count();F++)
-                {
-                    <tr @onclick="() => Data.IsRowExpanded = !Data.IsRowExpanded">
-                        
-                        <td> 
-                               @Data.FilteredListJson[F].meta.current.artist, @Data.FilteredListJson[F].meta.current.title  
-                        </td>                   
-                    </tr>
-                    if (Data.IsRowExpanded)
-                    {
-                        _GuitarOnly(F);
-                        for (int T = 0; T < Data.guitarOnly.Count(); T++)
-                        {
-                            <tr @onclick= "() => _TrackClicked(T,F)">
-                                <td>@Data.guitarOnly[T].instrument, @Data.guitarOnly[T].name</td>
-                           </tr>   
-                        }                     
-                    }
-                }
-            </tbody>
-        </table> 
-    }
-                             
-}*@
 
 @code 
 {
