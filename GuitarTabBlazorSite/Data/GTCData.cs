@@ -5,6 +5,7 @@ using Newtonsoft.Json.Converters;
 using System.Text.Json;
 using System.Linq;
 
+
 namespace GuitarTabBlazorSite.Data
 {
     public class GTCData
@@ -73,12 +74,13 @@ namespace GuitarTabBlazorSite.Data
             return content;
         }
 
-        public async Task<string> HttpGetAsync(string url)
+        public async Task<string> HttpGetAsync(string url) //, CancellationToken cancellationToken
         {
             using (HttpClient client = new HttpClient())
             {
-                return await client.GetStringAsync(url);
+                return await client.GetStringAsync(url); //, cancellationToken
             }
+
         }
         public List<string> GetSongUrls(string html)
         {
@@ -288,7 +290,7 @@ namespace GuitarTabBlazorSite.Data
             return beats;
         }
 
-        public async Task<List<AppJson>> SearchJsonAsync(string searchItem, List<AppJson> UserSearchedJson, List<string> songUrls)
+        public async Task<List<AppJson>> SearchJsonAsync(string searchItem, List<AppJson> UserSearchedJson, List<string> songUrls) //, CancellationToken cancellationToken
         {
             bool containsSearchItem = false;
 
@@ -315,7 +317,7 @@ namespace GuitarTabBlazorSite.Data
                     if (songUrls[urlNum].Contains("chord"))
                         continue;
 
-                    songSourceHTML = await HttpGetAsync($"https://www.songsterr.com{songUrls[urlNum]}");
+                    songSourceHTML = await HttpGetAsync($"https://www.songsterr.com{songUrls[urlNum]}"); //, cancellationToken
                     Song = GetJsonSongInfo(songSourceHTML);
                     UserSearchedJson.Add(Song);
 

@@ -9,6 +9,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<GTCData>();
+builder.Services.AddSingleton<System.Threading.CancellationTokenSource>();
 
 var app = builder.Build();
 

@@ -1,8 +1,10 @@
 ﻿@page "/SearchBar"
 @using GuitarTabBlazorSite.Data
 @using GuitarTabConverter
+@using System.Threading
 @inject GTCData Data
 @inject NavigationManager nav
+
 
 
 <h1>Welcome to Guitar Tab Converter</h1>
@@ -29,17 +31,17 @@ Search over 800,000 Guitar tabs!
             <tbody>
                 @foreach (AppJson Json in _FilteredListJson)
                 {
-                    <tr @onclick="() => ToggleRowExpansion()">
+                    <tr @onclick="() => ToggleRowExpansion(Json)">
                         <td>
                             @Json.meta.current.artist, @Json.meta.current.title  
                         </td>
                     </tr>
-                    @if (_IsRowExpanded)
+                    @if (_IsRowExpanded.ContainsKey(Json) && _IsRowExpanded[Json])
                     {
                         GuitarOnly(Json);
                         foreach (Track guitarTrack in _guitarOnly)
                         {
-                            <tr @onclick= "@(() => {TrackClicked(Json, guitarTrack); trackLinkClicked.InvokeAsync(true); sendSelectedSong.InvokeAsync(_selectedSong); sendSongJson.InvokeAsync(_songJson);})">                                
+                            <tr @onclick="@(() => {TrackClicked(Json, guitarTrack); trackLinkClicked.InvokeAsync(true); sendSelectedSong.InvokeAsync(_selectedSong); sendSongJson.InvokeAsync(_songJson);})">                                
                                 <td>@guitarTrack.instrument, @guitarTrack.name</td> 
                             </tr>   
                         }                     
@@ -54,9 +56,18 @@ Search over 800,000 Guitar tabs!
 
 @code {
 
-    private void ToggleRowExpansion()
+    private Dictionary<AppJson, bool> _IsRowExpanded { get; set; } = new Dictionary<AppJson, bool>();
+
+    private void ToggleRowExpansion(AppJson json)
     {
-        _IsRowExpanded = !_IsRowExpanded;
+        if (_IsRowExpanded.ContainsKey(json))
+        {
+            _IsRowExpanded[json] = !_IsRowExpanded[json];
+        }
+        else
+        {
+            _IsRowExpanded[json] = true;
+        }
     }
 
     private bool _isLoading = false;
@@ -65,50 +76,31 @@ Search over 800,000 Guitar tabs!
 
     private string _searchItem { get; set; }  
 
-
-    private bool _IsRowExpanded { get; set; } = false;
-
     private string _userSearchedUrl { get; set; }
 
     private string _fullSearchedUrl { get; set; }
 
     private string _userSearchedHTML { get; set; }
 
-
-    //private string _GetUserSearchedHTML(string _searchItem)
-    //{
-    //    string userSearchedUrl = $"/?pattern={_searchItem}";
-    //    string fullUrl = $"https://www.songsterr.com{userSearchedUrl}";
-    //    _userSearchedHTML = Data.HttpGet($"https://www.songsterr.com{userSearchedUrl}");
-    //    return _userSearchedHTML;
-    //}
-
     private List<string> _SongUrls { get; set; }
-
 
     private List<AppJson> _UserSearchedJson = new();
 
-
     private List<AppJson> _FilteredListJson = new();  
-
 
     private Track[] _SongTracks { get; set; }
 
-
     private List<Track> _guitarOnly { get; set; }
-
 
     private AppJson _songJson { get; set; }
 
     [Parameter]
     public EventCallback<AppJson> sendSongJson { get; set; }
 
-
     private bool _searchClicked { get; set; }
 
     [Parameter]
     public EventCallback<bool> trackLinkClicked { get; set; }
-
 
     private int _trackIndex { get; set; }
 
@@ -128,19 +120,18 @@ Search over 800,000 Guitar tabs!
 
     private string _trackUrl { get; set; }
 
-
     private string _trackHTML { get; set; }
-
 
     private SongsterrSong _selectedSong { get; set; }
 
     [Parameter]
     public EventCallback<SongsterrSong> sendSelectedSong { get; set; }
 
+    private Track _selectedTrack { get; set; }   
 
-    private Track _selectedTrack { get; set; }
+    private CancellationTokenSource _cancellationTokenSource;
 
-    private System.Threading.Timer loadingTimer;
+    private System.Threading.Timer _loadingTimer;
 
     private async Task _SearchClickedAsync()
     {
@@ -152,14 +143,16 @@ Search over 800,000 Guitar tabs!
         _userSearchedHTML = await Data.HttpGetAsync($"{_fullSearchedUrl}");
         _SongUrls = Data.GetSongUrls(_userSearchedHTML);
 
-        loadingTimer = new System.Threading.Timer(_ => UpdateLoadingDots(), null, 0, 500);
+        _loadingTimer = new System.Threading.Timer(_ => UpdateLoadingDots(), null, 0, 500);
 
         _UserSearchedJson = await Data.SearchJsonAsync(_searchItem, _UserSearchedJson, _SongUrls);
-        _FilteredListJson = _UserSearchedJson.Where(s => s.meta.current.title.ToLower() == _searchItem.ToLower() | s.meta.current.artist.ToLower() == _searchItem.ToLower()).ToList();// Your logic with the result goes here
-         
-        loadingTimer.Change(Timeout.Infinite, Timeout.Infinite); 
-        _loadingDots = ""; 
-        _isLoading = false;      
+        _FilteredListJson = _UserSearchedJson
+            .Where(s => s.meta.current.title.ToLower() == _searchItem.ToLower() || s.meta.current.artist.ToLower() == _searchItem.ToLower())
+            .ToList();
+
+        _loadingTimer.Change(Timeout.Infinite, Timeout.Infinite); // Stop the timer when loading is complete
+        _loadingDots = ""; // Clear loading dots after processing
+        _isLoading = false; // Ensure _isLoading is set to false
     }
 
     private void UpdateLoadingDots()
@@ -167,7 +160,7 @@ Search over 800,000 Guitar tabs!
         InvokeAsync(() =>
         {
             _loadingDots = _loadingDots.Length < 3 ? _loadingDots + "." : ".";
-            StateHasChanged();
+            StateHasChanged(); // Notify Blazor to re-render
         });
     }
 
