@@ -1,0 +1,9 @@
+﻿.horizontal-container {
+    display: flex;
+
+
+}
+
+.horizontal-container > div {
+    margin-right: 10px;
+}
