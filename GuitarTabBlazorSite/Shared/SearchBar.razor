@@ -1,6 +1,8 @@
-﻿@using GuitarTabBlazorSite.Data
+﻿@page "/SearchBar"
+@using GuitarTabBlazorSite.Data
 @using GuitarTabConverter
 @inject GTCData Data
+@inject NavigationManager nav
 
 
 <h1>Welcome to Guitar Tab Converter</h1>
@@ -8,18 +10,16 @@
 Search over 800,000 Guitar tabs!
 
 <input class= "form-control" style= "max-width:600px"placeholder="Search..."
-    @bind="searchItem" />
+    @bind="_searchItem" />
 
 <button class="form-control" style="max-width 300px"
-    @onclick="SearchClicked">Search</button>
+    @onclick="_SearchClickedAsync">Search</button>
 
-@if (searchClicked)
+@if (_searchClicked)
 {
-    @if (FilteredListJson == null)
-    {
-        <p><em>Loading...</em></p> 
-    }
-    @if (FilteredListJson.Count() == 0)
+    <p><em>@_loadingDots</em></p> 
+
+    @if (_FilteredListJson.Count() == 0 & _isLoading == false)
     {
         <p><em>No Results</em></p> 
     }
@@ -27,22 +27,21 @@ Search over 800,000 Guitar tabs!
     {
         <table class="table">       
             <tbody>
-                @foreach (AppJson Json in FilteredListJson)
+                @foreach (AppJson Json in _FilteredListJson)
                 {
-                    <tr @onclick="() => IsRowExpanded = !IsRowExpanded">
-                        
-                        <td> 
-                               @Json.meta.current.artist, @Json.meta.current.title  
-                        </td>                   
+                    <tr @onclick="() => ToggleRowExpansion()">
+                        <td>
+                            @Json.meta.current.artist, @Json.meta.current.title  
+                        </td>
                     </tr>
-                    if (IsRowExpanded)
+                    @if (_IsRowExpanded)
                     {
                         GuitarOnly(Json);
-                        foreach (Track guitarTrack in guitarOnly)
+                        foreach (Track guitarTrack in _guitarOnly)
                         {
-                            <tr @onclick= "() => TrackClicked(Json, guitarTrack)">                                
+                            <tr @onclick= "@(() => {TrackClicked(Json, guitarTrack); trackLinkClicked.InvokeAsync(true); sendSelectedSong.InvokeAsync(_selectedSong); sendSongJson.InvokeAsync(_songJson);})">                                
                                 <td>@guitarTrack.instrument, @guitarTrack.name</td> 
-                           </tr>   
+                            </tr>   
                         }                     
                     }
                 }
@@ -54,93 +53,146 @@ Search over 800,000 Guitar tabs!
 
 
 @code {
-    [Parameter]
-    public string searchItem { get; set; }  
 
-    [Parameter]
-    public bool IsRowExpanded { get; set; } = false;
-
-    [Parameter]
-    public string userSearchedHTML { get; set; }
-
-    public string GetUserSearchedHTML(string searchItem)
+    private void ToggleRowExpansion()
     {
-        string userSearchedHTML = $"/?pattern={searchItem}";
-        this.userSearchedHTML = Data.HttpGet($"https://www.songsterr.com{userSearchedHTML}");
-        return this.userSearchedHTML;
+        _IsRowExpanded = !_IsRowExpanded;
     }
 
-    [Parameter]
-    public List<string> SongUrls { get; set; }
+    private bool _isLoading = false;
+
+    private string _loadingDots = "";
+
+    private string _searchItem { get; set; }  
+
+
+    private bool _IsRowExpanded { get; set; } = false;
+
+    private string _userSearchedUrl { get; set; }
+
+    private string _fullSearchedUrl { get; set; }
+
+    private string _userSearchedHTML { get; set; }
+
+
+    //private string _GetUserSearchedHTML(string _searchItem)
+    //{
+    //    string userSearchedUrl = $"/?pattern={_searchItem}";
+    //    string fullUrl = $"https://www.songsterr.com{userSearchedUrl}";
+    //    _userSearchedHTML = Data.HttpGet($"https://www.songsterr.com{userSearchedUrl}");
+    //    return _userSearchedHTML;
+    //}
+
+    private List<string> _SongUrls { get; set; }
+
+
+    private List<AppJson> _UserSearchedJson = new();
+
+
+    private List<AppJson> _FilteredListJson = new();  
+
+
+    private Track[] _SongTracks { get; set; }
+
+
+    private List<Track> _guitarOnly { get; set; }
+
+
+    private AppJson _songJson { get; set; }
 
     [Parameter]
-    public List<AppJson> UserSearchedJson { get; set; }
+    public EventCallback<AppJson> sendSongJson { get; set; }
+
+
+    private bool _searchClicked { get; set; }
 
     [Parameter]
-    public List<AppJson> FilteredListJson { get; set; }   
+    public EventCallback<bool> trackLinkClicked { get; set; }
 
-    [Parameter]
-    public Track[] SongTracks { get; set; }
 
-    [Parameter]
-    public List<Track> guitarOnly { get; set; }
+    private int _trackIndex { get; set; }
 
-    [Parameter]
-    public AppJson songJson { get; set; }
-
-    [Parameter]
-    public bool searchClicked { get; set; }
-
-    [Parameter]
-    public int trackIndex { get; set; }
-
-    public int GetTrackIndex(Track guitarTrack, int trackIndex)
+    private int _GetTrackIndex(Track guitarTrack, int trackIndex)
     {
-        for (int i= 0;i< SongTracks.Count();i++)
+        for (int i= 0;i< _SongTracks.Count();i++)
         {
-            if (guitarTrack == SongTracks[i])
+            if (guitarTrack == _SongTracks[i])
             {
-                trackIndex = i;  
+                trackIndex = i;
+                break;
             }
         }
         return trackIndex;
     }
 
-    [Parameter]
-    public string trackUrl { get; set; }
+
+    private string _trackUrl { get; set; }
+
+
+    private string _trackHTML { get; set; }
+
+
+    private SongsterrSong _selectedSong { get; set; }
 
     [Parameter]
-    public string trackHTML { get; set; }
+    public EventCallback<SongsterrSong> sendSelectedSong { get; set; }
 
-    [Parameter]
-    public SongsterrSong selectedSong { get; set; }
 
-    public void SearchClicked()
+    private Track _selectedTrack { get; set; }
+
+    private System.Threading.Timer loadingTimer;
+
+    private async Task _SearchClickedAsync()
     {
-        searchClicked = true;
-        userSearchedHTML = GetUserSearchedHTML(searchItem);
-        SongUrls = Data.GetSongUrls(userSearchedHTML);
-        UserSearchedJson = Data.SearchJson(searchItem, UserSearchedJson, SongUrls);
-        FilteredListJson = UserSearchedJson.Where(s => s.meta.current.title.ToLower() == searchItem.ToLower() | s.meta.current.artist.ToLower() == searchItem.ToLower()).ToList();
+        _searchClicked = true;
+        _isLoading = true;
+
+        _userSearchedUrl = $"/?pattern={_searchItem}";
+        _fullSearchedUrl = $"https://www.songsterr.com{_userSearchedUrl}";
+        _userSearchedHTML = await Data.HttpGetAsync($"{_fullSearchedUrl}");
+        _SongUrls = Data.GetSongUrls(_userSearchedHTML);
+
+        loadingTimer = new System.Threading.Timer(_ => UpdateLoadingDots(), null, 0, 500);
+
+        _UserSearchedJson = await Data.SearchJsonAsync(_searchItem, _UserSearchedJson, _SongUrls);
+        _FilteredListJson = _UserSearchedJson.Where(s => s.meta.current.title.ToLower() == _searchItem.ToLower() | s.meta.current.artist.ToLower() == _searchItem.ToLower()).ToList();// Your logic with the result goes here
+         
+        loadingTimer.Change(Timeout.Infinite, Timeout.Infinite); 
+        _loadingDots = ""; 
+        _isLoading = false;      
+    }
+
+    private void UpdateLoadingDots()
+    {
+        InvokeAsync(() =>
+        {
+            _loadingDots = _loadingDots.Length < 3 ? _loadingDots + "." : ".";
+            StateHasChanged();
+        });
     }
 
     public void GuitarOnly(AppJson Json)
     {
-        SongTracks = Json.meta.current.tracks;
-        guitarOnly = SongTracks.Where(x => x.isGuitar).ToList();    
+        _SongTracks = Json.meta.current.tracks;
+        _guitarOnly = _SongTracks.Where(x => x.isGuitar).ToList();    
     }
 
-    [Parameter]
-    public bool trackClicked { get; set; }   
 
-    public void TrackClicked(AppJson Json, Track guitarTrack)
+    private bool _trackClicked { get; set; } 
+
+    public async void TrackClicked(AppJson Json, Track guitarTrack)
     {
-        trackClicked = true;
-        songJson = Json;
-        trackIndex = GetTrackIndex(guitarTrack, trackIndex);
-        trackUrl = Data.GetUrl(userSearchedHTML,songJson, trackIndex);
-        trackHTML = Data.TrackHTML(trackUrl);
-        selectedSong = Data.GetSong(trackHTML, selectedSong);
+        _trackClicked = true;
+        _songJson = Json;
+        _trackIndex = _GetTrackIndex(guitarTrack, _trackIndex);
+        _trackUrl = Data.GetUrl(_userSearchedHTML,_songJson, _trackIndex);
+        _trackHTML = Data.HttpGet(_trackUrl);//Data.TrackHTML(_trackUrl);
+        _selectedSong = Data.GetSong(_trackHTML, _selectedSong);
+        _selectedTrack = _SongTracks[_trackIndex];
     }
+
+
+
+
 
 }

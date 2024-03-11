@@ -39,38 +39,46 @@ namespace GuitarTabBlazorSite.Data
 
         public Track selectedTrack;
 
-        public bool IsRowExpanded { get; set; } = false;
+        //public bool IsRowExpanded { get; set; } = false;
 
-        public string ExpandableContent { get; set; }
-        public string searchItem { get; set; }
+        //public string ExpandableContent { get; set; }
+        //public string searchItem { get; set; }
 
-        public string userSearchedHTML;
-        public string GetUserSearchedHTML(string searchItem)
-        {
-            string userSearchedHTML = $"/?pattern={searchItem}";
-            this.userSearchedHTML = HttpGet($"https://www.songsterr.com{userSearchedHTML}");
-            return this.userSearchedHTML;
-        }
+        //public string userSearchedHTML;
+        //public string GetUserSearchedHTML(string searchItem)
+        //{
+        //    string userSearchedHTML = $"/?pattern={searchItem}";
+        //    this.userSearchedHTML = HttpGet($"https://www.songsterr.com{userSearchedHTML}");
+        //    return this.userSearchedHTML;
+        //}
 
-        public List<string> SongUrls;
+        //public List<string> SongUrls;
 
-        public AppJson songJson;
+        //public AppJson songJson;
 
-        public AppJson SongJson(AppJson song)
-        {
-            song = song;
-            return song;
-        }
+        //public AppJson SongJson(AppJson song)
+        //{
+        //    song = song;
+        //    return song;
+        //}
 
-        public List<AppJson> UserSearchedJson;
+        //public List<AppJson> UserSearchedJson;
 
-        public List<AppJson> FilteredListJson;
+        //public List<AppJson> FilteredListJson;
         public string HttpGet(string url)
         {
             string content = null;
             var wc = new MyWebClient();
             content = wc.DownloadString(url);
             return content;
+        }
+
+        public async Task<string> HttpGetAsync(string url)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                return await client.GetStringAsync(url);
+            }
         }
         public List<string> GetSongUrls(string html)
         {
@@ -142,7 +150,7 @@ namespace GuitarTabBlazorSite.Data
                     songSourceHTML = HttpGet($"https://www.songsterr.com{songUrls[urlNum]}");
                     Song = GetJsonSongInfo(songSourceHTML);
                     UserSearchedJson.Add(Song);
-                    Thread.Sleep(100);
+                    Thread.Sleep(1000);
                 }               
             }
             return UserSearchedJson;
@@ -179,7 +187,7 @@ namespace GuitarTabBlazorSite.Data
             string imageName = appJson.meta.current.image;
 
             // fifth part json file          
-            trackIndex--;
+            //trackIndex--;
             string trackNum = trackIndex.ToString();
             string jsonFile = $"{trackNum}.json";
             string finalUrl = $"https:{cloudFrontServer}{songId}/{revisionId}/{imageName}/{jsonFile}";
@@ -189,8 +197,8 @@ namespace GuitarTabBlazorSite.Data
 
         public SongsterrSong GetSong(string trackHTML, SongsterrSong selectedSong)
         {
-
-            SongsterrSong song = JsonConvert.DeserializeObject<SongsterrSong>(trackHTML);
+            string serializedSong = JsonConvert.SerializeObject(selectedSong);
+            SongsterrSong song = JsonConvert.DeserializeObject<SongsterrSong>(serializedSong); //formerly trackHTML
             return selectedSong;
         }
 
@@ -280,7 +288,44 @@ namespace GuitarTabBlazorSite.Data
             return beats;
         }
 
+        public async Task<List<AppJson>> SearchJsonAsync(string searchItem, List<AppJson> UserSearchedJson, List<string> songUrls)
+        {
+            bool containsSearchItem = false;
 
+            if (UserSearchedJson != null)
+            {
+                if (UserSearchedJson.Any(s => s.meta.current.title.ToLower() == searchItem.ToLower() || s.meta.current.artist.ToLower() == searchItem.ToLower()))
+                {
+                    containsSearchItem = true;
+                }
+            }
+
+            if (!containsSearchItem)
+            {
+                if (UserSearchedJson == null)
+                {
+                    UserSearchedJson = new List<AppJson>();
+                }
+
+                AppJson Song = new AppJson();
+                string songSourceHTML;
+
+                for (int urlNum = 0; urlNum < songUrls.Count; urlNum++)
+                {
+                    if (songUrls[urlNum].Contains("chord"))
+                        continue;
+
+                    songSourceHTML = await HttpGetAsync($"https://www.songsterr.com{songUrls[urlNum]}");
+                    Song = GetJsonSongInfo(songSourceHTML);
+                    UserSearchedJson.Add(Song);
+
+                    // Replace Thread.Sleep with asynchronous delay
+                    await Task.Delay(1000);
+                }
+            }
+
+            return UserSearchedJson;
+        }
 
     }
 

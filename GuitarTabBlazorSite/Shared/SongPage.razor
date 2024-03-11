@@ -1,0 +1,69 @@
+﻿@page "/SongPage"
+@using GuitarTabBlazorSite.Data
+@using GuitarTabConverter
+@inject GTCData Data
+
+
+ <h3>Choose Instrument</h3>
+ <div> 
+     <button @onclick="@(() => {IsGuitar(); _InstClicked();})">Guitar</button>
+     <button @onclick="@(() => {IsBassGuitar(); _InstClicked();})">Bass Guitar</button>
+     <button @onclick="@(() => {IsUkelele(); _InstClicked();})">Ukelele</button>
+     <button @onclick="@(() => {IsBanjo(); _InstClicked();})">Banjo</button>
+ </div>
+ <TabComponent instNum="@_instNum" converted="@_converted" ></TabComponent>  
+
+
+
+
+@code 
+{
+    [Parameter]
+    public SongsterrSong selectedSong { get; set; }
+
+    [Parameter]
+    public AppJson songJson { get; set; }
+
+    private bool _instClicked { get; set; }
+
+    private bool _converted  { get; set; } 
+
+    private int _instNum { get; set; }
+
+    private StringInstrument _selectedInstrument { get; set; }
+
+    private List<MusicalBeat> _songBeats { get; set; }
+
+    private Tab _tab { get; set; }
+
+    private void _InstClicked()
+    {
+        _instClicked = true;
+        _selectedInstrument = Data.InstrumentList[_instNum];
+        _songBeats = Data.GetSongBeats(selectedSong, _selectedInstrument, Data.InstrumentList);
+        _tab = new Tab(selectedSong, _selectedInstrument, _songBeats, songJson, _converted);
+        
+    }
+
+    private void IsGuitar()
+    {
+        _converted = false;
+        _instNum = 0;
+    }
+    private void IsBassGuitar()
+    {
+        _converted = true;
+        _instNum = 1;
+    }
+    private void IsUkelele()
+    {
+        _converted = true;
+        _instNum = 2;
+    }
+    private void IsBanjo()
+    {
+        _converted = true;
+        _instNum = 3;
+    }
+
+}

@@ -9,9 +9,9 @@
         <div>@Data.tab.TitleOfSong</div>
         <div>@Data.tab.InstrumentString</div>
 
-            @foreach (RootNotes tuning in Data.tab.Tuning.Reverse<RootNotes>())
+            @foreach (RootNotes tuning in Tab.Tuning.Reverse<RootNotes>())
             {
-                 <div>@tuning.ToString()</div>
+                <div>@tuning.ToString()</div>
             }
             if (Data.tab.Capo == 0)
             {
@@ -28,11 +28,11 @@
 
 
 @code {
+ 
 
+    [Parameter]
+    public Tab Tab { get; set; }
 
-    //Data.selectedInstrument = Data.InstrumentList[0];
-    //Data.songBeats = Data.GetSongBeats(Data.selectedSong, Data.selectedInstrument, Data.InstrumentList);
-    //Data.tab = new Tab(Data.selectedSong, Data.selectedInstrument, Data.songBeats, Data.songJson, Data.converted);
   
 
 

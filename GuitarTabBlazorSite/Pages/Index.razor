@@ -4,7 +4,17 @@
 @inject GTCData Data
 <PageTitle>Guitar Tab Converter</PageTitle>
 
-<SearchBar></SearchBar> 
+@if(!_trackLinkClicked)
+{
+    <SearchBar trackLinkClicked="_TrackLinkClicked" sendSelectedSong="_SelectedSong" sendSongJson="_SongJson"></SearchBar>
+}
+else
+{
+    <SongPage selectedSong="_selectedSong" songJson="_songJson"></SongPage>
+}
+
+
+
 
 @*<PageTitle>Guitar Tab Converter</PageTitle>
 
@@ -60,11 +70,25 @@ Search over 800,000 Guitar tabs!
 @code 
 {
 
-    private bool _searchClicked;
+    private bool _trackLinkClicked { get; set; }
 
-    private void _SearchClicked()
+    private void _TrackLinkClicked(bool trackClicked)
     {
-        _searchClicked = true;
+        _trackLinkClicked = trackClicked;
+    }
+
+    private SongsterrSong _selectedSong { get; set; }
+
+    private void _SelectedSong(SongsterrSong selectedSong)
+    {
+        _selectedSong = selectedSong;
+    }
+
+    private AppJson _songJson { get; set; }
+
+    private void _SongJson(AppJson sendSongJson)
+    {
+        _songJson = sendSongJson;
     }
 
 
