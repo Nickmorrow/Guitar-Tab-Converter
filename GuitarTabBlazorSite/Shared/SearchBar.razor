@@ -21,7 +21,7 @@ Search over 800,000 Guitar tabs!
 {
     <p><em>@_loadingDots</em></p> 
 
-    @if (_FilteredListJson.Count() == 0 & _isLoading == false)
+    @if (_FilteredListJson.Count() == 0 & _isLoading == false | _searchItem == null)
     {
         <p><em>No Results</em></p> 
     }
@@ -41,7 +41,7 @@ Search over 800,000 Guitar tabs!
                         GuitarOnly(Json);
                         foreach (Track guitarTrack in _guitarOnly)
                         {
-                            <tr @onclick="@( () => { TrackClicked(Json, guitarTrack); trackLinkClicked.InvokeAsync(true); sendSelectedSong.InvokeAsync(_selectedSong); sendSongJson.InvokeAsync(_songJson);})">                                
+                            <tr @onclick="@( async () => await TrackClicked(Json, guitarTrack))">                                
                                 <td>@guitarTrack.instrument, @guitarTrack.name</td> 
                             </tr>   
                         }                     
@@ -150,6 +150,7 @@ Search over 800,000 Guitar tabs!
         _loadingTimer.Change(Timeout.Infinite, Timeout.Infinite); // Stop the timer when loading is complete
         _loadingDots = ""; // Clear loading dots after processing
         _isLoading = false; // Ensure _isLoading is set to false
+        _loadingTimer.Dispose();
     }
 
     private void UpdateLoadingDots()
@@ -170,9 +171,9 @@ Search over 800,000 Guitar tabs!
 
     private bool _trackClicked { get; set; } 
 
-    public async void TrackClicked(AppJson Json, Track guitarTrack)
+    public async Task TrackClicked(AppJson Json, Track guitarTrack)
     {
-        if (!_trackClicked) return;
+        
         _trackClicked = true;
         _songJson = Json;
         _trackIndex = _GetTrackIndex(guitarTrack, _trackIndex);
@@ -180,7 +181,10 @@ Search over 800,000 Guitar tabs!
         _trackHTML = Data.HttpGet(_trackUrl);//Data.TrackHTML(_trackUrl);
         _selectedSong = Data.GetSong(_trackHTML, _selectedSong);
         _selectedTrack = _SongTracks[_trackIndex];
-        _loadingTimer.Dispose();
+        await trackLinkClicked.InvokeAsync(true); 
+        await sendSelectedSong.InvokeAsync(_selectedSong); 
+        await sendSongJson.InvokeAsync(_songJson);}
+        
     }
 
     
@@ -191,4 +195,4 @@ Search over 800,000 Guitar tabs!
 
 
 
-}
+

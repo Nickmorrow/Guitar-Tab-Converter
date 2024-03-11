@@ -199,8 +199,8 @@ namespace GuitarTabBlazorSite.Data
 
         public SongsterrSong GetSong(string trackHTML, SongsterrSong selectedSong)
         {
-            string serializedSong = JsonConvert.SerializeObject(selectedSong);
-            SongsterrSong song = JsonConvert.DeserializeObject<SongsterrSong>(serializedSong); //formerly trackHTML
+            //string serializedSong = JsonConvert.SerializeObject(trackHTML);
+            selectedSong = JsonConvert.DeserializeObject<SongsterrSong>(trackHTML); //formerly trackHTML
             return selectedSong;
         }
 

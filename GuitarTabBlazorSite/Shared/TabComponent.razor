@@ -5,21 +5,21 @@
 
 <div>
     <div>
-        <strong>@Data.tab.ArtistName</strong>
-        <div>@Data.tab.TitleOfSong</div>
-        <div>@Data.tab.InstrumentString</div>
+        <strong>@Tab.ArtistName</strong>
+        <div>@Tab.TitleOfSong</div>
+        <div>@Tab.InstrumentString</div>
 
             @foreach (RootNotes tuning in Tab.Tuning.Reverse<RootNotes>())
             {
                 <div>@tuning.ToString()</div>
             }
-            if (Data.tab.Capo == 0)
+            if (Tab.Capo == 0)
             {
                 <div>No Capo</div>
             }
             else
             {
-                <div>Capo on Fret @Data.tab.Capo.ToString()</div>
+                <div>Capo on Fret @Tab.Capo.ToString()</div>
             }
     </div>
 
@@ -27,8 +27,7 @@
 </div>
 
 
-@code {
- 
+@code { 
 
     [Parameter]
     public Tab Tab { get; set; }
