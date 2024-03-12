@@ -2,6 +2,7 @@
 @using GuitarTabBlazorSite.Data
 @using GuitarTabConverter
 @inject GTCData Data
+@inject NavigationManager Navigation
 
 
  <h3>Choose Instrument</h3>
@@ -11,6 +12,7 @@
      <button @onclick="_IsUkelele">Ukelele</button>
      <button @onclick="_IsBanjo">Banjo</button>
  </div>
+ <button @onclick="GoBackToSearch">Back to Search</button>
  @if(_isGuitar)
 {
     <TabComponent Tab="_tab" ></TabComponent>    
@@ -34,6 +36,8 @@
 
 @code 
 {
+    private bool _trackClicked { get; set; }
+
     [Parameter]
     public SongsterrSong selectedSong { get; set; }
 
@@ -43,6 +47,15 @@
     private StringInstrument _selectedInstrument { get; set; }
 
     private List<MusicalBeat> _songBeats { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> trackLinkClicked { get; set; }
+
+    private void GoBackToSearch()
+    {
+        trackLinkClicked.InvokeAsync(false);
+        Navigation.NavigateTo("/");
+    }
 
     private Tab _tab { get; set; }
 

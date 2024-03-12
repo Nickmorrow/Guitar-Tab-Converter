@@ -1,4 +1,4 @@
-﻿@page "/SearchBar"
+﻿@page "/Search"
 @using GuitarTabBlazorSite.Data
 @using GuitarTabConverter
 @using System.Threading
@@ -6,13 +6,12 @@
 @inject NavigationManager nav
 
 
-
 <h1>Welcome to Guitar Tab Converter</h1>
 
-Search over 800,000 Guitar tabs!
+<span>Search over 800,000 Guitar tabs!</span>
 
 <input class= "form-control" style= "max-width:600px"placeholder="Search..."
-    @bind="_searchItem" />
+    @bind="_searchItem"/> 
 
 <button class="form-control" style="max-width 300px"
     @onclick="_SearchClickedAsync">Search</button>
@@ -130,79 +129,57 @@ Search over 800,000 Guitar tabs!
 
     private System.Threading.Timer _loadingTimer;
 
-    //private async Task _SearchClickedAsync()
-    //{
-    //    _searchClicked = true;
-    //    _isLoading = true;
-    //    _searchItem = _searchItem.ToLower().TrimEnd();
-    //    _userSearchedUrl = $"/?pattern={_searchItem}";
-    //    _fullSearchedUrl = $"https://www.songsterr.com{_userSearchedUrl}";
-    //    _userSearchedHTML = await Data.HttpGetAsync($"{_fullSearchedUrl}");
-    //    _SongUrls = Data.GetSongUrls(_userSearchedHTML);
-
-    //    _loadingTimer = new System.Threading.Timer(_ => UpdateLoadingDots(), null, 0, 500);
-
-    //    _UserSearchedJson = await Data.SearchJsonAsync(_searchItem, _UserSearchedJson, _SongUrls);
-    //    _FilteredListJson = _UserSearchedJson.Where(s => s.meta.current.title.ToLower() == _searchItem || s.meta.current.artist.ToLower() == _searchItem).ToList();
-
-    //    _loadingTimer.Change(Timeout.Infinite, Timeout.Infinite); // Stop the timer when loading is complete
-    //    _loadingDots = ""; // Clear loading dots after processing
-    //    _isLoading = false; // Ensure _isLoading is set to false
-    //    _loadingTimer.Dispose();
-    //}
-
     private CancellationTokenSource _cancellationTokenSource;
 
-private async Task _SearchClickedAsync()
-{
-    _searchClicked = true;
-    _isLoading = true;
-    _searchItem = _searchItem.ToLower().TrimEnd();
-    _userSearchedUrl = $"/?pattern={_searchItem}";
-    _fullSearchedUrl = $"https://www.songsterr.com{_userSearchedUrl}";
-
-    CancellationTokenSource cts = new CancellationTokenSource();
-
-    _userSearchedHTML = await Data.HttpGetAsync($"{_fullSearchedUrl}",cts.Token);
-    _SongUrls = Data.GetSongUrls(_userSearchedHTML);
-
-    
-
-    try
+    private async Task _SearchClickedAsync()
     {
-        _loadingTimer = new System.Threading.Timer(_ => UpdateLoadingDots(), null, 0, 500);
+        _searchClicked = true;
+        _isLoading = true;
 
-        _UserSearchedJson = await Data.SearchJsonAsync(_searchItem, _UserSearchedJson, _SongUrls, cts.Token);
-        _FilteredListJson = _UserSearchedJson
-            .Where(s => s.meta.current.title.ToLower() == _searchItem || s.meta.current.artist.ToLower() == _searchItem)
-            .ToList();
-    }
-    catch (OperationCanceledException)
-    {
-        // Handle cancellation if needed
-    }
-    finally
-    {
-        // Ensure the timer is not null and is not disposed before changing or disposing
-        if (_loadingTimer != null && !_loadingTimer.Change(Timeout.Infinite, Timeout.Infinite))
+        if (_searchItem != null)
         {
-            _loadingTimer.Dispose();
+            _searchItem = _searchItem.ToLower().TrimEnd();
+            _userSearchedUrl = $"/?pattern={_searchItem}";
+            _fullSearchedUrl = $"https://www.songsterr.com{_userSearchedUrl}";
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+
+            _userSearchedHTML = await Data.HttpGetAsync($"{_fullSearchedUrl}", cts.Token);
+            _SongUrls = Data.GetSongUrls(_userSearchedHTML);
+
+            try
+            {
+                _loadingTimer = new System.Threading.Timer(_ => UpdateLoadingDots(), null, 0, 500);
+
+                _UserSearchedJson = await Data.SearchJsonAsync(_searchItem, _UserSearchedJson, _SongUrls, cts.Token);
+                _FilteredListJson = _UserSearchedJson
+                    .Where(s => s.meta.current.title.ToLower() == _searchItem || s.meta.current.artist.ToLower() == _searchItem)
+                    .ToList();
+            }
+            catch (OperationCanceledException)
+            {
+                // Handle cancellation if needed
+            }
+            finally
+            {
+                // Ensure the timer is not null and is not disposed before changing or disposing
+                if (_loadingTimer != null && !_loadingTimer.Change(Timeout.Infinite, Timeout.Infinite))
+                {
+                    _loadingTimer.Dispose();
+                }
+
+                _loadingDots = ""; // Clear loading dots after processing
+                _isLoading = false; // Ensure _isLoading is set to false
+            }
         }
-
-        _loadingDots = ""; // Clear loading dots after processing
-        _isLoading = false; // Ensure _isLoading is set to false
     }
-}
-
-
-
 
     private void UpdateLoadingDots()
     {
         InvokeAsync(() =>
         {
             _loadingDots = _loadingDots.Length < 3 ? _loadingDots + "." : ".";
-            StateHasChanged(); // Notify Blazor to re-render
+            StateHasChanged(); 
     });
     }
 
@@ -211,7 +188,6 @@ private async Task _SearchClickedAsync()
         _SongTracks = Json.meta.current.tracks;
         _guitarOnly = _SongTracks.Where(x => x.isGuitar).ToList();    
     }
-
 
     private bool _trackClicked { get; set; } 
 

@@ -1,11 +1,18 @@
-﻿.horizontal-container {
+﻿.tab-body{
+
+}
+.tuning {
     display: flex;
 
 
 }
-    .horizontal-container > div {
+    .tuning > div {
         margin-right: 10px;
     }
+
+.tablines-body{
+
+}
 
 .tab-row {
     display: flex;

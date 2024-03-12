@@ -10,29 +10,6 @@ namespace GuitarTabBlazorSite.Data
 {
     public class GTCData
     {
-        //public List<Track> guitarOnly;
-
-        //public Track[] songTracks;
-
-        //public bool converted;
-
-        //public int trackIndex;
-
-        //public string trackUrl;
-
-        //public string trackHTML;
-
-        //public string TrackHTML(string trackUrl)
-        //{
-        //    trackHTML = HttpGet(trackUrl);
-        //    return trackHTML;
-        //}
-
-        public Tab tab;
-
-        //public SongsterrSong selectedSong;
-        
-        //public StringInstrument selectedInstrument;
 
         public List<StringInstrument> InstrumentList = InstObjects.DefStrInstruments();
 
@@ -74,11 +51,11 @@ namespace GuitarTabBlazorSite.Data
             return content;
         }
 
-        public async Task<string> HttpGetAsync(string url,CancellationToken cancellationToken) //, CancellationToken cancellationToken
+        public async Task<string> HttpGetAsync(string url,CancellationToken cancellationToken) 
         {
             using (HttpClient client = new HttpClient())
             {
-                return await client.GetStringAsync(url,cancellationToken); //, cancellationToken
+                return await client.GetStringAsync(url,cancellationToken); 
             }
 
         }
@@ -199,8 +176,7 @@ namespace GuitarTabBlazorSite.Data
 
         public SongsterrSong GetSong(string trackHTML, SongsterrSong selectedSong)
         {
-            //string serializedSong = JsonConvert.SerializeObject(trackHTML);
-            selectedSong = JsonConvert.DeserializeObject<SongsterrSong>(trackHTML); //formerly trackHTML
+            selectedSong = JsonConvert.DeserializeObject<SongsterrSong>(trackHTML); 
             return selectedSong;
         }
 
@@ -290,7 +266,7 @@ namespace GuitarTabBlazorSite.Data
             return beats;
         }
 
-        public async Task<List<AppJson>> SearchJsonAsync(string searchItem, List<AppJson> UserSearchedJson, List<string> songUrls,CancellationToken cancellationToken) //, CancellationToken cancellationToken
+        public async Task<List<AppJson>> SearchJsonAsync(string searchItem, List<AppJson> UserSearchedJson, List<string> songUrls,CancellationToken cancellationToken) 
         {
             bool containsSearchItem = false;
 
@@ -317,11 +293,11 @@ namespace GuitarTabBlazorSite.Data
                     if (songUrls[urlNum].Contains("chord"))
                         continue;
 
-                    songSourceHTML = await HttpGetAsync($"https://www.songsterr.com{songUrls[urlNum]}",cancellationToken); //, cancellationToken
+                    songSourceHTML = await HttpGetAsync($"https://www.songsterr.com{songUrls[urlNum]}",cancellationToken);
                     Song = GetJsonSongInfo(songSourceHTML);
                     UserSearchedJson.Add(Song);
                     
-                    await Task.Delay(1000);
+                    await Task.Delay(500);
                 }
                 UserSearchedJson = UserSearchedJson.Distinct().ToList();
             }

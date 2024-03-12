@@ -3,13 +3,13 @@
 @using GuitarTabConverter
 @inject GTCData Data
 
-<div>
+<div class="tab-body">
     <div>
         <strong>@Tab.ArtistName</strong>
         <div>@Tab.TitleOfSong</div>
         <div>@Tab.InstrumentString</div>
 
-        <div class="horizontal-container">
+        <div class="tuning">
             @foreach (RootNotes tuning in Tab.Tuning.Reverse<RootNotes>())
             {
                 <div>@tuning.ToString().Substring(0, 1)</div>
@@ -25,7 +25,7 @@
             }
     </div>
 
-    <div class="tabBody">
+    <div class="tablines-body">
         @for (int outerIndex = 0; outerIndex < tabOne.Count; outerIndex += 4)
         {
             <div class="tab-row">
