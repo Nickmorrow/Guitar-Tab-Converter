@@ -3,7 +3,26 @@
 
 
 }
+    .horizontal-container > div {
+        margin-right: 10px;
+    }
 
-.horizontal-container > div {
-    margin-right: 10px;
+.tab-row {
+    display: flex;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
+
+.measure {
+    //display: flex;
+}
+
+.tabline {
+    display: flex;
+}
+
+.beat {
+    //display: flex;
+}        
+
+
