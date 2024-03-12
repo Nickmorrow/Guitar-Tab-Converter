@@ -12,7 +12,7 @@
         <div class="horizontal-container">
             @foreach (RootNotes tuning in Tab.Tuning.Reverse<RootNotes>())
             {
-                <div>@tuning.ToString()</div>
+                <div>@tuning.ToString().Substring(0, 1)</div>
             }
         </div>
             @if (Tab.Capo == 0)
@@ -24,37 +24,39 @@
                 <div>Capo on Fret @Tab.Capo.ToString()</div>
             }
     </div>
+
     <div class="tabBody">
-        @for (int outerIndex = 0; outerIndex < tabOne.Count; outerIndex += 5)
-{
-    <div class="tab-row">
-        @for (int innerIndex = 0; innerIndex < 5 && (outerIndex + innerIndex) < tabOne.Count; innerIndex++)
+        @for (int outerIndex = 0; outerIndex < tabOne.Count; outerIndex += 4)
         {
-            int tabIndex = outerIndex + innerIndex;
-            <div class="measure">
-                @for (int stringNum = 0; stringNum < Tab.TabLines.Count; stringNum++)
+            <div class="tab-row">
+                @for (int innerIndex = 0; innerIndex < 4 && (outerIndex + innerIndex) < tabOne.Count; innerIndex++)
                 {
-                    List<List<string>> instString = Tab.TabLines[stringNum];
-                    List<string> measure = instString[tabIndex];
-                    <div class="tabline">
-                        @for (int beatIndex = 0; beatIndex < measure.Count; beatIndex++)
+                    
+                    int tabIndex = outerIndex + innerIndex;
+                    <div class="measure">
+                        @for (int stringNum = 0; stringNum < Tab.TabLines.Count; stringNum++)
                         {
-                            string beat = measure[beatIndex];
-                            if (measure[0] != "|")
-                            {
-                                <div class="tuning">@beat</div>
-                            }
-                            else
-                            {
-                                <div class="beat">@beat</div>
-                            }
+                            List<List<string>> instString = Tab.TabLines[stringNum];
+                            List<string> measure = instString[tabIndex];
+                            <div class="tabline">
+                            @for (int beatIndex = 0; beatIndex < measure.Count; beatIndex++)
+                                {
+                                    string beat = measure[beatIndex];
+                                    if (measure[0] != "|")
+                                    {
+                                        <div class="tuning">@beat</div>                                       
+                                    }
+                                    else
+                                    {
+                                        <div class="beat">@beat</div>
+                                    }
+                                }
+                            </div>
                         }
-                    </div>
+                    </div>                    
                 }
             </div>
         }
-    </div>
-}
 
         
         

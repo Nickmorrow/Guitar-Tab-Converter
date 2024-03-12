@@ -31,16 +31,16 @@ namespace GuitarTabConverter
             {
                 List<List<string>> Measures = new List<List<string>>(); //Measures per guitar string
                 List<string> D16ths = new List<string>();
-                if (converted)
-                {
-                    tuningString = instrument.MusicStrings[stringIndex].Tuning.ToString();
-                }
-                else
-                {
-                    tuningString = ConvertMidiNum(Song.Tuning[stringIndex]).ToString();
-                }
-                D16ths.Add(tuningString);
-                Measures.Add(D16ths);
+                //if (converted)
+                //{
+                //    tuningString = instrument.MusicStrings[stringIndex].Tuning.ToString();
+                //}
+                //else
+                //{
+                //    tuningString = ConvertMidiNum(Song.Tuning[stringIndex]).ToString();
+                //}
+                //D16ths.Add(tuningString);
+                //Measures.Add(D16ths);
 
                 for (int measure = 0; measure < Song.Measures.Count(); measure++)
                 {

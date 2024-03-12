@@ -74,11 +74,11 @@ namespace GuitarTabBlazorSite.Data
             return content;
         }
 
-        public async Task<string> HttpGetAsync(string url) //, CancellationToken cancellationToken
+        public async Task<string> HttpGetAsync(string url,CancellationToken cancellationToken) //, CancellationToken cancellationToken
         {
             using (HttpClient client = new HttpClient())
             {
-                return await client.GetStringAsync(url); //, cancellationToken
+                return await client.GetStringAsync(url,cancellationToken); //, cancellationToken
             }
 
         }
@@ -290,7 +290,7 @@ namespace GuitarTabBlazorSite.Data
             return beats;
         }
 
-        public async Task<List<AppJson>> SearchJsonAsync(string searchItem, List<AppJson> UserSearchedJson, List<string> songUrls) //, CancellationToken cancellationToken
+        public async Task<List<AppJson>> SearchJsonAsync(string searchItem, List<AppJson> UserSearchedJson, List<string> songUrls,CancellationToken cancellationToken) //, CancellationToken cancellationToken
         {
             bool containsSearchItem = false;
 
@@ -317,17 +317,17 @@ namespace GuitarTabBlazorSite.Data
                     if (songUrls[urlNum].Contains("chord"))
                         continue;
 
-                    songSourceHTML = await HttpGetAsync($"https://www.songsterr.com{songUrls[urlNum]}"); //, cancellationToken
+                    songSourceHTML = await HttpGetAsync($"https://www.songsterr.com{songUrls[urlNum]}",cancellationToken); //, cancellationToken
                     Song = GetJsonSongInfo(songSourceHTML);
                     UserSearchedJson.Add(Song);
-
-                    // Replace Thread.Sleep with asynchronous delay
+                    
                     await Task.Delay(1000);
                 }
+                UserSearchedJson = UserSearchedJson.Distinct().ToList();
             }
 
             return UserSearchedJson;
-        }
+        }       
 
     }
 
