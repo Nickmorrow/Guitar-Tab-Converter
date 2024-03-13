@@ -4,17 +4,29 @@
 @using System.Threading
 @inject GTCData Data
 @inject NavigationManager nav
+ 
+<div style="display: flex; flex-direction: column; align-items: center;">
+    <img src="@ImagePath" alt="logo" style="width: 300px; height: auto; margin-bottom: 5px;"/>
+
+    <div class="searchbar-container" style="width: 600px; margin-bottom: 10px;  display: flex; align-items: center; border: 1px solid black; border-radius: 100px; padding: 5px;"> 
+        <div style="margin-left: 10px; margin-bottom: 5px">
+            <div style="height: 20px; width: 20px;">
+                <svg focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+            </div>
+        </div>
+        <input class="form-control custom-searchbar" style="width: 100%; max-width: 650px; border: none;" placeholder="Search over 800,000 Guitar tabs!" @bind="_searchItem" />
+    </div> 
+
+    <button class="form-control" style="max-width: 100px; margin-top: 5px;;" @onclick="_SearchClickedAsync">Search</button>
+</div>
 
 
-<h1>Welcome to Guitar Tab Converter</h1>
-
-<span>Search over 800,000 Guitar tabs!</span>
-
-<input class= "form-control" style= "max-width:600px"placeholder="Search..."
-    @bind="_searchItem"/> 
-
-<button class="form-control" style="max-width 300px"
-    @onclick="_SearchClickedAsync">Search</button>
+ <div> 
+ 
+ 
+</div>
 
 @if (_searchClicked)
 {
@@ -54,6 +66,8 @@
 
 
 @code {
+
+    private string ImagePath = "/images/logo.jpg";
 
     private Dictionary<AppJson, bool> _IsRowExpanded { get; set; } = new Dictionary<AppJson, bool>();
 

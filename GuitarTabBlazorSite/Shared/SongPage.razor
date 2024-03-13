@@ -4,15 +4,17 @@
 @inject GTCData Data
 @inject NavigationManager Navigation
 
-
- <h3>Choose Instrument</h3>
- <div>
-     <button @onclick="_IsGuitar">Guitar</button>
-     <button @onclick="_IsBassGuitar">Bass Guitar</button>
-     <button @onclick="_IsUkelele">Ukelele</button>
-     <button @onclick="_IsBanjo">Banjo</button>
+<div class="choose-instrument">
+    <div><h3>Choose Instrument</h3> </div>
+    <div>
+        <button @onclick="_IsGuitar">Guitar</button>
+        <button @onclick="_IsBassGuitar">Bass Guitar</button>
+        <button @onclick="_IsUkelele">Ukelele</button>
+        <button @onclick="_IsBanjo">Banjo</button>
+        <button @onclick="GoBackToSearch">Back to Search</button>
+    </div>
  </div>
- <button @onclick="GoBackToSearch">Back to Search</button>
+ 
  @if(_isGuitar)
 {
     <TabComponent Tab="_tab" ></TabComponent>    
@@ -29,9 +31,6 @@
 {
     <TabComponent Tab="_tab" ></TabComponent>    
 }
-
-
-
 
 
 @code 

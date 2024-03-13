@@ -1,5 +1,6 @@
-﻿.tab-body{
-
+﻿.tab-body {
+    max-width: 100%; /* Ensure the tab body doesn't exceed the width of its container */
+    overflow-x: auto;
 }
 .tuning {
     display: flex;
@@ -10,8 +11,10 @@
         margin-right: 10px;
     }
 
-.tablines-body{
-
+.tablines-body {
+    display: flex; /* Use flexbox layout for the tab lines */
+    flex-wrap: wrap; /* Allow tab lines to wrap to the next line if they exceed the width */
+    gap: 10px;
 }
 
 .tab-row {
@@ -22,6 +25,9 @@
 
 .measure {
     //display: flex;
+    flex: 1 1 auto; /* Allow measures to grow and shrink based on available space */
+    max-width: calc(25% - 10px); /* Each measure takes up 25% of the container width minus some spacing */
+    min-width: 200px;
 }
 
 .tabline {
@@ -30,6 +36,12 @@
 
 .beat {
     //display: flex;
-}        
+}
+
+@media screen and (max-width: 768px) {
+    /* Media query for smaller screens */
+    .tablines-body {
+        flex-direction: column; /* Stack tab lines vertically on smaller screens */
+    }
 
 

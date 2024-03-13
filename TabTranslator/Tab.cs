@@ -72,12 +72,12 @@ namespace GuitarTabConverter
                     {
                         if (tSigNums[1] == 2 || tSigNums[1] == 4)
                         {
-                            D16th = "-___";
+                            D16th = "-   ";
                             D16ths.Add(D16th);
                         }
                         if (tSigNums[1] == 8 || tSigNums[1] == 16)
                         {
-                            D16th = "-_";
+                            D16th = "- ";
                             D16ths.Add(D16th);
                         }
                     }

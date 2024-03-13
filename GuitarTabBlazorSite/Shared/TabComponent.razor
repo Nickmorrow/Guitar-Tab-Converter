@@ -41,14 +41,19 @@
                             <div class="tabline">
                             @for (int beatIndex = 0; beatIndex < measure.Count; beatIndex++)
                                 {
-                                    string beat = measure[beatIndex];
+                                    string beat = measure[beatIndex]; @*Not used*@
                                     if (measure[0] != "|")
                                     {
                                         <div class="tuning">@beat</div>                                       
                                     }
                                     else
                                     {
-                                        <div class="beat">@beat</div>
+                                        <div class="beat">
+                                            @foreach (char character in beat)
+                                            {
+                                                <span>@character</span><span>&nbsp;</span>
+                                            }   
+                                        </div>
                                     }
                                 }
                             </div>
@@ -56,50 +61,8 @@
                     </div>                    
                 }
             </div>
-        }
-
-        
-        
-           
-    </div> 
-        @*@while (tabLineStartPoint < tabLength)
-            {
-                int remainingMeasures = tabLength - tabLineEndPoint;
-                for (int i = 0; i < Tab.TabLines.Count; i++)
-                {
-                    List<List<string>> tabLine = Tab.TabLines[i];
-                    <div class="tabline">
-                    @for (int h = tabLineStartPoint; h < tabLineEndPoint; h++)
-                    {
-                        List<string> measure = tabLine[h];
-                        int dashCount = measure.Count;
-
-                        <div class="measures"> 
-                        @for (int k = 0; k < dashCount; k++)
-                        {
-                            <div class="16ths"><p>@measure[k]</p></div>
-                        }
-                        </div>
-                    }
-                    </div>
-                }
-                tabLineStartPoint += 10;
-                if (remainingMeasures >= 10)
-                {
-                    tabLineEndPoint += 10;
-                }
-                else
-                {
-                    tabLineEndPoint = tabLength;
-                }
-            }
-
-        }*@
-        
-
-    
-
-
+        }                        
+    </div>           
 </div>
 
 
