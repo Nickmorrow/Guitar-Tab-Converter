@@ -1,6 +1,8 @@
 ﻿@page "/About"
-<h3>About</h3>
-<div>
+
+
+<div class="about">
+    <h3>About</h3>
     <p>
         Guitar Tab Converter is an open-source initiative designed to facilitate users in accessing musical tablature tailored to their instrument of choice. 
         Catering to musicians seeking versatility in their play, our platform serves as a comprehensive repository for musicians of all skill levels to explore diverse guitar tunings and other stringed instruments. 
@@ -9,7 +11,9 @@
         Embark on a transformative musical journey with Guitar Tab Converter, where innovation meets precision to elevate your musical experience.
     </p>
 </div>
-<div>
+
+<div class="my story">
+    <img src="@imagePath" alt="Me" style="width: 500px;"/>
     <p>
         I started this project back when I was just starting out with the guitar. 
     With a background in music production and recording, I was eager to pick up other instruments and find cool songs to play along with on guitar. 
@@ -20,7 +24,8 @@
     I hope you find it useful and have as much fun with it as I did!    
     </p>
 </div>
-<div>
+
+<div class="future updates">
     <h3>Future Updates</h3>
     <ul>
         <li>Choose alternate tunings feature for all included instruments</li>
@@ -33,12 +38,13 @@
     </ul>
     <a href="/PatchNotes">View the Patch notes here</a>
 </div>
-<div>
+
+<div class="join us">
     <h3>Join us!</h3>
     <p>We're constantly on the lookout for fresh ideas to enhance functionality. If you're interested in diving into our source code, you can find it on our <a href"https://github.com/Nickmorrow/Guitar-Tab-Converter">GitHub</a> page.
        If you would like to become a contributor or have any other inquiries, don't hesitate to reach out to us below.</p>
 </div>
-<div>
+<div class="contact">
     <form action="mailto:example@example.com" method="post" enctype="text/plain">
     <label for="subject">Subject:</label><br>
     <input type="text" id="subject" name="subject"><br>
@@ -50,5 +56,7 @@
 
 
 @code {
+    public string imagePath = "/images/DSC06467.jpg";
 
 }
+

@@ -1,0 +1,13 @@
+﻿@page "/PatchNotes"
+@inject NavigationManager Back
+
+<h3>PatchNotes</h3>
+<a @onclick="_backToAbout">Back</a>
+
+@code {
+    private void _backToAbout()
+    {
+        Back.NavigateTo("/About");
+    }
+
+}
