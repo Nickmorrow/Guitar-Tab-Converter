@@ -1,6 +1,7 @@
 ﻿.tab-body {
     max-width: 100%; /* Ensure the tab body doesn't exceed the width of its container */
     overflow-x: auto;
+    margin-top:100px;
 }
 .tuning {
     display: flex;

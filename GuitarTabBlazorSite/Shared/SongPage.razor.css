@@ -1,2 +1,20 @@
-﻿body {
+﻿.choose-instrument {
+    text-align: center;
+    margin-top: 100px;
 }
+
+    .choose-instrument > div {
+        margin-top: 50px; /* Add some margin between the sections */
+    }
+
+.choose-instrument-buttons {
+    display: flex; /* Use flexbox to align buttons horizontally */
+    justify-content: center; /* Center-align the buttons horizontally */
+    margin-top: 10px; /* Add some top margin for spacing */
+}
+
+    .choose-instrument-buttons button {
+        margin: 0 10px; /* Add some horizontal margin between buttons */
+        max-width: 200px;
+    }
+

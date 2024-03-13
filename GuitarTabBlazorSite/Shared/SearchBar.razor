@@ -23,7 +23,7 @@
                 </svg>
             </div>
         </div>
-        <input class="form-control custom-searchbar" style="width: 100%; max-width: 650px; border: none;" placeholder="Search over 800,000 Guitar tabs!" @bind="_searchItem" />
+        <input class="form-control custom-searchbar" style="width: 100%; max-width: 650px; border: none; outline: none;" placeholder="Search over 800,000 Guitar tabs!" @bind="_searchItem" />
     </div> 
 
     <button class="form-control" style="max-width: 100px; margin-top: 5px;;" @onclick="_SearchClickedAsync">Search</button>
@@ -33,7 +33,7 @@
 
 @if (_searchClicked)
 {
-    <div style="text-align: center;"><p><em>@_loadingDots</em></p></div> 
+    <div style="text-align: center; font-size: 25px"><p>@_loadingDots.Replace(".", "●")</p></div> 
 
     @if (_FilteredListJson.Count() == 0 & _isLoading == false | _searchItem == null)
     {
