@@ -11,7 +11,7 @@
         <button class="form-control" @onclick="_IsBassGuitar">Bass Guitar</button>
         <button class="form-control" @onclick="_IsUkelele">Ukelele</button>
         <button class="form-control" @onclick="_IsBanjo">Banjo</button>
-        <button class="form-control" @onclick="GoBackToSearch">Back to Search</button>
+        <button class="form-control" @onclick="_GoBackToSearch">Back to Search</button>
     </div>
  </div>
  
@@ -50,7 +50,7 @@
     [Parameter]
     public EventCallback<bool> trackLinkClicked { get; set; }
 
-    private void GoBackToSearch()
+    private void _GoBackToSearch()
     {
         trackLinkClicked.InvokeAsync(false);
         Navigation.NavigateTo("/");
