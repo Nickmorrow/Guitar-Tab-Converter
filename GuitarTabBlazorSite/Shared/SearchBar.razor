@@ -2,9 +2,16 @@
 @using GuitarTabBlazorSite.Data
 @using GuitarTabConverter
 @using System.Threading
+@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Components
 @inject GTCData Data
 @inject NavigationManager nav
+
+<link href="Searchbar.razor.css" rel="stylesheet" />
+
  
+<div style="display: flex; flex-direction: column; align-items: center;">
+
 <div style="display: flex; flex-direction: column; align-items: center;">
     <img src="@ImagePath" alt="logo" style="width: 300px; height: auto; margin-bottom: 5px;"/>
 
@@ -22,15 +29,11 @@
     <button class="form-control" style="max-width: 100px; margin-top: 5px;;" @onclick="_SearchClickedAsync">Search</button>
 </div>
 
-
- <div> 
- 
- 
-</div>
+<div>
 
 @if (_searchClicked)
 {
-    <p><em>@_loadingDots</em></p> 
+    <div style="text-align: center;"><p><em>@_loadingDots</em></p></div> 
 
     @if (_FilteredListJson.Count() == 0 & _isLoading == false | _searchItem == null)
     {
@@ -42,18 +45,18 @@
             <tbody>
                 @foreach (AppJson Json in _FilteredListJson)
                 {
-                    <tr @onclick="() => ToggleRowExpansion(Json)">
-                        <td>
-                            @Json.meta.current.artist, @Json.meta.current.title  
+                    <tr @onclick="() => ToggleRowExpansion(Json)"class="@GetRowClass(Json)">
+                        <td style="text-align: center; font-size: 18px">
+                            @Json.meta.current.artist, @Json.meta.current.title 
                         </td>
                     </tr>
-                    @if (_IsRowExpanded.ContainsKey(Json) && _IsRowExpanded[Json])
+                    @if (_IsRowExpanded(Json))
                     {
                         GuitarOnly(Json);
                         foreach (Track guitarTrack in _guitarOnly)
                         {
-                            <tr @onclick="@( async () => await TrackClicked(Json, guitarTrack))">                                
-                                <td>@guitarTrack.instrument, @guitarTrack.name</td> 
+                            <tr  @onclick="@( async () => await TrackClicked(Json, guitarTrack))" style="transition: max-height 0.5s ease-in-out; max-height: @(_IsRowExpanded(Json) ? "1000px" : "0px")">                                
+                                <td colspan="2" style="text-align: center; font-size: 15px; color: #400;">@guitarTrack.instrument, @guitarTrack.name</td> 
                             </tr>   
                         }                     
                     }
@@ -63,24 +66,51 @@
     }
                              
 }
+</div>
+</div>
+
 
 
 @code {
 
     private string ImagePath = "/images/logo.jpg";
 
-    private Dictionary<AppJson, bool> _IsRowExpanded { get; set; } = new Dictionary<AppJson, bool>();
+    //private Dictionary<AppJson, bool> _IsRowExpanded { get; set; } = new Dictionary<AppJson, bool>();
 
-    private void ToggleRowExpansion(AppJson json)
+    //private void ToggleRowExpansion(AppJson json)
+    //{
+    //    if (_IsRowExpanded.ContainsKey(json))
+    //    {
+    //        _IsRowExpanded[json] = !_IsRowExpanded[json];
+    //    }
+    //    else
+    //    {
+    //        _IsRowExpanded[json] = true;
+    //    }
+    //}
+
+    private Dictionary<AppJson, bool> _expandedRows = new Dictionary<AppJson, bool>();
+
+    private void ToggleRowExpansion(AppJson item)
     {
-        if (_IsRowExpanded.ContainsKey(json))
+        if (_expandedRows.ContainsKey(item))
         {
-            _IsRowExpanded[json] = !_IsRowExpanded[json];
+            _expandedRows[item] = !_expandedRows[item];
         }
         else
         {
-            _IsRowExpanded[json] = true;
+            _expandedRows[item] = true;
         }
+    }
+
+    private bool _IsRowExpanded(AppJson item)
+    {
+        return _expandedRows.ContainsKey(item) && _expandedRows[item];
+    }
+
+    private string GetRowClass(AppJson item)
+    {
+        return _IsRowExpanded(item) ? "expanded" : "";
     }
 
     private bool _isLoading = false;
