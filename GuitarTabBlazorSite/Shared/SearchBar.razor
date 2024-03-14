@@ -11,9 +11,10 @@
  <div class="search-page">
 <div class="search-component"style="display: flex; flex-direction: column; align-items: center;">
 
-<div style="display: flex; flex-direction: column; align-items: center;">
+<div style="display: flex; flex-direction: column; align-items: center;">                                                                                                                   
     <img src="@ImagePath" alt="logo" style="width: 300px; height: auto; margin-bottom: 5px;"/>
 
+    <form @onsubmit="HandleFormSubmit" style="display: flex; flex-direction: column; align-items: center;">
     <div class="searchbar-container" style="width: 600px; margin-bottom: 10px;  display: flex; align-items: center; border: 2px solid black; border-radius: 100px; padding: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0); 
             transition: box-shadow 0.3s; "onmouseover="this.style.boxShadow = '0 0 10px rgba(128, 128, 128, 0.5)';"onmouseout="this.style.boxShadow = '0 0 5px rgba(0, 0, 0, 0)';"> 
         <div style="margin-left: 10px; margin-bottom: 5px">
@@ -23,12 +24,13 @@
                 </svg>
             </div>
         </div>
-        <input class="searchbar" style="width: 100%; max-width: 650px; border: none; outline: none;" placeholder="Search over 800,000 Guitar tabs!" @bind="_searchItem" />
+        <input class="searchbar" ref="searchInput" style="width: 100%; max-width: 650px; border: none; outline: none;" placeholder="Search over 800,000 Guitar tabs!" @bind="_searchItem" />          
     </div> 
+    </form>
 
     <button class="form-control" style="max-width: 100px; margin-top: 5px; background-color: #3a3a3a; color: #fff; transition: transform 0.3s;"
         onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" 
-        @onclick="_SearchClickedAsync">Search</button>
+         @onclick="_SearchClickedAsync">Search</button>
             
 </div>
 
@@ -49,7 +51,7 @@
                 @foreach (AppJson Json in _FilteredListJson)
                 {
                     <tr @onclick="() => ToggleRowExpansion(Json)"class="@GetRowClass(Json)">
-                        <td style="text-align: center; font-size: 18px">
+                        <td style="text-align: center; font-size: 22px; transition: transform 0.3s;"onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';">
                             @Json.meta.current.artist, @Json.meta.current.title 
                         </td>
                     </tr>
@@ -58,8 +60,8 @@
                         GuitarOnly(Json);
                         foreach (Track guitarTrack in _guitarOnly)
                         {
-                            <tr  @onclick="@( async () => await TrackClicked(Json, guitarTrack))" style="transition: max-height 0.5s ease-in-out; max-height: @(_IsRowExpanded(Json) ? "1000px" : "0px")">                                
-                                <td colspan="2" style="text-align: center; font-size: 15px; color: #400;">@guitarTrack.instrument, @guitarTrack.name</td> 
+                            <tr  @onclick="@( async () => await TrackClicked(Json, guitarTrack))" style=" transition: max-height 0.5s ease-in-out; max-height: @(_IsRowExpanded(Json) ? "1000px" : "0px")">                                
+                                <td colspan="2" style="text-align: center; font-size: 15px; color: #400; transition: transform 0.3s;"onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';">@guitarTrack.instrument, @guitarTrack.name</td> 
                             </tr>   
                         }                     
                     }
@@ -76,6 +78,12 @@
 
 
 @code {
+
+   private async Task HandleFormSubmit()
+{
+    // This method will be called when the form is submitted (by pressing Enter)
+    await _SearchClickedAsync();
+}
 
     private string ImagePath = "/images/logo.jpg";
 

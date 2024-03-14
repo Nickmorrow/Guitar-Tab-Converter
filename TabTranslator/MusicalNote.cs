@@ -394,7 +394,7 @@ namespace GuitarTabConverter
                     rootnotes.Add(removedNotes[i]);
                 }
                 //rootNotes.AddRange(removedNotes);
-                endNote = rootnotes[fretNr];
+                endNote = rootnotes[fretNr];            // index out of range exception here!
             }
 
             return endNote;
