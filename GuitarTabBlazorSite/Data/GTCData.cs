@@ -266,13 +266,13 @@ namespace GuitarTabBlazorSite.Data
             return beats;
         }
 
-        public async Task<List<AppJson>> SearchJsonAsync(string searchItem, List<AppJson> UserSearchedJson, List<string> songUrls,CancellationToken cancellationToken) 
+        public async Task<List<AppJson>> SearchJsonAsync(string _searchItem, List<AppJson> UserSearchedJson, List<string> songUrls,CancellationToken cancellationToken) 
         {
             bool containsSearchItem = false;
 
             if (UserSearchedJson != null)
             {
-                if (UserSearchedJson.Any(s => s.meta.current.title.ToLower() == searchItem.ToLower() || s.meta.current.artist.ToLower() == searchItem.ToLower()))
+                if (UserSearchedJson.Any(s => s.meta.current.title.ToLower().Contains(_searchItem) || s.meta.current.artist.ToLower().Contains(_searchItem)))
                 {
                     containsSearchItem = true;
                 }
