@@ -1,4 +1,6 @@
-﻿.choose-instrument {
+﻿
+
+.choose-instrument {
     text-align: center;
     margin-top: 100px;
 }
@@ -20,5 +22,6 @@
         color: #fff;
         transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     }
+
         
 

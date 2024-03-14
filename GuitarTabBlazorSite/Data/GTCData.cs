@@ -12,6 +12,7 @@ namespace GuitarTabBlazorSite.Data
     {
 
         public List<StringInstrument> InstrumentList = InstObjects.DefStrInstruments();
+        private List<AppJson> _searchCache = new();
 
         //public List<MusicalBeat> songBeats;
 
@@ -266,24 +267,26 @@ namespace GuitarTabBlazorSite.Data
             return beats;
         }
 
-        public async Task<List<AppJson>> SearchJsonAsync(string _searchItem, List<AppJson> UserSearchedJson, List<string> songUrls,CancellationToken cancellationToken) 
+        public async Task<List<AppJson>> SearchJsonAsync(string _searchItem, List<string> songUrls,CancellationToken cancellationToken) 
         {
             bool containsSearchItem = false;
 
-            if (UserSearchedJson != null)
+            if (_searchCache != null)
             {
-                if (UserSearchedJson.Any(s => s.meta.current.title.ToLower().Contains(_searchItem) || s.meta.current.artist.ToLower().Contains(_searchItem)))
+                if (_searchCache.Any(s => s.meta.current.title.ToLower().Contains(_searchItem) || s.meta.current.artist.ToLower().Contains(_searchItem)))
                 {
                     containsSearchItem = true;
+
+                    return _searchCache.Where(s => s.meta.current.title.ToLower().Contains(_searchItem) || s.meta.current.artist.ToLower().Contains(_searchItem)).ToList();
                 }
             }
 
             if (!containsSearchItem)
             {
-                if (UserSearchedJson == null)
-                {
-                    UserSearchedJson = new List<AppJson>();
-                }
+                //if (_searchCache == null)
+                //{
+                //    _searchCache = new List<AppJson>();
+                //}
 
                 AppJson Song = new AppJson();
                 string songSourceHTML;
@@ -295,16 +298,14 @@ namespace GuitarTabBlazorSite.Data
 
                     songSourceHTML = await HttpGetAsync($"https://www.songsterr.com{songUrls[urlNum]}",cancellationToken);
                     Song = GetJsonSongInfo(songSourceHTML);
-                    UserSearchedJson.Add(Song);
+                    _searchCache.Add(Song);
                     
                     await Task.Delay(500);
                 }
-                UserSearchedJson = UserSearchedJson.Distinct().ToList();
+                _searchCache = _searchCache.Distinct().ToList();
             }
-
-            return UserSearchedJson;
+            return _searchCache.Where(s => s.meta.current.title.ToLower().Contains(_searchItem) || s.meta.current.artist.ToLower().Contains(_searchItem)).ToList();
         }       
-
     }
 
     

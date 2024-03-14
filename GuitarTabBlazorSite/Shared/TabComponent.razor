@@ -1,11 +1,13 @@
 ﻿@page "/TabComponent"
 @using GuitarTabBlazorSite.Data
 @using GuitarTabConverter
+@using PdfSharp.Pdf
+@using PdfSharp.Drawing
 @inject GTCData Data
 @inject IJSRuntime JSRuntime
 
-<button @onclick="PrintComponent">Print</button>
-<button @onclick="DownloadPDF">Download PDF</button>
+<button class="print-button" @onclick="PrintComponent">Print</button>
+<button class="pdf-button" @onclick="DownloadPDF">Download PDF</button>
 
 <div class="tab-body" id="tab-body-content">
     <div>
@@ -71,8 +73,34 @@
 
 
 @code {
+    private async Task DownloadPDF()
+    {
+        
+        PdfDocument document = new PdfDocument();
+        PdfPage page = document.AddPage();
+        XGraphics gfx = XGraphics.FromPdfPage(page);
+        
+        
+        XFont font = new XFont("Helvetica Nue", 12);
+        gfx.DrawString("Hello, world!", font, XBrushes.Black, new XRect(10, 10, page.Width, page.Height), XStringFormats.TopLeft);
+        
+        
+        using (MemoryStream stream = new MemoryStream())
+        {
+            document.Save(stream, false);
+            stream.Position = 0;
+            
+            
+            await JSRuntime.InvokeVoidAsync("BlazorDownloadFile", 
+                "tab_component.pdf", 
+                Convert.ToBase64String(stream.ToArray()));
+        }
+    } 
 
-
+    private void PrintComponent()
+    {
+         JSRuntime.InvokeVoidAsync("printContent", "tab-body-content");
+    }      
 
     [Parameter]
     public Tab Tab { get; set; }
@@ -88,15 +116,7 @@
         tabOne = Tab.TabLines[0];
     }
 
-    private void PrintComponent()
-    {
-         JSRuntime.InvokeVoidAsync("printContent", "tab-body-content");
-    }
     
-    private void DownloadPDF()
-    {
-        JSRuntime.InvokeVoidAsync("downloadPDF", "tab-body-content");
-    }
   
 
 

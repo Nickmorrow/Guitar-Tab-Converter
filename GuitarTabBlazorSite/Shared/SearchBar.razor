@@ -38,9 +38,14 @@
 
 @if (_searchClicked)
 {
-    <div style="text-align: center; font-size: 25px"><p>@_loadingDots.Replace(".", "●")</p></div> 
-
-    @if (_FilteredListJson.Count() == 0 & _isLoading == false | _searchItem == null)
+    
+    @if(_isLoading == true)
+    {
+        <div class="spinner-border text-muted" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>   
+    }
+    @if (_searchResults.Count() == 0 & _isLoading == false | _searchItem == null)
     {
         <p><em>No Results</em></p> 
     }
@@ -48,7 +53,7 @@
     {
         <table class="table">       
             <tbody>
-                @foreach (AppJson Json in _FilteredListJson)
+                @foreach (AppJson Json in _searchResults)
                 {
                     <tr @onclick="() => ToggleRowExpansion(Json)"class="@GetRowClass(Json)">
                         <td style="text-align: center; font-size: 22px; transition: transform 0.3s;"onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';">
@@ -79,27 +84,12 @@
 
 @code {
 
-   private async Task HandleFormSubmit()
-{
-    // This method will be called when the form is submitted (by pressing Enter)
-    await _SearchClickedAsync();
-}
+    private async Task HandleFormSubmit()
+    {
+        await _SearchClickedAsync();
+    }
 
-    private string ImagePath = "/images/logo.jpg";
-
-    //private Dictionary<AppJson, bool> _IsRowExpanded { get; set; } = new Dictionary<AppJson, bool>();
-
-    //private void ToggleRowExpansion(AppJson json)
-    //{
-    //    if (_IsRowExpanded.ContainsKey(json))
-    //    {
-    //        _IsRowExpanded[json] = !_IsRowExpanded[json];
-    //    }
-    //    else
-    //    {
-    //        _IsRowExpanded[json] = true;
-    //    }
-    //}
+    private string ImagePath = "/images/logo.jpg";  
 
     private Dictionary<AppJson, bool> _expandedRows = new Dictionary<AppJson, bool>();
 
@@ -139,9 +129,9 @@
 
     private List<string> _SongUrls { get; set; }
 
-    private List<AppJson> _UserSearchedJson = new();
+    private List<AppJson> _searchResults = new(); 
 
-    private List<AppJson> _FilteredListJson = new();  
+    //private List<AppJson> _FilteredListJson = new();  
 
     private Track[] _SongTracks { get; set; }
 
@@ -202,31 +192,8 @@
 
             _userSearchedHTML = await Data.HttpGetAsync($"{_fullSearchedUrl}", cts.Token);
             _SongUrls = Data.GetSongUrls(_userSearchedHTML);
-
-            try
-            {
-                _loadingTimer = new System.Threading.Timer(_ => UpdateLoadingDots(), null, 0, 500);
-
-                _UserSearchedJson = await Data.SearchJsonAsync(_searchItem, _UserSearchedJson, _SongUrls, cts.Token);
-                _FilteredListJson = _UserSearchedJson
-                    .Where(s => s.meta.current.title.ToLower().Contains(_searchItem) || s.meta.current.artist.ToLower().Contains(_searchItem))
-                    .ToList();
-            }
-            catch (OperationCanceledException)
-            {
-                
-            }
-            finally
-            {
-                
-                if (_loadingTimer != null && !_loadingTimer.Change(Timeout.Infinite, Timeout.Infinite))
-                {
-                    _loadingTimer.Dispose();
-                }
-
-                _loadingDots = ""; 
-                _isLoading = false; 
-            }
+            _searchResults = await Data.SearchJsonAsync(_searchItem, _SongUrls, cts.Token);
+            _isLoading = false;
         }
     }
 
