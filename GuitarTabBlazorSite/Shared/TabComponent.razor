@@ -2,8 +2,12 @@
 @using GuitarTabBlazorSite.Data
 @using GuitarTabConverter
 @inject GTCData Data
+@inject IJSRuntime JSRuntime
 
-<div class="tab-body">
+<button @onclick="PrintComponent">Print</button>
+<button @onclick="DownloadPDF">Download PDF</button>
+
+<div class="tab-body" id="tab-body-content">
     <div>
         <strong>@Tab.ArtistName</strong>
         <div>@Tab.TitleOfSong</div>
@@ -68,6 +72,8 @@
 
 @code {
 
+
+
     [Parameter]
     public Tab Tab { get; set; }
 
@@ -82,6 +88,15 @@
         tabOne = Tab.TabLines[0];
     }
 
+    private void PrintComponent()
+    {
+         JSRuntime.InvokeVoidAsync("printContent", "tab-body-content");
+    }
+    
+    private void DownloadPDF()
+    {
+        JSRuntime.InvokeVoidAsync("downloadPDF", "tab-body-content");
+    }
   
 
 
