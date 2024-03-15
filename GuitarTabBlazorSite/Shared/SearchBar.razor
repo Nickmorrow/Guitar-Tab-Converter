@@ -4,8 +4,11 @@
 @using System.Threading
 @using Microsoft.JSInterop
 @using Microsoft.AspNetCore.Components
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Converters;
 @inject GTCData Data
-@inject NavigationManager nav
+@inject NavigationManager navToSongPage
+
 
 
  <div class="search-page">
@@ -24,28 +27,28 @@
                 </svg>
             </div>
         </div>
-        <input class="searchbar" ref="searchInput" style="width: 100%; max-width: 650px; border: none; outline: none;" placeholder="Search over 800,000 Guitar tabs!" @bind="_searchItem" />          
+        <input class="searchbar" ref="searchInput" style="width: 100%; max-width: 650px; border: none; outline: none;" placeholder="Search over 800,000 Guitar tabs!" @bind="Data.searchItem" />          
     </div> 
     </form>
 
     <button class="form-control" style="max-width: 100px; margin-top: 5px; background-color: #3a3a3a; color: #fff; transition: transform 0.3s;"
         onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" 
-         @onclick="_SearchClickedAsync">Search</button>
+         @onclick="Data._SearchClickedAsync">Search</button>
             
 </div>
 
 <div class="results-table">
 
-@if (_searchClicked)
+@if (Data.searchClicked)
 {
     
-    @if(_isLoading == true)
+    @if(Data.isLoading == true)
     {
         <div class="spinner-border text-muted" role="status">
             <span class="visually-hidden">Loading...</span>
         </div>   
     }
-    @if (_searchResults.Count() == 0 & _isLoading == false | _searchItem == null)
+    @if (Data.searchResults.Count() == 0 && !Data.isLoading)
     {
         <p><em>No Results</em></p> 
     }
@@ -53,7 +56,7 @@
     {
         <table class="table">       
             <tbody>
-                @foreach (AppJson Json in _searchResults)
+                @foreach (AppJson Json in Data.searchResults)
                 {
                     <tr @onclick="() => ToggleRowExpansion(Json)"class="@GetRowClass(Json)">
                         <td style="text-align: center; font-size: 22px; transition: transform 0.3s;"onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';">
@@ -62,10 +65,10 @@
                     </tr>
                     @if (_IsRowExpanded(Json))
                     {
-                        GuitarOnly(Json);
-                        foreach (Track guitarTrack in _guitarOnly)
+                        Data.GuitarOnly(Json);
+                        foreach (Track guitarTrack in Data.guitarOnly)
                         {
-                            <tr  @onclick="@( async () => await TrackClicked(Json, guitarTrack))" style=" transition: max-height 0.5s ease-in-out; max-height: @(_IsRowExpanded(Json) ? "1000px" : "0px")">                                
+                            <tr  @onclick="@( async () => await HandleTrackClicked(Json, guitarTrack))" style=" transition: max-height 0.5s ease-in-out; max-height: @(_IsRowExpanded(Json) ? "1000px" : "0px")">                                
                                 <td colspan="2" style="text-align: center; font-size: 15px; color: #400; transition: transform 0.3s;"onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';">@guitarTrack.instrument, @guitarTrack.name</td> 
                             </tr>   
                         }                     
@@ -86,8 +89,8 @@
 
     private async Task HandleFormSubmit()
     {
-        await _SearchClickedAsync();
-    }
+        await Data._SearchClickedAsync();
+    }   
 
     private string ImagePath = "/images/logo.jpg";  
 
@@ -115,119 +118,23 @@
         return _IsRowExpanded(item) ? "expanded" : "";
     }
 
-    private bool _isLoading = false;
-
-    private string _loadingDots = "";
-
-    private string _searchItem { get; set; }  
-
-    private string _userSearchedUrl { get; set; }
-
-    private string _fullSearchedUrl { get; set; }
-
-    private string _userSearchedHTML { get; set; }
-
-    private List<string> _SongUrls { get; set; }
-
-    private List<AppJson> _searchResults = new(); 
-
-    //private List<AppJson> _FilteredListJson = new();  
-
-    private Track[] _SongTracks { get; set; }
-
-    private List<Track> _guitarOnly { get; set; }
-
-    private AppJson _songJson { get; set; }
-
-    [Parameter]
-    public EventCallback<AppJson> sendSongJson { get; set; }
-
-    private bool _searchClicked { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> trackLinkClicked { get; set; }
-
-    private int _trackIndex { get; set; }
-
-    private int _GetTrackIndex(Track guitarTrack, int trackIndex)
+    private async Task HandleTrackClicked(AppJson json, Track guitarTrack)
     {
-        for (int i= 0;i< _SongTracks.Count();i++)
-        {
-            if (guitarTrack == _SongTracks[i])
-            {
-                trackIndex = i;
-                break;
-            }
-        }
-        return trackIndex;
+        await Data.TrackClicked(json, guitarTrack);
+        Data.searchItem = null;
+        Data.searchClicked = false;
+        Data.searchResults = null;
+        Data.trackClicked = true;
+        Data.trackIndex = null;
+        Data.trackUrl = null;
+        Data.trackHTML = "";      
+        Data.selectedTrack = null;
+        await NavigateToAnotherPage();
     }
 
-    private string _trackUrl { get; set; }
-
-    private string _trackHTML { get; set; }
-
-    private SongsterrSong _selectedSong { get; set; }
-
-    [Parameter]
-    public EventCallback<SongsterrSong> sendSelectedSong { get; set; }
-
-    private Track _selectedTrack { get; set; }   
-
-    private System.Threading.Timer _loadingTimer;
-
-    private CancellationTokenSource _cancellationTokenSource;
-
-    private async Task _SearchClickedAsync()
-    {
-        _searchClicked = true;
-        _isLoading = true;
-
-        if (_searchItem != null)
-        {
-            _searchItem = _searchItem.ToLower().TrimEnd();
-            _userSearchedUrl = $"/?pattern={_searchItem}";
-            _fullSearchedUrl = $"https://www.songsterr.com{_userSearchedUrl}";
-
-            CancellationTokenSource cts = new CancellationTokenSource();
-
-            _userSearchedHTML = await Data.HttpGetAsync($"{_fullSearchedUrl}", cts.Token);
-            _SongUrls = Data.GetSongUrls(_userSearchedHTML);
-            _searchResults = await Data.SearchJsonAsync(_searchItem, _SongUrls, cts.Token);
-            _isLoading = false;
-        }
-    }
-
-    private void UpdateLoadingDots()
-    {
-        InvokeAsync(() =>
-        {
-            _loadingDots = _loadingDots.Length < 3 ? _loadingDots + "." : ".";
-            StateHasChanged(); 
-    });
-    }
-
-    public void GuitarOnly(AppJson Json)
-    {
-        _SongTracks = Json.meta.current.tracks;
-        _guitarOnly = _SongTracks.Where(x => x.isGuitar).ToList();    
-    }
-
-    private bool _trackClicked { get; set; } 
-
-    public async Task TrackClicked(AppJson Json, Track guitarTrack)
-    {
-        
-        _trackClicked = true;
-        _songJson = Json;
-        _trackIndex = _GetTrackIndex(guitarTrack, _trackIndex);
-        _trackUrl = Data.GetUrl(_userSearchedHTML,_songJson, _trackIndex);
-        _trackHTML = Data.HttpGet(_trackUrl);//Data.TrackHTML(_trackUrl);
-        _selectedSong = Data.GetSong(_trackHTML, _selectedSong);
-        _selectedTrack = _SongTracks[_trackIndex];
-        await trackLinkClicked.InvokeAsync(true); 
-        await sendSelectedSong.InvokeAsync(_selectedSong); 
-        await sendSongJson.InvokeAsync(_songJson);
-        //nav.NavigateTo("/SongPage");
+    private async Task NavigateToAnotherPage()
+    {       
+        navToSongPage.NavigateTo("/SongPage");
     }
         
     }

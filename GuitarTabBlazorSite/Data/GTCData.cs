@@ -11,8 +11,162 @@ namespace GuitarTabBlazorSite.Data
     public class GTCData
     {
 
+        public string searchItem { get; set; }
+
+        public bool searchClicked { get; set; }
+
+        public bool isLoading = false;
+
+        private string _userSearchedUrl { get; set; }
+
+        private string _fullSearchedUrl { get; set; }
+
+        private string _userSearchedHTML { get; set; }
+
+        private List<string> _SongUrls { get; set; }
+
+        public List<AppJson> searchResults = new();
+
+        private Track[] _SongTracks { get; set; }
+
+        public List<Track> guitarOnly { get; set; }
+
+        public AppJson songJson { get; set; }
+
+        public int? trackIndex { get; set; }
+
+        public string trackUrl { get; set; }
+
+        public string trackHTML { get; set; }
+
+        public SongsterrSong selectedSong { get; set; }
+
+        public Track selectedTrack { get; set; }
+
         public List<StringInstrument> InstrumentList = InstObjects.DefStrInstruments();
+
         private List<AppJson> _searchCache = new();
+
+
+        public bool trackClicked { get; set; }
+
+        public StringInstrument selectedInstrument { get; set; }
+
+        public List<MusicalBeat> songBeats { get; set; }
+
+        public Tab tab { get; set; }
+
+        public bool converted { get; set; }
+
+        public int instNum { get; set; }
+
+        public bool isGuitar { get; set; }
+
+        public bool isBassGuitar { get; set; }
+
+        public bool isUkelele { get; set; }
+
+        public bool isBanjo { get; set; }
+
+        public void IsGuitar()
+        {
+            isGuitar = true;
+            isBassGuitar = false;
+            isUkelele = false;
+            isBanjo = false;
+            converted = false;
+            instNum = 0;
+            selectedInstrument = InstrumentList[instNum];
+            songBeats = GetSongBeats(selectedSong, selectedInstrument, InstrumentList);
+            tab = new Tab(selectedSong, selectedInstrument, songBeats, songJson, converted);
+        }
+        public void IsBassGuitar()
+        {
+            isGuitar = false;
+            isBassGuitar = true;
+            isUkelele = false;
+            isBanjo = false;
+            converted = true;
+            instNum = 1;
+            selectedInstrument = InstrumentList[instNum];
+            songBeats = GetSongBeats(selectedSong, selectedInstrument, InstrumentList);
+            tab = new Tab(selectedSong, selectedInstrument, songBeats, songJson, converted);
+        }
+        public void IsUkelele()
+        {
+            isGuitar = false;
+            isBassGuitar = false;
+            isUkelele = true;
+            isBanjo = false;
+            converted = true;
+            instNum = 2;
+            selectedInstrument = InstrumentList[instNum];
+            songBeats = GetSongBeats(selectedSong, selectedInstrument, InstrumentList);
+            tab = new Tab(selectedSong, selectedInstrument, songBeats, songJson, converted);
+        }
+        public void IsBanjo()
+        {
+            isGuitar = false;
+            isBassGuitar = false;
+            isUkelele = false;
+            isBanjo = true;
+            converted = true;
+            instNum = 3;
+            selectedInstrument = InstrumentList[instNum];
+            songBeats = GetSongBeats(selectedSong, selectedInstrument, InstrumentList);
+            tab = new Tab(selectedSong, selectedInstrument, songBeats, songJson, converted);
+        }
+
+        private int? _GetTrackIndex(Track guitarTrack, int? trackIndex)
+        {
+            for (int i = 0; i < _SongTracks.Count(); i++)
+            {
+                if (guitarTrack == _SongTracks[i])
+                {
+                    trackIndex = i;
+                    break;
+                }
+            }
+            return trackIndex;
+        }
+
+        public async Task _SearchClickedAsync()
+        {
+            searchClicked = true;
+            isLoading = true;
+
+            if (searchItem != null)
+            {
+                searchItem = searchItem.ToLower().TrimEnd();
+                _userSearchedUrl = $"/?pattern={searchItem}";
+                _fullSearchedUrl = $"https://www.songsterr.com{_userSearchedUrl}";
+
+                CancellationTokenSource cts = new CancellationTokenSource();
+
+                _userSearchedHTML = await HttpGetAsync($"{_fullSearchedUrl}", cts.Token);
+                _SongUrls = GetSongUrls(_userSearchedHTML);
+                searchResults = await SearchJsonAsync(searchItem, _SongUrls, cts.Token);
+                isLoading = false;
+            }
+        }
+
+        public void GuitarOnly(AppJson Json)
+        {
+            _SongTracks = Json.meta.current.tracks;
+            guitarOnly = _SongTracks.Where(x => x.isGuitar).ToList();
+        }
+
+        public async Task TrackClicked(AppJson Json, Track guitarTrack)
+        {
+            trackClicked = true;
+            songJson = Json;
+            trackIndex = _GetTrackIndex(guitarTrack, trackIndex);
+            trackUrl = GetUrl(_userSearchedHTML, songJson, trackIndex);
+            trackHTML = HttpGet(trackUrl);
+            selectedSong = GetSong(trackHTML, selectedSong);
+            selectedTrack = _SongTracks[(int)trackIndex];
+
+        }       
 
         //public List<MusicalBeat> songBeats;
 
@@ -52,11 +206,11 @@ namespace GuitarTabBlazorSite.Data
             return content;
         }
 
-        public async Task<string> HttpGetAsync(string url,CancellationToken cancellationToken) 
+        public async Task<string> HttpGetAsync(string url, CancellationToken cancellationToken)
         {
             using (HttpClient client = new HttpClient())
             {
-                return await client.GetStringAsync(url,cancellationToken); 
+                return await client.GetStringAsync(url, cancellationToken);
             }
 
         }
@@ -113,8 +267,8 @@ namespace GuitarTabBlazorSite.Data
                 {
                     containsSearchItem = true;
                 }
-            }            
-            if (containsSearchItem == false )
+            }
+            if (containsSearchItem == false)
             {
                 if (UserSearchedJson == null)
                 {
@@ -131,12 +285,12 @@ namespace GuitarTabBlazorSite.Data
                     Song = GetJsonSongInfo(songSourceHTML);
                     UserSearchedJson.Add(Song);
                     Thread.Sleep(1000);
-                }               
+                }
             }
             return UserSearchedJson;
         }
 
-        public string GetUrl(string url, AppJson appJson, int trackIndex)
+        public string GetUrl(string url, AppJson appJson, int? trackIndex)
         {
             List<string> resultList = new List<string>();
 
@@ -177,7 +331,7 @@ namespace GuitarTabBlazorSite.Data
 
         public SongsterrSong GetSong(string trackHTML, SongsterrSong selectedSong)
         {
-            selectedSong = JsonConvert.DeserializeObject<SongsterrSong>(trackHTML); 
+            selectedSong = JsonConvert.DeserializeObject<SongsterrSong>(trackHTML);
             return selectedSong;
         }
 
@@ -267,7 +421,7 @@ namespace GuitarTabBlazorSite.Data
             return beats;
         }
 
-        public async Task<List<AppJson>> SearchJsonAsync(string _searchItem, List<string> songUrls,CancellationToken cancellationToken) 
+        public async Task<List<AppJson>> SearchJsonAsync(string _searchItem, List<string> songUrls, CancellationToken cancellationToken)
         {
             bool containsSearchItem = false;
 
@@ -296,17 +450,19 @@ namespace GuitarTabBlazorSite.Data
                     if (songUrls[urlNum].Contains("chord"))
                         continue;
 
-                    songSourceHTML = await HttpGetAsync($"https://www.songsterr.com{songUrls[urlNum]}",cancellationToken);
+                    songSourceHTML = await HttpGetAsync($"https://www.songsterr.com{songUrls[urlNum]}", cancellationToken);
                     Song = GetJsonSongInfo(songSourceHTML);
                     _searchCache.Add(Song);
-                    
+
                     await Task.Delay(500);
                 }
                 _searchCache = _searchCache.Distinct().ToList();
             }
             return _searchCache.Where(s => s.meta.current.title.ToLower().Contains(_searchItem) || s.meta.current.artist.ToLower().Contains(_searchItem)).ToList();
-        }       
-    }
+        }
 
-    
+
+
+
+    }
 }

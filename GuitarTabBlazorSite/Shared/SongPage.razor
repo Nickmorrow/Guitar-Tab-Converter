@@ -8,10 +8,10 @@
 <div class="choose-instrument">
     <div><h3>Choose Instrument</h3> </div>
     <div class="choose-instrument-buttons">
-        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="_IsGuitar">Guitar</button>
-        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="_IsBassGuitar">Bass Guitar</button>
-        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="_IsUkelele">Ukelele</button>
-        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="_IsBanjo">Banjo</button>
+        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsGuitar">Guitar</button>
+        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsBassGuitar">Bass Guitar</button>
+        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsUkelele">Ukelele</button>
+        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsBanjo">Banjo</button>
         <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="_GoBackToSearch">Back to Search</button>
     </div>
  </div>
@@ -20,109 +20,40 @@
  
 
  
- @if(_isGuitar)
+ @if(Data.isGuitar)
 {
-    <TabComponent Tab="_tab" ></TabComponent>    
+    <TabComponent Tab="Data.tab" ></TabComponent>    
 }
-@if(_isBassGuitar)
+@if(Data.isBassGuitar)
 {
-    <TabComponent Tab="_tab" ></TabComponent>    
+    <TabComponent Tab="Data.tab" ></TabComponent>    
 }
-@if(_isUkelele)
+@if(Data.isUkelele)
 {
-    <TabComponent Tab="_tab" ></TabComponent>    
+    <TabComponent Tab="Data.tab" ></TabComponent>    
 }
-@if(_isBanjo)
+@if(Data.isBanjo)
 {
-    <TabComponent Tab="_tab" ></TabComponent>    
+    <TabComponent Tab="Data.tab" ></TabComponent>    
 }
 
 
 @code 
 {
-    
-
-    private bool _trackClicked { get; set; }
-
-    [Parameter]
-    public SongsterrSong selectedSong { get; set; }
-
-    [Parameter]
-    public AppJson songJson { get; set; }
-
-    private StringInstrument _selectedInstrument { get; set; }
-
-    private List<MusicalBeat> _songBeats { get; set; }
-
-    [Parameter]
-    public EventCallback<bool> trackLinkClicked { get; set; }
-
     private void _GoBackToSearch()
     {
-        trackLinkClicked.InvokeAsync(false);
+        Data.isGuitar = true;
+        Data.isBassGuitar = false;
+        Data.isUkelele = false;
+        Data.isBanjo = false;
+        Data.converted = false;
+        Data.instNum = 0;
+        Data.selectedInstrument = null;
+        Data.songBeats = null;
+        Data.tab = null;
         Navigation.NavigateTo("/");
     }
-
-    private Tab _tab { get; set; }
-
-    private bool _converted  { get; set; } 
-    private int _instNum { get; set; }
-
-    private bool _isGuitar { get; set; }
-    private bool _isBassGuitar { get; set; }
-    private bool _isUkelele { get; set; }
-    private bool _isBanjo { get; set; }
-
-    private void _IsGuitar()
-    {
-        _isGuitar = true;
-        _isBassGuitar = false;
-        _isUkelele = false;
-        _isBanjo = false;
-        _converted = false;
-        _instNum = 0;
-        _selectedInstrument = Data.InstrumentList[_instNum];
-        _songBeats = Data.GetSongBeats(selectedSong, _selectedInstrument, Data.InstrumentList);
-        _tab = new Tab(selectedSong, _selectedInstrument, _songBeats, songJson, _converted);
-    }
-    private void _IsBassGuitar()
-    {
-        _isGuitar = false;
-        _isBassGuitar = true;
-        _isUkelele = false;
-        _isBanjo = false;
-        _converted = true;
-        _instNum = 1;
-        _selectedInstrument = Data.InstrumentList[_instNum];
-        _songBeats = Data.GetSongBeats(selectedSong, _selectedInstrument, Data.InstrumentList);
-        _tab = new Tab(selectedSong, _selectedInstrument, _songBeats, songJson, _converted);
-    }
-    private void _IsUkelele()
-    {
-        _isGuitar = false;
-        _isBassGuitar = false;
-        _isUkelele = true;
-        _isBanjo = false;
-        _converted = true;
-        _instNum = 2;
-        _selectedInstrument = Data.InstrumentList[_instNum];
-        _songBeats = Data.GetSongBeats(selectedSong, _selectedInstrument, Data.InstrumentList);
-        _tab = new Tab(selectedSong, _selectedInstrument, _songBeats, songJson, _converted);
-    }
-    private void _IsBanjo()
-    {
-        _isGuitar = false;
-        _isBassGuitar = false;
-        _isUkelele = false;
-        _isBanjo = true;
-        _converted = true;
-        _instNum = 3;
-        _selectedInstrument = Data.InstrumentList[_instNum];
-        _songBeats = Data.GetSongBeats(selectedSong, _selectedInstrument, Data.InstrumentList);
-        _tab = new Tab(selectedSong, _selectedInstrument, _songBeats, songJson, _converted);
-    }
-
-
     
+
 
 }
