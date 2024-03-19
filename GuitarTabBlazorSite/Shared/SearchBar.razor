@@ -71,7 +71,7 @@
                         Data.GuitarOnly(Json);
                         foreach (Track guitarTrack in Data.guitarOnly)
                         {
-                            <tr  @onclick="@( async () => await HandleTrackClicked(Json, guitarTrack))" 
+                            <tr  @onclick="@( async () =>  HandleTrackClicked(Json, guitarTrack))" 
                                 style=" transition: max-height 0.5s ease-in-out; max-height: @(_IsRowExpanded(Json) ? "1000px" : "0px")">
                                 
                                 <td colspan="2" style="text-align: center; font-size: 15px; color: #400; transition: transform 0.3s;
@@ -126,21 +126,13 @@
         return _IsRowExpanded(item) ? "expanded" : "";
     }
 
-    private async Task HandleTrackClicked(AppJson json, Track guitarTrack)
+    private void HandleTrackClicked(AppJson json, Track guitarTrack)
     {
-        await Data.TrackClicked(json, guitarTrack);
-        //Data.searchItem = null;
-        //Data.searchClicked = false;
-        //Data.searchResults = null;
-        //Data.trackClicked = true;
-        //Data.trackIndex = null;
-        //Data.trackUrl = null;
-        //Data.trackHTML = "";      
-        //Data.selectedTrack = null;
-        await NavigateToAnotherPage();
+        Data.TrackClicked(json, guitarTrack);
+        NavigateToAnotherPage();
     }
 
-    private async Task NavigateToAnotherPage()
+    private void NavigateToAnotherPage()
     {       
         navToSongPage.NavigateTo("/SongPage");
     }
