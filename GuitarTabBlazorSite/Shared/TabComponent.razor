@@ -11,38 +11,38 @@
 
 <div class="tab-body" id="tab-body-content">
     <div>
-        <strong>@Tab.ArtistName</strong>
-        <div>@Tab.TitleOfSong</div>
-        <div>@Tab.InstrumentString</div>
+        <strong>@Data.tab.ArtistName</strong>
+        <div>@Data.tab.TitleOfSong</div>
+        <div>@Data.tab.InstrumentString</div>
 
         <div class="tuning">
-            @foreach (RootNotes tuning in Tab.Tuning.Reverse<RootNotes>())
+            @foreach (RootNotes tuning in Data.tab.Tuning.Reverse<RootNotes>())
             {
                 <div>@tuning.ToString().Substring(0, 1)</div>
             }
         </div>
-            @if (Tab.Capo == 0)
+            @if (Data.tab.Capo == 0)
             {
                 <div>No Capo</div>
             }
             else
             {
-                <div>Capo on Fret @Tab.Capo.ToString()</div>
+                <div>Capo on Fret @Data.tab.Capo.ToString()</div>
             }
     </div>
 
     <div class="tablines-body">
-        @for (int outerIndex = 0; outerIndex < tabOne.Count; outerIndex += 4)
+        @for (int outerIndex = 0; outerIndex < Data.tab.TabLines[0].Count; outerIndex += 4)
         {
             <div class="tab-row">
-                @for (int innerIndex = 0; innerIndex < 4 && (outerIndex + innerIndex) < tabOne.Count; innerIndex++)
+                @for (int innerIndex = 0; innerIndex < 4 && (outerIndex + innerIndex) < Data.tab.TabLines[0].Count; innerIndex++)
                 {
                     
                     int tabIndex = outerIndex + innerIndex;
                     <div class="measure">
-                        @for (int stringNum = 0; stringNum < Tab.TabLines.Count; stringNum++)
+                        @for (int stringNum = 0; stringNum < Data.tab.TabLines.Count; stringNum++)
                         {
-                            List<List<string>> instString = Tab.TabLines[stringNum];
+                            List<List<string>> instString = Data.tab.TabLines[stringNum];
                             List<string> measure = instString[tabIndex];
                             <div class="tabline">
                             @for (int beatIndex = 0; beatIndex < measure.Count; beatIndex++)
@@ -75,22 +75,22 @@
 @code {
     private async Task DownloadPDF()
     {
-        
+
         PdfDocument document = new PdfDocument();
         PdfPage page = document.AddPage();
         XGraphics gfx = XGraphics.FromPdfPage(page);
-        
-        
+
+
         XFont font = new XFont("Helvetica Nue", 12);
         gfx.DrawString("Hello, world!", font, XBrushes.Black, new XRect(10, 10, page.Width, page.Height), XStringFormats.TopLeft);
-        
-        
+
+
         using (MemoryStream stream = new MemoryStream())
         {
             document.Save(stream, false);
             stream.Position = 0;
-            
-            
+
+
             await JSRuntime.InvokeVoidAsync("BlazorDownloadFile", 
                 "tab_component.pdf", 
                 Convert.ToBase64String(stream.ToArray()));
@@ -99,22 +99,19 @@
 
     private void PrintComponent()
     {
-         JSRuntime.InvokeVoidAsync("printContent", "tab-body-content");
-    }      
-
-    [Parameter]
-    public Tab Tab { get; set; }
-
-    private List<List<string>> tabOne;
-
-    private int rowcounter = 0;
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        tabOne = Tab.TabLines[0];
+        JSRuntime.InvokeVoidAsync("printContent", "tab-body-content");
     }
+
+    //private List<List<string>> tabOne;
+
+    //private int rowcounter = 0;
+
+    //protected override void OnInitialized()
+    //{
+    //    base.OnInitialized();
+
+    //    tabOne = Data.tab.TabLines[0];
+    //}
 
     
   

@@ -12,47 +12,41 @@
         <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsBassGuitar">Bass Guitar</button>
         <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsUkelele">Ukelele</button>
         <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsBanjo">Banjo</button>
-        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="_GoBackToSearch">Back to Search</button>
+        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="_HandleBackToSearch">Back to Search</button>
     </div>
  </div>
 
 
  
-
  
  @if(Data.isGuitar)
 {
-    <TabComponent Tab="Data.tab" ></TabComponent>    
+    <TabComponent></TabComponent>     
 }
 @if(Data.isBassGuitar)
 {
-    <TabComponent Tab="Data.tab" ></TabComponent>    
+    <TabComponent></TabComponent>    
 }
 @if(Data.isUkelele)
 {
-    <TabComponent Tab="Data.tab" ></TabComponent>    
+    <TabComponent></TabComponent>     
 }
 @if(Data.isBanjo)
 {
-    <TabComponent Tab="Data.tab" ></TabComponent>    
+    <TabComponent></TabComponent>
 }
+
 
 
 @code 
 {
-    private void _GoBackToSearch()
+    private void _HandleBackToSearch()
     {
-        Data.isGuitar = true;
-        Data.isBassGuitar = false;
-        Data.isUkelele = false;
-        Data.isBanjo = false;
-        Data.converted = false;
-        Data.instNum = 0;
-        Data.selectedInstrument = null;
-        Data.songBeats = null;
-        Data.tab = null;
+        Data.GoBackToSearch();
         Navigation.NavigateTo("/");
     }
+
+    
     
 
 

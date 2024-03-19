@@ -42,7 +42,7 @@
 @if (Data.searchClicked)
 {
     
-    @if(Data.isLoading == true)
+    @if (Data.isLoading == true )
     {
         <div class="spinner-border text-muted" role="status">
             <span class="visually-hidden">Loading...</span>
@@ -59,8 +59,11 @@
                 @foreach (AppJson Json in Data.searchResults)
                 {
                     <tr @onclick="() => ToggleRowExpansion(Json)"class="@GetRowClass(Json)">
-                        <td style="text-align: center; font-size: 22px; transition: transform 0.3s;"onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';">
-                            @Json.meta.current.artist, @Json.meta.current.title 
+                        <td style="text-align: center; font-size: 22px; transition: transform 0.3s;
+                            "onmouseover="this.style.transform = 'scale(1.1)';
+                            "onmouseout="this.style.transform = 'scale(1)';">
+
+                                <a>@Json.meta.current.artist, @Json.meta.current.title</a> 
                         </td>
                     </tr>
                     @if (_IsRowExpanded(Json))
@@ -68,8 +71,13 @@
                         Data.GuitarOnly(Json);
                         foreach (Track guitarTrack in Data.guitarOnly)
                         {
-                            <tr  @onclick="@( async () => await HandleTrackClicked(Json, guitarTrack))" style=" transition: max-height 0.5s ease-in-out; max-height: @(_IsRowExpanded(Json) ? "1000px" : "0px")">                                
-                                <td colspan="2" style="text-align: center; font-size: 15px; color: #400; transition: transform 0.3s;"onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';">@guitarTrack.instrument, @guitarTrack.name</td> 
+                            <tr  @onclick="@( async () => await HandleTrackClicked(Json, guitarTrack))" 
+                                style=" transition: max-height 0.5s ease-in-out; max-height: @(_IsRowExpanded(Json) ? "1000px" : "0px")">
+                                
+                                <td colspan="2" style="text-align: center; font-size: 15px; color: #400; transition: transform 0.3s;
+                                    "onmouseover="this.style.transform = 'scale(1.1)';
+                                    "onmouseout="this.style.transform = 'scale(1)';">
+                                       <a> @guitarTrack.instrument, @guitarTrack.name</a></td> 
                             </tr>   
                         }                     
                     }
@@ -121,14 +129,14 @@
     private async Task HandleTrackClicked(AppJson json, Track guitarTrack)
     {
         await Data.TrackClicked(json, guitarTrack);
-        Data.searchItem = null;
-        Data.searchClicked = false;
-        Data.searchResults = null;
-        Data.trackClicked = true;
-        Data.trackIndex = null;
-        Data.trackUrl = null;
-        Data.trackHTML = "";      
-        Data.selectedTrack = null;
+        //Data.searchItem = null;
+        //Data.searchClicked = false;
+        //Data.searchResults = null;
+        //Data.trackClicked = true;
+        //Data.trackIndex = null;
+        //Data.trackUrl = null;
+        //Data.trackHTML = "";      
+        //Data.selectedTrack = null;
         await NavigateToAnotherPage();
     }
 

@@ -4,13 +4,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Text.Json;
 using System.Linq;
-
+using System.Reflection;
 
 namespace GuitarTabBlazorSite.Data
 {
     public class GTCData
     {
-
+        public bool isBackToSearch { get; set; }
         public string searchItem { get; set; }
 
         public bool searchClicked { get; set; }
@@ -54,11 +54,13 @@ namespace GuitarTabBlazorSite.Data
 
         public List<MusicalBeat> songBeats { get; set; }
 
-        public Tab tab { get; set; }
+        public Tab tab;
 
-        public bool converted { get; set; }
+        public List<Tab> tabs;
 
-        public int instNum { get; set; }
+        public bool? converted { get; set; }
+
+        public int? instNum { get; set; }
 
         public bool isGuitar { get; set; }
 
@@ -74,11 +76,12 @@ namespace GuitarTabBlazorSite.Data
             isBassGuitar = false;
             isUkelele = false;
             isBanjo = false;
-            converted = false;
-            instNum = 0;
-            selectedInstrument = InstrumentList[instNum];
-            songBeats = GetSongBeats(selectedSong, selectedInstrument, InstrumentList);
-            tab = new Tab(selectedSong, selectedInstrument, songBeats, songJson, converted);
+            //converted = false;
+            //instNum = 0;
+            //selectedInstrument = InstrumentList[Convert.ToInt32(instNum)];
+            //songBeats = GetSongBeats(selectedSong, selectedInstrument, InstrumentList);
+            //tab = new Tab(selectedSong, selectedInstrument, songBeats, songJson, converted);
+            tab = tabs[0];
         }
         public void IsBassGuitar()
         {
@@ -86,11 +89,12 @@ namespace GuitarTabBlazorSite.Data
             isBassGuitar = true;
             isUkelele = false;
             isBanjo = false;
-            converted = true;
-            instNum = 1;
-            selectedInstrument = InstrumentList[instNum];
-            songBeats = GetSongBeats(selectedSong, selectedInstrument, InstrumentList);
-            tab = new Tab(selectedSong, selectedInstrument, songBeats, songJson, converted);
+            //converted = true;
+            //instNum = 1;
+            //selectedInstrument = InstrumentList[Convert.ToInt32(instNum)];
+            //songBeats = GetSongBeats(selectedSong, selectedInstrument, InstrumentList);
+            //tab = new Tab(selectedSong, selectedInstrument, songBeats, songJson, converted);
+            tab = tabs[1];
         }
         public void IsUkelele()
         {
@@ -98,11 +102,12 @@ namespace GuitarTabBlazorSite.Data
             isBassGuitar = false;
             isUkelele = true;
             isBanjo = false;
-            converted = true;
-            instNum = 2;
-            selectedInstrument = InstrumentList[instNum];
-            songBeats = GetSongBeats(selectedSong, selectedInstrument, InstrumentList);
-            tab = new Tab(selectedSong, selectedInstrument, songBeats, songJson, converted);
+            //converted = true;
+            //instNum = 2;
+            //selectedInstrument = InstrumentList[Convert.ToInt32(instNum)];
+            //songBeats = GetSongBeats(selectedSong, selectedInstrument, InstrumentList);
+            //tab = new Tab(selectedSong, selectedInstrument, songBeats, songJson, converted);
+            tab = tabs[2];
         }
         public void IsBanjo()
         {
@@ -110,11 +115,28 @@ namespace GuitarTabBlazorSite.Data
             isBassGuitar = false;
             isUkelele = false;
             isBanjo = true;
-            converted = true;
-            instNum = 3;
-            selectedInstrument = InstrumentList[instNum];
-            songBeats = GetSongBeats(selectedSong, selectedInstrument, InstrumentList);
-            tab = new Tab(selectedSong, selectedInstrument, songBeats, songJson, converted);
+            //converted = true;
+            //instNum = 3;
+            //selectedInstrument = InstrumentList[Convert.ToInt32(instNum)];
+            //songBeats = GetSongBeats(selectedSong, selectedInstrument, InstrumentList);
+            //tab = new Tab(selectedSong, selectedInstrument, songBeats, songJson, converted);
+            tab = tabs[3];
+
+        }
+
+        public void GoBackToSearch()
+        {
+            //isBackToSearch = true;
+            isGuitar = false;
+            isBassGuitar = false;
+            isUkelele = false;
+            isBanjo = false;
+            converted = null;
+            instNum = null;
+            selectedInstrument = null;
+            songBeats = null;
+            //tab = null;
+            tabs = null;
         }
 
         private int? _GetTrackIndex(Track guitarTrack, int? trackIndex)
@@ -132,11 +154,15 @@ namespace GuitarTabBlazorSite.Data
 
         public async Task _SearchClickedAsync()
         {
-            searchClicked = true;
-            isLoading = true;
+            if (searchItem == "")
+            {
+                searchItem = null;
+            }
 
             if (searchItem != null)
             {
+                searchClicked = true;
+                isLoading = true;
                 searchItem = searchItem.ToLower().TrimEnd();
                 _userSearchedUrl = $"/?pattern={searchItem}";
                 _fullSearchedUrl = $"https://www.songsterr.com{_userSearchedUrl}";
@@ -165,6 +191,27 @@ namespace GuitarTabBlazorSite.Data
             trackHTML = HttpGet(trackUrl);
             selectedSong = GetSong(trackHTML, selectedSong);
             selectedTrack = _SongTracks[(int)trackIndex];
+
+            tabs = new();
+
+            foreach (StringInstrument instrument in InstrumentList)
+            {
+                if (instrument == InstrumentList[0]) converted = false;
+                else converted = true;
+
+                songBeats = GetSongBeats(selectedSong, instrument, InstrumentList);
+                tab = new Tab(selectedSong, instrument, songBeats, songJson, converted);
+                tabs.Add(tab);
+            }
+
+            searchItem = null;
+            searchClicked = false;
+            searchResults = null;
+            trackClicked = true;
+            trackIndex = null;
+            trackUrl = null;
+            trackHTML = "";
+            selectedTrack = null;
 
         }       
 
@@ -461,7 +508,7 @@ namespace GuitarTabBlazorSite.Data
             return _searchCache.Where(s => s.meta.current.title.ToLower().Contains(_searchItem) || s.meta.current.artist.ToLower().Contains(_searchItem)).ToList();
         }
 
-
+        
 
 
     }

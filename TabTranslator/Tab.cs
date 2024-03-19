@@ -19,8 +19,9 @@ namespace GuitarTabConverter
         public string Description;
         public string Lyrics;
         public List<List<List<string>>> TabLines;
+        
 
-        public List<List<List<string>>> GetTabLines(SongsterrSong Song, StringInstrument instrument, bool converted)
+        public List<List<List<string>>> GetTabLines(SongsterrSong Song, StringInstrument instrument)
         {
             long? tSigNum = 0;
             string tuningString = "";
@@ -314,7 +315,7 @@ namespace GuitarTabConverter
             return midiNote;
         }
 
-        public Tab(SongsterrSong Song, StringInstrument Instrument, List<MusicalBeat> songBeats, AppJson appjson, bool converted)
+        public Tab(SongsterrSong Song, StringInstrument Instrument, List<MusicalBeat> songBeats, AppJson appjson, bool? converted)
         {
             ArtistName = appjson.meta.current.artist;
             TitleOfSong = appjson.meta.current.title;
@@ -322,7 +323,9 @@ namespace GuitarTabConverter
             InstrumentString = Instrument.Name; //Song.Instrument;
             List<RootNotes> convertedTunings = new List<RootNotes>();
 
-            if (!converted)
+            
+
+            if ((bool)!converted)
             {
                 for (int i = 0; i < Song.Tuning.Count(); i++)
                 {
@@ -342,7 +345,7 @@ namespace GuitarTabConverter
             }
 
             Capo = Song.Capo;
-            TabLines = GetTabLines(Song, Instrument, converted);
+            TabLines = GetTabLines(Song, Instrument);
             FillTablines(TabLines, songBeats, Song);
         }
 
