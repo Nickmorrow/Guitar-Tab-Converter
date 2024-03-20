@@ -194,6 +194,8 @@ namespace GuitarTabBlazorSite.Data
             trackHTML = "";
             selectedTrack = null;
 
+
+
         }       
 
         //public List<MusicalBeat> songBeats;

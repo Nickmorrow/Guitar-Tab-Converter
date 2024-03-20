@@ -15,7 +15,7 @@
 <div class="search-component"style="display: flex; flex-direction: column; align-items: center;">
 
 <div style="display: flex; flex-direction: column; align-items: center;">                                                                                                                   
-    <img src="@ImagePath" alt="logo" style="width: 300px; height: auto; margin-bottom: 5px;"/>
+    <img src="@ImagePath" alt="logo" style="width: 400px; height: auto; margin-bottom: 0px;"/>
 
     <form @onsubmit="HandleFormSubmit" style="display: flex; flex-direction: column; align-items: center;">
     <div class="searchbar-container" style="width: 600px; margin-bottom: 10px;  display: flex; align-items: center; border: 2px solid black; border-radius: 100px; padding: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0); 
@@ -31,26 +31,24 @@
     </div> 
     </form>
 
-    <button class="form-control" style="max-width: 100px; margin-top: 5px; background-color: #3a3a3a; color: #fff; transition: transform 0.3s;"
+    <button class="form-control" style="max-width: 100px; margin-top: 25px; background-color: #3a3a3a; color: #fff; transition: transform 0.3s;"
         onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" 
          @onclick="Data._SearchClickedAsync">Search</button>
             
 </div>
 
-<div class="results-table">
+<div class="results-table" style="display: flex; flex-direction: column; align-items: center; margin-top: 10px;">
 
 @if (Data.searchClicked)
 {
     
     @if (Data.isLoading == true )
     {
-        <div class="spinner-border text-muted" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>   
+            <div class="spinner-grow" role="status" style=""></div>            
     }
     @if (Data.searchResults.Count() == 0 && !Data.isLoading)
     {
-        <p><em>No Results</em></p> 
+        <p>No Results</p> 
     }
     else
     {
@@ -58,12 +56,12 @@
             <tbody>
                 @foreach (AppJson Json in Data.searchResults)
                 {
-                    <tr @onclick="() => ToggleRowExpansion(Json)"class="@GetRowClass(Json)">
+                    <tr style="cursor: pointer;" @onclick="() => ToggleRowExpansion(Json)"class="@GetRowClass(Json)">
                         <td style="text-align: center; font-size: 22px; transition: transform 0.3s;
                             "onmouseover="this.style.transform = 'scale(1.1)';
                             "onmouseout="this.style.transform = 'scale(1)';">
 
-                                <a>@Json.meta.current.artist, @Json.meta.current.title</a> 
+                                <strong>@Json.meta.current.artist, @Json.meta.current.title</strong>
                         </td>
                     </tr>
                     @if (_IsRowExpanded(Json))
@@ -71,13 +69,13 @@
                         Data.GuitarOnly(Json);
                         foreach (Track guitarTrack in Data.guitarOnly)
                         {
-                            <tr  @onclick="@( async () =>  HandleTrackClicked(Json, guitarTrack))" 
-                                style=" transition: max-height 0.5s ease-in-out; max-height: @(_IsRowExpanded(Json) ? "1000px" : "0px")">
-                                
+                            <tr style=" cursor: pointer; transition: max-height 0.5s ease-in-out; max-height: @(_IsRowExpanded(Json) ? "1000px" : "0px")"
+                                @onclick="@( async () =>  HandleTrackClicked(Json, guitarTrack))"> 
+                                                               
                                 <td colspan="2" style="text-align: center; font-size: 15px; color: #400; transition: transform 0.3s;
                                     "onmouseover="this.style.transform = 'scale(1.1)';
                                     "onmouseout="this.style.transform = 'scale(1)';">
-                                       <a> @guitarTrack.instrument, @guitarTrack.name</a></td> 
+                                        @guitarTrack.instrument, @guitarTrack.name</td> 
                             </tr>   
                         }                     
                     }
@@ -100,7 +98,7 @@
         await Data._SearchClickedAsync();
     }   
 
-    private string ImagePath = "/images/logo.jpg";  
+    private string ImagePath = "/images/logoBiggertext.jpg";  
 
     private Dictionary<AppJson, bool> _expandedRows = new Dictionary<AppJson, bool>();
 
