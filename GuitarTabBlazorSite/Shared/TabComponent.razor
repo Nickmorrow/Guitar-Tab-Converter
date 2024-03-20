@@ -1,10 +1,11 @@
 ﻿@page "/TabComponent"
 @using GuitarTabBlazorSite.Data
 @using GuitarTabConverter
-@using PdfSharp.Pdf
-@using PdfSharp.Drawing
+@using Microsoft.JSInterop
+@using System.IO
 @inject GTCData Data
 @inject IJSRuntime JSRuntime
+
 
 <button class="print-button" @onclick="PrintComponent">Print</button>
 <button class="pdf-button" @onclick="DownloadPDF">Download PDF</button>
@@ -75,27 +76,17 @@
 @code {
     private async Task DownloadPDF()
     {
-
-        PdfDocument document = new PdfDocument();
-        PdfPage page = document.AddPage();
-        XGraphics gfx = XGraphics.FromPdfPage(page);
-
-
-        XFont font = new XFont("Helvetica Nue", 12);
-        gfx.DrawString("Hello, world!", font, XBrushes.Black, new XRect(10, 10, page.Width, page.Height), XStringFormats.TopLeft);
-
-
-        using (MemoryStream stream = new MemoryStream())
+        try
         {
-            document.Save(stream, false);
-            stream.Position = 0;
+            var tabBodyHtml = await JSRuntime.InvokeAsync<string>("CaptureHtml", "tab-body-content");
 
-
-            await JSRuntime.InvokeVoidAsync("BlazorDownloadFile", 
-                "tab_component.pdf", 
-                Convert.ToBase64String(stream.ToArray()));
+            await JSRuntime.InvokeVoidAsync("GeneratePdf", tabBodyHtml, "tab_component.pdf");
         }
-    } 
+        catch (Exception ex)
+        {
+            Console.Write(ex);    
+        }
+    }   
 
     private void PrintComponent()
     {

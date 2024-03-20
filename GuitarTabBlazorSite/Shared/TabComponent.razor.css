@@ -59,6 +59,58 @@
     .tab-body {
         transform: scale(0.75);
     }
+    
+    }
+@print {
+    .tab-body {
+        max-width: 100%;
+        overflow-x: auto;
+        margin-top: -500px;
+        transform: scale(0.75);
+        font-size: 1.2em;
+    }
 
+    .print-button {
+        float: right;
+    }
+
+    .pdf-button {
+        float: right;
+    }
+
+    .tuning {
+        display: flex;
+    }
+
+        .tuning > div {
+            margin-right: 10px;
+        }
+
+    .tablines-body {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .tab-row {
+        display: flex;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .measure {
+        //display: flex;
+        flex: 1 1 auto;
+        max-width: calc(25% - 10px);
+        min-width: 200px;
+    }
+
+    .tabline {
+        display: flex;
+    }
+
+    .beat {
+        //display: flex;
+    }
 
 

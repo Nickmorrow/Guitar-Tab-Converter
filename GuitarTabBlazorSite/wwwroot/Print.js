@@ -4,7 +4,7 @@ window.printContent = function (elementId) {
     if (element) {
         var printWindow = window.open('', '_blank');
         printWindow.document.open();
-        printWindow.document.write('<html><head><title>Print</title><link rel="stylesheet" type="text/css" href="tabcomponentPrint.css"></head><body onload="window.print(); window.close();">');
+        printWindow.document.write('<html><head><title>Print</title><link rel="stylesheet" type="text/css" href="TabComponent.razor.css"></head><body onload="window.print(); window.close();">');
 
         printWindow.document.write(element.innerHTML);
 

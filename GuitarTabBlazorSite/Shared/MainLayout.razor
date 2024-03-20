@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject GuitarTabBlazorSite.Data.GTCData Data
+@inject NavigationManager Navigation
 
 <PageTitle>GuitarTabBlazorSite</PageTitle>
 
@@ -10,7 +12,7 @@
     <main>        
         <div class="top-row px-4 d-flex justify-content-start"> 
             <div class="nav-item px-3" style="transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';">
-                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <NavLink class="nav-link" href="#" @onclick="HandleHomeClick">
                     <span class="oi oi-home" aria-hidden="true" ></span> Home
                 </NavLink>
             </div>
@@ -30,3 +32,12 @@
         </article>
     </main>
 </div>
+
+@code{
+    private void HandleHomeClick()
+    {
+        Data.GoBackToSearch();
+        Navigation.NavigateTo("/");
+    }
+
+}

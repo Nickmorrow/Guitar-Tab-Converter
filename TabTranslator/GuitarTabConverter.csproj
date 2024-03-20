@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="HtmlRenderer.PdfSharp" Version="1.5.0.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="PDFsharp" Version="6.0.0" />
   </ItemGroup>
 
 </Project>

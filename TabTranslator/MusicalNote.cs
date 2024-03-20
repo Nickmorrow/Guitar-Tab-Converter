@@ -265,6 +265,8 @@ namespace GuitarTabConverter
                     }
                     var orderedFingerPositions = fingerPositions.OrderBy(x => x.MidiNum).ThenBy(x => x.FretNr).ToList();
                     fingerPositions = orderedFingerPositions;
+
+                    
                 }                
             }
             else

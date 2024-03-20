@@ -5,12 +5,15 @@ using Newtonsoft.Json.Converters;
 using System.Text.Json;
 using System.Linq;
 using System.Reflection;
+using PdfSharp.Fonts;
+using System.IO;
+
 
 namespace GuitarTabBlazorSite.Data
 {
     public class GTCData
     {
-        public bool isBackToSearch { get; set; }
+        //public bool isBackToSearch { get; set; }
         public string searchItem { get; set; }
 
         public bool searchClicked { get; set; }
@@ -184,7 +187,7 @@ namespace GuitarTabBlazorSite.Data
 
             searchItem = null;
             searchClicked = false;
-            searchResults = null;
+            searchResults.Clear();
             trackClicked = true;
             trackIndex = null;
             trackUrl = null;
@@ -490,4 +493,6 @@ namespace GuitarTabBlazorSite.Data
 
 
     }
+
+    
 }
