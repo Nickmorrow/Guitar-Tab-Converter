@@ -489,12 +489,11 @@ namespace GuitarTabBlazorSite.Data
                 _searchCache = _searchCache.Distinct().ToList();
             }
             return _searchCache.Where(s => s.meta.current.title.ToLower().Contains(_searchItem) || s.meta.current.artist.ToLower().Contains(_searchItem)).ToList();
-        }
-
-        
-
+        }       
 
     }
+
+
 
     
 }

@@ -7,8 +7,8 @@
 @inject IJSRuntime JSRuntime
 
 
-<button class="print-button" @onclick="PrintComponent">Print</button>
-<button class="pdf-button" @onclick="DownloadPDF">Download PDF</button>
+<button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="PrintComponent">Print</button>
+
 
 <div class="tab-body" id="tab-body-content">
     <div>
@@ -74,19 +74,7 @@
 
 
 @code {
-    private async Task DownloadPDF()
-    {
-        try
-        {
-            var tabBodyHtml = await JSRuntime.InvokeAsync<string>("CaptureHtml", "tab-body-content");
-
-            await JSRuntime.InvokeVoidAsync("GeneratePdf", tabBodyHtml, "tab_component.pdf");
-        }
-        catch (Exception ex)
-        {
-            Console.Write(ex);    
-        }
-    }   
+   
 
     private void PrintComponent()
     {
