@@ -7,11 +7,12 @@
 @inject IJSRuntime JSRuntime
 
 
-<button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="PrintComponent">Print</button>
+
 
 
 <div class="tab-body" id="tab-body-content">
-    <div>
+    <div class="songinfo">
+        <button class="print-button" @onclick="PrintComponent">Print</button>
         <strong>@Data.tab.ArtistName</strong>
         <div>@Data.tab.TitleOfSong</div>
         <div>@Data.tab.InstrumentString</div>

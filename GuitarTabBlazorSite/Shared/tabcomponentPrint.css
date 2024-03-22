@@ -1,46 +1,47 @@
-﻿.tab-body {
-    max-width: 100%; 
-    overflow-x: auto;
-    margin-top: 100px;
-}
+﻿
 
-.tuning {
-    display: flex;
-}
+@media print {
 
-    .tuning > div {
-        margin-right: 10px;
+    .tab-body {
+        max-width: 100%;
+        overflow-x: auto;
+        /*margin-top: -500px;*/
+        /*transform: scale(1);*/
+        font-size: 1.2em;
     }
 
-.tablines-body {
-    display: flex; 
-    flex-wrap: wrap; 
-    gap: 10px;
-}
+    .tuning {
+        display: flex;
+    }
 
-.tab-row {
-    display: flex;
-    padding-top: 10px;
-    padding-bottom: 10px;
-}
+        .tuning > div {
+            margin-right: 10px;
+        }
 
-.measure {
-    //display: flex;
-    flex: 1 1 auto; 
-    max-width: calc(25% - 10px); 
-    min-width: 200px;
-}
-
-.tabline {
-    display: flex;
-}
-
-.beat {
-    //display: flex;
-}
-
-@media screen and (max-width: 768px) {
-    
     .tablines-body {
-        
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
     }
+
+    .tab-row {
+        display: flex;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .measure {
+        //display: flex;
+        flex: 1 1 auto;
+        max-width: calc(25% - 10px);
+        min-width: 200px;
+    }
+
+    .tabline {
+        display: flex;
+    }
+
+    .beat {
+        //display: flex;
+    }
+}
