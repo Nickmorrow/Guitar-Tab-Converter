@@ -12,7 +12,11 @@
 
 <div class="tab-body" id="tab-body-content">
     <div class="songinfo">
-        <button class="print-button" @onclick="PrintComponent">Print</button>
+        
+        <a class="print-link" @onclick="PrintComponent">
+            <i class="bi bi-printer-fill printer-icon" style="color: white" ></i>
+        </a>
+        
         <strong>@Data.tab.ArtistName</strong>
         <div>@Data.tab.TitleOfSong</div>
         <div>@Data.tab.InstrumentString</div>

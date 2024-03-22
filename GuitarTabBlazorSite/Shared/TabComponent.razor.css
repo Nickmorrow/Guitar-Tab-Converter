@@ -1,7 +1,17 @@
-﻿.print-button {
+﻿.print-link {
     float: right;
     margin-right: 50px;
+    width: 100px;
+    height: 50px;
+    border-radius: 10px;
+    color: #fff;
 }
+
+.printer-icon {
+    font-size: 32px;
+    cursor: pointer;
+}
+
 
 .tab-body {
     margin: 0 auto;
