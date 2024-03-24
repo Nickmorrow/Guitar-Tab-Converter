@@ -6,8 +6,9 @@
 }
 
 .title {
+    color: #3c4c62;
     margin-top: 25px;
-    font-size: 50px;
+    font-size: 75px;
     font-family: 'Tw Cen MT'
 }    
 
@@ -20,7 +21,7 @@
     .choose-instrument-buttons button {
         margin: 0 10px;
         max-width: 200px;
-        background-color: #3a3a3a;
+        background-color: #3c4c62;
         color: #fff;
         transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     }

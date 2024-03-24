@@ -55,7 +55,7 @@
 
 .story-content {
     color: #3c4c62;
-    font-size: 26px;
+    font-size: 30px;
     max-width: 1500px;
     justify-content: center;
     align-items: center;
@@ -175,7 +175,7 @@
 
         .contact input[type="submit"]:hover {
             background-color: #3c4c62;
-            color: #daeeee
+            color: #fff
         }
 @media{
 

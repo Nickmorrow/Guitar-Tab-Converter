@@ -13,10 +13,10 @@ main {
 }
 
 .top-row {
-    background-image: linear-gradient(180deg, #3a3a3a 0%, #757575 70%);
+   /* background-image: linear-gradient(180deg, #3c4c62 30%, #daeeee 70%);*/
     /*background-color: #f7f7f7;*/
     /*background-color: #5b5b5b;*/
-    background-color: #757575;
+    background-color: #3c4c62;
     justify-content: flex-end;
     height: 3.5rem;
     display: flex;
