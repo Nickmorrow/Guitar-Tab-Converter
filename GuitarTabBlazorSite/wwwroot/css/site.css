@@ -2,7 +2,8 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    /*background-color: #f0f0f0;*/
+    height: 100%; /* Ensure html and body take up the full height of the viewport */
+    margin: 0;
 }
 
 h1:focus {

@@ -1,50 +1,98 @@
-﻿.about {
-    text-align: center;
-    margin-bottom: 50px;
+﻿
+
+.about-page {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
 }
 
-    .about h3 {
-        color: #3a3a3a;
-        font-size: 24px;
-        margin-bottom: 20px;
+.about {
+
+    background-color: #243139;
+    display: flex;   
+}
+
+.about-text-container {
+    max-width: 1500px;
+    margin: auto;
+    padding-top: 35px;
+    padding-bottom: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+
+    .title {
+        color: #daeeee;
+        font-size: 85px;
+        margin-top: 50px;
+        font-family: 'Tw Cen MT';
     }
 
-    .about p {
-        color: #666;
-        font-size: 16px;
+
+    .about-text-container p {
+        color: #daeeee;
+        font-size: 27px;
         line-height: 1.6;
     }
 
 .my-story {
+    background-color: coral;
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 50px;
+    padding-top: 50px;
+    padding-bottom: 50px;
 }
 
-    .my-story img {
+.story-content {
+
+    color: #666;
+    font-size: 23px;
+    max-width: 1500px;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
+
+    .image {
         width: 300px;
         height: auto;
-        margin-right: 30px;
         border-radius: 50%;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        float: left;       
+        -webkit-shape-outside: circle();
+        shape-outside: circle();
+        margin-right: 30px;
     }
 
-    .my-story p {
-        color: #666;
-        font-size: 16px;
-        line-height: 1.6;
+    .story-text {
+
+        line-height: 1.6;        
     }
+
 
 .future-updates {
+    background-color: hotpink;
+    position: relative;
     text-align: center;
-    margin-bottom: 50px;
+    padding-top: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
     .future-updates h3 {
+        
         color: #3a3a3a;
         font-size: 24px;
         margin-bottom: 20px;
+        font-family: 'Tw Cen MT';
     }
 
     .future-updates ul {
@@ -59,14 +107,20 @@
     }
 
 .join-us {
+    background-color: aquamarine;
+    position: relative;
     text-align: center;
-    margin-bottom: 50px;
+    padding-top: 50px;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
 }
 
     .join-us h3 {
         color: #3a3a3a;
         font-size: 24px;
         margin-bottom: 20px;
+        font-family: 'Tw Cen MT';
     }
 
     .join-us p {
@@ -76,6 +130,10 @@
     }
 
 .contact {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color:chartreuse;
+    position: relative;
     text-align: center;
 }
 

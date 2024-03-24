@@ -1,31 +1,36 @@
 ﻿@page "/About"
 
-
-<div class="about">
-    <h3>About</h3>
-    <p>
-        Guitar Tab Converter is an open-source educational project designed to facilitate users in accessing musical tablature tailored to their instrument of choice. 
-        Catering to musicians seeking versatility in their play, our platform serves as a comprehensive repository for musicians of all skill levels to explore diverse guitar tunings and other stringed instruments. 
-        With an expansive database housing over 800,000 guitar tabs, Guitar Tab Converter empowers users to effortlessly adapt compositions to suit their instrument of choice with a single click. 
-        Gone are the days of futile searches—our platform guarantees precision, meticulously preserving intricate time signatures and notation details. 
-        Embark on a transformative musical journey with Guitar Tab Converter, where innovation meets precision to elevate your musical experience.
-    </p>
+<div class="about-page">
+<div class="about">   
+    <div class="about-text-container">
+        <h3 class="title">About</h3>
+        <p>
+            Guitar Tab Converter is an open-source educational project designed to facilitate users in accessing musical tablature tailored to their instrument of choice. 
+            Catering to musicians seeking versatility in their play, our platform serves as a comprehensive repository for musicians of all skill levels to explore diverse guitar tunings and other stringed instruments. 
+            With an expansive database housing over 1,000,000 guitar tabs, Guitar Tab Converter empowers users to effortlessly adapt compositions to suit their instrument of choice with a single click. 
+            Gone are the days of futile searches—our platform guarantees precision, meticulously preserving intricate time signatures and notation details. 
+            Embark on a transformative musical journey with Guitar Tab Converter, where innovation meets precision to elevate your musical experience.
+        </p>
+    </div>
 </div>
 
-<div class="my story">
-    <img src="@imagePath" alt="Me" style="width: 500px;"/>
-    <p>
-        I started this project back when I was just starting out with the guitar. 
-    With a background in music production and recording, I was eager to pick up other instruments and find cool songs to play along with on guitar. 
-    But I quickly ran into a problem—there weren't enough tabs out there for different instruments, and the ones I did find were often missing important details like note duration and time signatures.
+<div class="my-story">
+    <div class="story-content">
+    <img class="image" src="@imagePath" alt="Me" style="width: 500px;"/>
+    
+        <p class="story-text">
+            I started this project back when I was just starting out with the guitar. 
+            With a background in music production and recording, I was eager to pick up other instruments and find cool songs to play along with on guitar. 
+            But I quickly ran into a problem—there weren't enough tabs out there for different instruments, and the ones I did find were often missing important details like note duration and time signatures.
 
-    So, I decided to do something about it. I started this project to fill that gap and ended up learning a ton about music theory in the process. It really helped me get better at playing all my instruments.
+            So, I decided to do something about it. I started this project to fill that gap and ended up learning a ton about music theory in the process. It really helped me get better at playing all my instruments.
 
-    I hope you find it useful and have as much fun with it as I did!    
-    </p>
+            I hope you find it useful and have as much fun with it as I did!    
+        </p>
+    </div>
 </div>
 
-<div class="future updates">
+<div class="future-updates">
     <h3>Future Updates</h3>
     <ul>
         <li>Choose alternate tunings feature for all included instruments</li>
@@ -39,7 +44,7 @@
     <a href="/PatchNotes">View the Patch notes here</a>
 </div>
 
-<div class="join us">
+<div class="join-us">
     <h3>Join us!</h3>
     <p>We're constantly on the lookout for fresh ideas to enhance functionality. If you're interested in diving into our source code, you can find it on our <a href="https://github.com/Nickmorrow/Guitar-Tab-Converter" style="text-decoration: none; color: inherit;"><strong>GitHub</strong></a> page.
        If you would like to become a contributor or have any other inquiries, don't hesitate to reach out to us below.</p>
@@ -53,10 +58,11 @@
     <input type="submit" value="Send" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';">
 </form>
 </div>
+</div>
 
 
 @code {
-    public string imagePath = "/images/nickCircleBNW.jpg";
+    public string imagePath = "/images/DSC06467.png";
 
 }
 
