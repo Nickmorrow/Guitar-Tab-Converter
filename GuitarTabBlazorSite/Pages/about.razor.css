@@ -10,9 +10,8 @@
 }
 
 .about {
-
-    background-color: #243139;
-    display: flex;   
+    background-color: #3c4c62;
+    display: flex;
 }
 
 .about-text-container {
@@ -20,40 +19,43 @@
     margin: auto;
     padding-top: 35px;
     padding-bottom: 35px;
-    display: flex;
-    flex-direction: column;
+/*    display: flex;
+    flex-direction: column;*/
     justify-content: center;
     align-content: center;
 }
 
-    .title {
-        color: #daeeee;
-        font-size: 85px;
-        margin-top: 50px;
-        font-family: 'Tw Cen MT';
-    }
+.title {
+    color: #ffd847;
+    font-size: 100px;
+    margin-top: 50px;
+    font-family: 'Tw Cen MT';
+}
 
 
-    .about-text-container p {
+    .about-text {
         color: #daeeee;
-        font-size: 27px;
+        font-size: 30px;
         line-height: 1.6;
     }
 
+.tagline {
+    font-size: 35px;
+    color: #ffd847;
+}
+
 .my-story {
-    background-color: coral;
+    background-color: #daeeee;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding-top: 100px;
 }
 
 .story-content {
-
-    color: #666;
-    font-size: 23px;
+    color: #3c4c62;
+    font-size: 26px;
     max-width: 1500px;
     justify-content: center;
     align-items: center;
@@ -62,13 +64,13 @@
 
 
     .image {
-        width: 300px;
+        width: 400px;
         height: auto;
         border-radius: 50%;
         float: left;       
         -webkit-shape-outside: circle();
         shape-outside: circle();
-        margin-right: 30px;
+        margin-right: 75px;
     }
 
     .story-text {
@@ -78,19 +80,19 @@
 
 
 .future-updates {
-    background-color: hotpink;
+    background-color: #daeeee;
     position: relative;
-    text-align: center;
-    padding-top: 50px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    padding-top: 50px;
+    padding-bottom: 25px;
 }
 
     .future-updates h3 {
-        
-        color: #3a3a3a;
-        font-size: 24px;
+        color: #3c4c62;
+        font-size: 100px;
         margin-bottom: 20px;
         font-family: 'Tw Cen MT';
     }
@@ -101,38 +103,39 @@
     }
 
     .future-updates li {
-        color: #666;
-        font-size: 16px;
+        color: #3c4c62;
+        font-size: 26px;
         margin-bottom: 10px;
     }
 
 .join-us {
-    background-color: aquamarine;
+    background-color: #ffd847;
     position: relative;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding-top: 50px;
-    display: flex; 
-    flex-direction: column; 
-    justify-content: center; 
+    padding-bottom: 50px;
 }
 
     .join-us h3 {
-        color: #3a3a3a;
-        font-size: 24px;
-        margin-bottom: 20px;
+        color: #3c4c62;
+        font-size: 100px;
+        margin-bottom: 75px;
         font-family: 'Tw Cen MT';
     }
 
     .join-us p {
-        color: #666;
-        font-size: 16px;
+        color: #3c4c62;
+        font-size: 26px;
         line-height: 1.6;
+        max-width: 1000px;
     }
 
 .contact {
-    padding-top: 50px;
-    padding-bottom: 50px;
-    background-color:chartreuse;
+    padding-bottom: 100px;
+    background-color: #ffd847;
     position: relative;
     text-align: center;
 }
@@ -144,31 +147,36 @@
     }
 
     .contact label {
-        color: #3a3a3a;
-        font-size: 18px;
+        color: #3c4c62;
+        font-size: 35px;
         margin-bottom: 10px;
     }
 
     .contact input[type="text"],
     .contact textarea {
-        width: 300px;
+        width: 750px;
         padding: 10px;
         margin-bottom: 20px;
-        border: 1px solid #ccc;
+        /*border: 1px solid #ccc;*/
+        border: none;
         border-radius: 5px;
+        color: #243139;
     }
 
     .contact input[type="submit"] {
         width: 150px;
         padding: 10px;
-        background-color: #3a3a3a;
-        color: #fff;
+        background-color: #3c4c62;
+        color: #daeeee;
         border: none;
         border-radius: 5px;
         cursor: pointer;
     }
 
         .contact input[type="submit"]:hover {
-            background-color: #3a3a3a;
-            color: #fff
+            background-color: #3c4c62;
+            color: #daeeee
         }
+@media{
+
+}
