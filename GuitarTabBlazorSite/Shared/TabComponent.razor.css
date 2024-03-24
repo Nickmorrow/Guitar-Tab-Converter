@@ -15,11 +15,12 @@
 
 
 .tab-body {
+
     margin: 0 auto;
-    margin-top: 50px;
+    margin-top: 360px;
     max-width: 80%;
     overflow-x: auto;
-    font-size: .9em;
+    font-size: 1.2em;
     padding: 25px;
     border-radius: 25px;
     background-color: #3c4c62;

@@ -1,21 +1,33 @@
 ﻿
-
+.choose-instrument-page {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
 .choose-instrument {
-    text-align: center; 
-
+    text-align: center;
+    background-color: #ffd847;
+    justify-content: center;
+    align-content: center;
+    margin: auto;
+    padding-top: 75px;
+    padding-bottom: 75px;
 }
 
 .title {
     color: #3c4c62;
     margin-top: 25px;
-    font-size: 75px;
+    font-size: 85px;
     font-family: 'Tw Cen MT'
 }    
 
 .choose-instrument-buttons {
     display: flex; 
-    justify-content: center; 
-    margin-top: 50px; 
+    justify-content: center;
+    margin-top: 50px;
+
 }
 
     .choose-instrument-buttons button {
@@ -26,5 +38,5 @@
         transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
     }
 
-        
+     
 
