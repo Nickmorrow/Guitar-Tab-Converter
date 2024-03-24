@@ -1,0 +1,102 @@
+﻿
+
+@media print {
+
+    /*.tab-body {
+        max-width: 100%;
+        overflow-x: auto;*/
+        /*        margin-top: -500px;*/
+        /*transform: scale(1);
+        font-size: .9em;
+    }
+
+    .songinfo {
+        font-size: 20px;
+    }
+
+    .tuning {
+        display: flex;
+    }
+
+        .tuning > div {
+            margin-right: 10px;
+        }
+
+    .tablines-body {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .tab-row {
+        display: flex;
+5
+    }
+
+    .measure {
+        //display: flex;
+        flex: 1 1 auto;*/
+/*        max-width: calc(25% - 10px);*/
+        /*min-width: 150px;
+    }
+
+    .tabline {
+        display: flex;
+    }
+
+    .beat {
+        //display: flex;
+    }*/
+
+    .tab-body {
+        margin: 0 auto;
+        /*margin-top: 360px;*/
+        max-width: 80%;
+        overflow-x: auto;
+
+
+    }
+
+    .songinfo {
+        font-size: 20px;
+
+    }
+
+    .tuning {
+        display: flex;
+    }
+
+        .tuning > div {
+            margin-right: 10px;
+        }
+
+    .tablines-body {
+        font-size: .75em;
+        margin-top: 35px;
+        display: flex;
+        
+        flex-wrap: wrap;
+        gap: 10px;
+
+    }
+
+    .tab-row {
+        display: flex;
+        margin-top: 20px;
+        page-break-inside: avoid;
+    }
+
+        .tab-row > .measure {
+            flex: 1 1 auto;
+            max-width: calc(25% - 10px);
+            min-width: 200px;
+        }
+
+    .tabline {
+        display: flex;
+    }
+
+    .beat {
+        /*display: flex;*/
+    }
+}

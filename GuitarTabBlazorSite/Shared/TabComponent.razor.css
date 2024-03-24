@@ -83,14 +83,15 @@
     }*/
     
     }
+
 /*@media print {
 
     .tab-body {
         max-width: 100%;
-        overflow-x: auto;*/
-        /*margin-top: -500px;*/
-        /*transform: scale(1);*/
-        /*font-size: 1.2em;
+        overflow-x: auto;
+        margin-top: -500px;
+        transform: scale(1);
+        font-size: 1.2em;
     }
 
     .tuning {
