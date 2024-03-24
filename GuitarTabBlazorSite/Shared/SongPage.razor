@@ -6,13 +6,25 @@
 
 <div class="choose-instrument-page">
 <div class="choose-instrument">
-    <div><h1 class="title">Choose Instrument</h1></div>
-    <div class="choose-instrument-buttons">
-        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsGuitar">Guitar</button>
+    <div>@*<h1 class="title">Choose Instrument</h1>*@</div>
+    <div class="choose-instrument-icons">
+        @*<button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsGuitar">Guitar</button>
         <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsBassGuitar">Bass Guitar</button>
         <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsUkelele">Ukelele</button>
         <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsBanjo">Banjo</button>
-        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="_HandleBackToSearch">Back to Search</button>
+        <button class="form-control" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="_HandleBackToSearch">Back to Search</button>*@
+        <div class="guitar" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsGuitar">
+            <img src="@_guitarPath" alt="guitar-icon" /><div>Guitar</div>
+        </div>
+        <div class="bass" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsBassGuitar">
+            <img src="@_bassPath" alt="bass-icon"/><div>Bass</div>
+        </div>
+        <div class="uke" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsUkelele">
+            <img src="@_ukePath" alt="uke-icon"/><div>Ukelele</div>
+        </div>
+        <div class="banjo" onmouseover="this.style.transform = 'scale(1.1)';"onmouseout="this.style.transform = 'scale(1)';" @onclick="Data.IsBanjo">
+            <img src="@_banjoPath" alt="banjo-icon"/><div>Banjo</div>
+        </div>
     </div>
  </div>
  </div>
@@ -40,6 +52,14 @@
 
 @code 
 {
+    private string _guitarPath = "/images/guitar.png";
+
+    private string _bassPath = "/images/bassIcon.png";
+
+    private string _ukePath = "/images/uke.png";
+
+    private string _banjoPath = "/images/banjo.png";
+
     private void _HandleBackToSearch()
     {
         Data.GoBackToSearch();

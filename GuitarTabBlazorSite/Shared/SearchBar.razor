@@ -15,7 +15,7 @@
 <div class="search-component"style="display: flex; flex-direction: column; align-items: center;">
 
 <div style="display: flex; flex-direction: column; align-items: center;">                                                                                                                   
-    <img src="@ImagePath" alt="logo" style="width: 400px; height: auto; margin-bottom: 0px;"/>
+    <img src="@_imagePath" alt="logo" style="width: 400px; height: auto; margin-bottom: 0px;"/>
 
     <form @onsubmit="HandleFormSubmit" style="display: flex; flex-direction: column; align-items: center;">
     <div class="searchbar-container" style="width: 600px; margin-bottom: 10px;  display: flex; align-items: center;  border-radius: 100px; padding: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0); 
@@ -98,7 +98,7 @@
         await Data._SearchClickedAsync();
     }   
 
-    private string ImagePath = "/images/logocolored.jpg";  
+    private string _imagePath = "/images/logocolored.jpg";  
 
     private Dictionary<AppJson, bool> _expandedRows = new Dictionary<AppJson, bool>();
 

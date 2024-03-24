@@ -102,7 +102,7 @@
 
     .future-updates li {
         color: #3c4c62;
-        font-size: 26px;
+        font-size: 30px;
         margin-bottom: 10px;
     }
 
@@ -126,7 +126,7 @@
 
     .join-us p {
         color: #3c4c62;
-        font-size: 26px;
+        font-size: 30px;
         line-height: 1.6;
         max-width: 1000px;
     }
@@ -173,7 +173,8 @@
 
         .contact input[type="submit"]:hover {
             background-color: #3c4c62;
-            color: #fff
+            color: #fff; 
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
 @media{
 
