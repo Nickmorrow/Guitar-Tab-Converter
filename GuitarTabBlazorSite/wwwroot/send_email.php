@@ -1,6 +1,6 @@
 ﻿<?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $to = "Contact@guitartabconverter.me"; // Replace with your email address
+    $to = "contact@guitartabconverter.me"; // Replace with your email address
     $subject = "Form Submission";
     $message = "Name: " . $_POST["name"] . "\n";
     $message .= "Email: " . $_POST["email"] . "\n";
